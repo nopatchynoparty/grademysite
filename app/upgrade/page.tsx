@@ -39,11 +39,11 @@ export default async function UpgradePage({
         quantity: 1,
         price_data: {
           currency: "gbp",
-          unit_amount: 10000, // £100 — upgrade price for existing report customers
+          unit_amount: 5000, // £50 — upgrade delta (£99 full bundle minus £49 already paid)
           product_data: {
-            name: "Grade My Site — HTML Upgrade",
+            name: "Grade My Site — Homepage Add-on",
             description:
-              "Upgrade your existing report to include a ready-to-build HTML homepage, styled and ready for your developer to drop straight in.",
+              "Add the branded HTML homepage to your existing report — styled in your colours, fonts, and logo, ready for your developer to drop straight in.",
           },
         },
       },

@@ -118,6 +118,12 @@ Write a "sound_familiar" section: 3 bullet points in second-person that name the
 
 Write suggested section headings for a redesigned homepage: hero, problem, solution, social proof, CTA.
 
+Write 3 "solution bullets" — specific, concrete reasons to choose this business over a competitor. These will appear verbatim in the "Why customers choose us" section of the homepage template. Pull them directly from the page: unique claims, specific stats, named features, or anything that passes Rule 3, 14, or 15. Each bullet must be under 12 words. Never write generic bullets like "Quality workmanship" or "Experienced team" — if the page gives you specifics, use them. If it doesn't, write the most concrete thing you can infer from what's there.
+
+Extract the phone number exactly as it appears on the page (e.g. "01243 940330"). If multiple numbers appear, use the most prominent one from the header or top section. If no phone number is found anywhere on the page, output null.
+
+Set has_pricing to true if Rule 12 passed (any price, fee, percentage, or starting-from figure appears on the page), false otherwise.
+
 ═══════════════════════════════════════
 OUTPUT FORMAT
 ═══════════════════════════════════════
@@ -125,6 +131,7 @@ OUTPUT FORMAT
 Return ONLY the following JSON — no markdown fences, no text outside the JSON:
 
 {
+  "company_name": "<exact business name as displayed on the site>",
   "score": <integer — count of passes only>,
   "out_of": <integer — rules assessed, excluding unable_to_assess and skipped>,
   "grade": "<A|B|C|D|F>",
@@ -167,8 +174,15 @@ Return ONLY the following JSON — no markdown fences, no text outside the JSON:
       "solution": "<suggested solution section heading>",
       "social_proof": "<suggested social proof section heading>",
       "cta": "<suggested final CTA section heading>"
-    }
-  }
+    },
+    "solution_bullets": [
+      "<differentiator 1 — specific, pulled from the page, under 12 words>",
+      "<differentiator 2 — a distinct second reason, under 12 words>",
+      "<differentiator 3 — a third distinct reason or strongest proof point, under 12 words>"
+    ]
+  },
+  "phone": "<phone number exactly as displayed on the page — null if not found>",
+  "has_pricing": <true|false>
 }
 
 Grade: score/out_of >= 0.9 = A, >= 0.8 = B, >= 0.6 = C, >= 0.4 = D, < 0.4 = F`;

@@ -16,9 +16,9 @@ const TIERS = {
     description: "20-rule analysis + rewritten copy for your business",
   },
   html: {
-    amountPence: 14900,
-    label: "Conversion Report + HTML Page",
-    description: "Full report plus a ready-to-build HTML homepage",
+    amountPence: 9900,
+    label: "Full Report + Homepage",
+    description: "Full report plus a branded HTML homepage file ready for your developer — styled in your colours, fonts, and logo",
   },
 } as const;
 

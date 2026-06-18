@@ -44,10 +44,10 @@ export default async function SuccessPage({
     return (
       <SuccessLayout
         icon="html"
-        heading="Report + HTML page incoming"
+        heading="Report + Homepage incoming"
         subheading="We'll run your full audit and build your new homepage. Both land in your inbox within 24 hours."
         steps={[
-          "We run your site through all 20 conversion rules with specific findings",
+          "We run your site through all 22 rules with specific findings",
           "We rewrite your headline, CTA, and copy — and build it into a complete HTML file",
           "We review and approve everything before it leaves",
           "Both the report and HTML homepage land in your inbox, ready to hand to your developer",
@@ -62,7 +62,7 @@ export default async function SuccessPage({
       heading="Payment received"
       subheading="Your report will be delivered to your email within 24 hours."
       steps={[
-        "We run your site through all 20 conversion rules",
+        "We run your site through all 22 rules",
         "We rewrite your headline, CTA, and problem section using your actual copy",
         "We review and approve the output before it leaves",
         "It lands in your inbox — ready to hand to your developer",

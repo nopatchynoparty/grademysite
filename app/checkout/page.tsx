@@ -22,15 +22,15 @@ export default async function CheckoutPage({
         <div className="max-w-md w-full">
           <div className="mb-8">
             <p className="eyebrow mb-2">
-              {validTier === "html" ? "Report + HTML Page" : "Full Report"}
+              {validTier === "html" ? "Report + Homepage" : "Full Report"}
             </p>
             <h1 className="text-3xl font-black text-ink mb-2">
-              {validTier === "html" ? "£149 one-time" : "£49 one-time"}
+              {validTier === "html" ? "£99 one-time" : "£49 one-time"}
             </h1>
             <p className="text-muted">
               {validTier === "html"
-                ? "Full 20-rule analysis, rewritten copy, and a ready-to-build HTML homepage."
-                : "Full 20-rule analysis with rewritten headlines, CTAs, and copy for your business."}
+                ? "Full 22-rule analysis, rewritten copy, and a branded HTML homepage styled in your colours, fonts, and logo — ready to hand to your developer."
+                : "Full 22-rule analysis with rewritten headlines, CTAs, and copy for your business."}
             </p>
           </div>
 

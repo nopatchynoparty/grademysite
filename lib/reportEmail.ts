@@ -120,7 +120,8 @@ function unableCell(r: RuleResult): string {
 
 export function buildHtmlDeliveryEmail(
   url: string,
-  analysis: FullAnalysis
+  analysis: FullAnalysis,
+  screenshotUrl?: string | null
 ): { subject: string; html: string } {
   const copy = analysis.rewritten_copy;
   const displayUrl = url.replace(/^https?:\/\//, "");
@@ -149,7 +150,7 @@ export function buildHtmlDeliveryEmail(
     <p style="margin:0 0 12px;font-size:22px;font-weight:800;color:#0f172a;line-height:1.3;">Your full report and HTML homepage are ready.</p>
     <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">Two files are attached to this email:</p>
     <ul style="margin:0 0 20px;padding:0 0 0 20px;">
-      <li style="font-size:14px;color:#374151;margin-bottom:6px;"><strong>Your full report</strong> — all 22 conversion rules checked, with rewritten copy ready to use</li>
+      <li style="font-size:14px;color:#374151;margin-bottom:6px;"><strong>Your full report</strong> — all 22 rules checked, with rewritten copy ready to use</li>
       <li style="font-size:14px;color:#374151;"><strong>Your new homepage</strong> — a complete HTML file for your developer to drop straight in</li>
     </ul>
     <div style="background:#f1f5f9;border-radius:10px;padding:16px 18px;margin-bottom:0;">
@@ -157,6 +158,14 @@ export function buildHtmlDeliveryEmail(
       <p style="margin:0;font-size:14px;color:#1e293b;line-height:1.6;font-style:italic;">"Please replace my current homepage with the attached HTML file. The copy is already written — just add a real photo in the hero section, replace the testimonial placeholders with real quotes, and update the pricing tiers and contact links before going live."</p>
     </div>
   </div>
+
+  ${screenshotUrl ? `
+  <!-- Screenshot of current site -->
+  <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:12px;">Your current homepage</div>
+    <img src="${screenshotUrl}" alt="Current homepage screenshot" style="display:block;width:100%;max-width:100%;border-radius:8px;border:1px solid #e2e8f0;">
+    <div style="font-size:10px;color:#94a3b8;margin-top:6px;text-align:center;">${esc(displayUrl)} at time of scan</div>
+  </div>` : ""}
 
   <!-- Copy reminder -->
   <div style="background:#0f172a;border-radius:16px;padding:24px;margin-bottom:16px;color:#ffffff;">
@@ -250,7 +259,7 @@ export function buildReportEmail(
       </div>
       <div>
         <div style="font-size:28px;font-weight:900;color:#0f172a;">${analysis.score}<span style="font-size:16px;font-weight:400;color:#94a3b8;">/${analysis.out_of}</span></div>
-        <div style="font-size:13px;color:#64748b;">conversion rules passed</div>
+        <div style="font-size:13px;color:#64748b;">rules passed</div>
       </div>
     </div>
     <p style="margin:0 0 16px;font-size:15px;color:#374151;font-weight:500;">${esc(analysis.headline)}</p>
@@ -384,8 +393,8 @@ export function buildReportEmail(
     <p style="margin:0 0 8px;font-size:18px;font-weight:800;color:#ffffff;">Want this built for you?</p>
     <p style="margin:0 0 12px;font-size:14px;color:#cbd5e1;line-height:1.6;">We've taken your rewritten copy and built it into a complete HTML page — styled, mobile-ready, and ready for your developer to drop straight in. No briefing required.</p>
     <p style="margin:0 0 20px;font-size:13px;color:#64748b;">The HTML tier includes branding matched to your current site — your colours, your fonts, your logo.</p>
-    <a href="${baseUrl}/upgrade?jobId=${jobId}" style="display:inline-block;background:#3B6CF4;color:#ffffff;font-weight:700;font-size:14px;padding:14px 24px;border-radius:10px;text-decoration:none;">Get the HTML page — £100 →</a>
-    <p style="margin:12px 0 0;font-size:12px;color:#475569;">One-time payment. Upgrade price for existing report customers — £149 for new customers.</p>
+    <a href="${baseUrl}/upgrade?jobId=${jobId}" style="display:inline-block;background:#3B6CF4;color:#ffffff;font-weight:700;font-size:14px;padding:14px 24px;border-radius:10px;text-decoration:none;">Add the homepage file — £50 →</a>
+    <p style="margin:12px 0 0;font-size:12px;color:#475569;">One-time payment. You've already paid for the report — this is the difference. New customers pay £99 for the full bundle.</p>
   </div>`
       : ""
   }

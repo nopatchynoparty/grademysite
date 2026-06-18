@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const freshScreenshot: string | null = (scrapeResult as any).screenshot ?? null;
 
-      // Always capture screenshot URL for the report
-      if (!screenshotUrl && freshScreenshot) screenshotUrl = freshScreenshot;
+      // Always replace with the freshest Firecrawl screenshot — old URLs expire
+      if (freshScreenshot) screenshotUrl = freshScreenshot;
 
       // og_image: prefer actual og:image meta, fall back to screenshot
       if (!resolvedOgImage) {
@@ -120,26 +120,44 @@ export async function POST(req: NextRequest) {
           new Promise<null>((resolve) => setTimeout(() => resolve(null), timeoutMs)),
         ]);
 
-      const endpoints = ["colors", "fonts", "logo", "styleguide"] as const;
-      const results = await Promise.allSettled(
-        endpoints.map((ep) =>
-          withTimeout(
-            fetch(`${contextBase}/brand/${ep}?url=${encodeURIComponent(job.url)}`, {
-              headers: { Authorization: `Bearer ${contextApiKey}` },
-            }).then((r) => (r.ok ? r.json() : null))
-          )
+      // /brand/retrieve   — company name, logo, colours (10 credits)
+      // /brand/styleguide — full design system: typography, fontLinks, components (10 credits)
+      // /web/scrape/images — page images for hero (1–5 credits)
+      const contextCalls = {
+        retrieve:   () => fetch(`${contextBase}/brand/retrieve?domain=${encodeURIComponent(new URL(job.url).hostname)}`, { headers: { Authorization: `Bearer ${contextApiKey}` } }),
+        styleguide: () => fetch(`${contextBase}/brand/styleguide?directUrl=${encodeURIComponent(job.url)}`, { headers: { Authorization: `Bearer ${contextApiKey}` } }),
+        images:     () => fetch(`${contextBase}/web/scrape/images?url=${encodeURIComponent(job.url)}`,      { headers: { Authorization: `Bearer ${contextApiKey}` } }),
+      } as const;
+
+      const contextResults = await Promise.allSettled(
+        (Object.entries(contextCalls) as [string, () => Promise<Response>][]).map(([, fn]) =>
+          withTimeout(fn().then((r) => (r.ok ? r.json() : r.json().then((body: unknown) => { console.log(`[analyse] context.dev error body:`, JSON.stringify(body)); return null; }))))
         )
       );
 
       brandData = {};
-      endpoints.forEach((ep, i) => {
-        const r = results[i];
+      (Object.keys(contextCalls) as (keyof typeof contextCalls)[]).forEach((key, i) => {
+        const r = contextResults[i];
         if (r.status === "fulfilled" && r.value) {
-          brandData![ep] = r.value;
+          brandData![key] = r.value;
+          if (key === "images") {
+            console.log(`[analyse] context.dev /images response:`, JSON.stringify(r.value, null, 2));
+          } else if (key === "styleguide") {
+            const sgColors = (r.value as Record<string, unknown>)?.styleguide as Record<string, unknown>;
+            console.log(`[analyse] context.dev /styleguide colors:`, JSON.stringify(sgColors?.colors));
+            console.log(`[analyse] context.dev /styleguide button:`, JSON.stringify((sgColors?.components as Record<string, unknown>)?.button));
+          } else if (key === "retrieve") {
+            const brand = (r.value as Record<string, unknown>)?.brand as Record<string, unknown>;
+            console.log(`[analyse] context.dev /retrieve brand.colors:`, JSON.stringify(brand?.colors));
+            console.log(`[analyse] context.dev /retrieve brand.logos:`, JSON.stringify(brand?.logos));
+          } else {
+            console.log(`[analyse] context.dev /${key} ok`);
+          }
         } else {
-          console.log(`[analyse] context.dev ${ep} failed or timed out — continuing without it`);
+          console.log(`[analyse] context.dev /${key} failed or timed out`);
         }
       });
+      console.log(`[analyse] brandData keys:`, Object.keys(brandData));
     }
 
     // Build user message — include Stage 1 context if available
@@ -189,7 +207,7 @@ export async function POST(req: NextRequest) {
     let htmlOutput: string | null = null;
     if (job.tier === "html") {
       try {
-        htmlOutput = generateHtmlTemplate(job.url, analysis, brandData ?? undefined);
+        htmlOutput = generateHtmlTemplate(job.url, analysis, brandData ?? undefined, analysis.company_name ?? undefined);
       } catch (htmlErr) {
         console.error("[analyse] HTML generation failed:", htmlErr);
       }

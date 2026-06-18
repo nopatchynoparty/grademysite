@@ -11,12 +11,12 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Grade My Site — Free website check for local businesses",
   description:
-    "Find out why your website isn't getting calls. Free 30-second audit checks 22 conversion rules — no account needed.",
+    "Find out why your website isn't getting calls. Free 30-second audit checks 22 rules — no account needed.",
   metadataBase: new URL("https://grademy.site"),
   openGraph: {
     title: "Grade My Site — Free website check for local businesses",
     description:
-      "Find out why your website isn't getting calls. Free 30-second audit checks 22 conversion rules — no account needed.",
+      "Find out why your website isn't getting calls. Free 30-second audit checks 22 rules — no account needed.",
     url: "https://grademy.site",
     siteName: "GradeMysite",
     locale: "en_GB",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Grade My Site — Free website check for local businesses",
     description:
-      "Find out why your website isn't getting calls. Free 30-second audit checks 22 conversion rules — no account needed.",
+      "Find out why your website isn't getting calls. Free 30-second audit checks 22 rules — no account needed.",
     images: ["/og.png"],
   },
 };

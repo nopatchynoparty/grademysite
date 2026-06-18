@@ -236,7 +236,7 @@ export default function RulesPage() {
         <section className="bg-surface px-5 pt-10 pb-12 border-b border-border">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-light border border-blue-light mb-5">
-              <span className="eyebrow">22 conversion rules</span>
+              <span className="eyebrow">22 rules</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-ink tracking-tight leading-[1.08] mb-4">
               What we check — and why it matters

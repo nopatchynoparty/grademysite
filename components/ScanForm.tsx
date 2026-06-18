@@ -349,7 +349,7 @@ export default function ScanForm() {
                 disabled={checkoutLoading !== null}
                 className="flex-1 py-3 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {checkoutLoading === "html" ? "Redirecting…" : "Report + HTML — £149"}
+                {checkoutLoading === "html" ? "Redirecting…" : "Report + Homepage — £99"}
               </button>
             </div>
             <p className="text-xs text-slate-400 text-center mt-2">

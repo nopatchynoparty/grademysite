@@ -79,7 +79,7 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
       >
         {loading
           ? "Redirecting to payment…"
-          : `Pay ${tier === "html" ? "£149" : "£49"} →`}
+          : `Pay ${tier === "html" ? "£99" : "£49"} →`}
       </button>
 
       <p className="text-xs text-muted text-center">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ScanForm from "@/components/ScanForm";
 
-/* ─── Static example data (fictional free scan — Acorn Plumbing) ───── */
+/* ─── Static example data (example free scan — Acorn Plumbing) ───── */
 const EXAMPLE = {
   url: "acornplumbing.co.uk",
   grade: "D",
@@ -14,11 +14,13 @@ const EXAMPLE = {
       rule: 3,
       name: "You use real numbers, not vague claims",
       finding: "Page states '18 years in business' and 'over 400 jobs completed in Bristol'.",
+      rationale: "Numbers beat adjectives. '400+ jobs' is something a visitor can weigh. 'Experienced team' isn't.",
     },
     {
       rule: 4,
       name: "There's one clear thing for visitors to do",
       finding: "A single 'Request a Quote' button sits at the top of the page with no competing buttons.",
+      rationale: "When there's one button, visitors know exactly what to do. When there are five, they leave.",
     },
   ],
   fails: [
@@ -27,17 +29,20 @@ const EXAMPLE = {
       name: "Google can tell what your page is about",
       finding:
         "The main heading reads 'Welcome to Acorn Plumbing' — tells Google nothing about what the business does or where it works.",
+      rationale: "Google reads your H1 to decide what searches to show you for. A generic welcome heading means invisible rankings.",
     },
     {
       rule: 7,
       name: "At least one real customer quote on your homepage",
       finding: "No customer quotes appear on the page — only a '5 stars' badge with no supporting text.",
+      rationale: "A specific quote from a named person is worth more than any badge or star rating.",
     },
     {
       rule: 13,
       name: "Your phone number is visible the moment the page loads",
       finding:
         "No phone number in the header. The only contact option is a form on a separate 'Contact' page.",
+      rationale: "Most visitors are on a phone. If they can't tap to call from the top of the page, they'll call the next plumber.",
     },
   ],
   biggestWin:
@@ -180,7 +185,7 @@ export default function Home() {
                 {
                   step: "02",
                   heading: "We scan your site",
-                  body: "We fetch your homepage and check it against 5 key conversion rules in about 30 seconds.",
+                  body: "We fetch your homepage and check it against 5 key checks in about 30 seconds.",
                 },
                 {
                   step: "03",
@@ -219,7 +224,7 @@ export default function Home() {
             <div className="flex items-center justify-center mb-8">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface text-muted text-xs font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-muted" />
-                Example — fictional scan output
+                Example — example scan output
               </span>
             </div>
 
@@ -252,6 +257,7 @@ export default function Home() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-ink">Rule {r.rule} — {r.name}</p>
                     <p className="text-xs text-muted mt-0.5">{r.finding}</p>
+                    {r.rationale && <p className="text-xs text-muted mt-0.5 italic opacity-75">{r.rationale}</p>}
                   </div>
                 </div>
               ))}
@@ -261,6 +267,7 @@ export default function Home() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-ink">Rule {r.rule} — {r.name}</p>
                     <p className="text-xs text-muted mt-0.5">{r.finding}</p>
+                    {r.rationale && <p className="text-xs text-muted mt-0.5 italic opacity-75">{r.rationale}</p>}
                   </div>
                 </div>
               ))}
@@ -331,7 +338,7 @@ export default function Home() {
                       <p className="text-2xl font-black text-ink">
                         7<span className="text-sm font-normal text-muted">/22</span>
                       </p>
-                      <p className="text-xs text-muted">conversion rules passed</p>
+                      <p className="text-xs text-muted">rules passed</p>
                     </div>
                   </div>
                   <p className="text-sm font-medium text-ink">
@@ -376,27 +383,29 @@ export default function Home() {
                     <div className="p-3">
                       <p className="text-xs font-semibold text-green mb-2">What&apos;s working ✓</p>
                       {[
-                        { label: "Real numbers on the page", finding: "'18 years in business and 400+ jobs completed in Bristol' — specific and credible." },
-                        { label: "One clear button to click", finding: "'Request a Quote' is the only button in the header — no competing options." },
-                        { label: "Where you work is clear", finding: "Bristol is mentioned four times on the page, plus Clifton, Redland, and Westbury." },
+                        { rule: 3, label: "You use real numbers, not vague claims", finding: "'18 years in business and 400+ jobs completed in Bristol' — specific and credible.", rationale: "Numbers beat adjectives. '400+ jobs' is something a visitor can weigh. 'Experienced team' isn't." },
+                        { rule: 4, label: "There's one clear thing for visitors to do", finding: "'Request a Quote' is the only button in the header — no competing options.", rationale: "When there's one button, visitors know exactly what to do. When there are five, they leave." },
+                        { rule: 9, label: "You clearly state where you work", finding: "Bristol is mentioned four times on the page, plus Clifton, Redland, and Westbury.", rationale: "Local searchers need to know you cover their area before they'll read anything else." },
                       ].map((row, i) => (
-                        <div key={i} className="mb-2 last:mb-0">
-                          <p className="text-xs font-semibold text-ink leading-snug">{row.label}</p>
+                        <div key={i} className="mb-3 last:mb-0">
+                          <p className="text-xs font-semibold text-ink leading-snug">Rule {row.rule} — {row.label}</p>
                           <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
+                          <p className="text-xs text-muted mt-0.5 leading-snug italic opacity-75">{row.rationale}</p>
                         </div>
                       ))}
                     </div>
                     <div className="p-3">
                       <p className="text-xs font-semibold text-red mb-2">What needs fixing ✗</p>
                       {[
-                        { label: "Google can't tell what you do", finding: "Main heading reads 'Welcome to Acorn Plumbing' — no service or location." },
-                        { label: "No phone number visible", finding: "No number in the header. Contact is a form on a separate page." },
-                        { label: "No customer quotes", finding: "No testimonials anywhere. A 5-star badge with no words is meaningless." },
-                        { label: "No prices mentioned", finding: "Nothing to indicate what a call-out costs. Many visitors will just move on." },
+                        { rule: 1, label: "Google can tell what your page is about", finding: "Main heading reads 'Welcome to Acorn Plumbing' — no service or location mentioned.", rationale: "Google reads your H1 to decide what searches to show you for. A generic welcome heading means poor rankings." },
+                        { rule: 13, label: "Your phone number is visible the moment the page loads", finding: "No number in the header. Contact is a form on a separate page.", rationale: "Most visitors are on a phone. If they can't tap to call from the top of the page, they'll call the next plumber." },
+                        { rule: 7, label: "At least one real customer quote on your homepage", finding: "No testimonials anywhere. A 5-star badge with no words is meaningless.", rationale: "A specific quote from a named person is worth more than any badge or star rating." },
+                        { rule: 12, label: "You give at least a rough idea of your prices", finding: "Nothing to indicate what a call-out costs. Many visitors will assume the worst and move on.", rationale: "Visitors who can't see a rough price don't know if they can afford you — many just leave." },
                       ].map((row, i) => (
-                        <div key={i} className="mb-2 last:mb-0">
-                          <p className="text-xs font-semibold text-ink leading-snug">{row.label}</p>
+                        <div key={i} className="mb-3 last:mb-0">
+                          <p className="text-xs font-semibold text-ink leading-snug">Rule {row.rule} — {row.label}</p>
                           <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
+                          <p className="text-xs text-muted mt-0.5 leading-snug italic opacity-75">{row.rationale}</p>
                         </div>
                       ))}
                     </div>
@@ -484,49 +493,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── Testimonials ─────────────────────────────────────────────── */}
-        {/*
-          IMPORTANT: Replace these placeholder quotes with real customer words.
-          Ask each customer: "What was the most useful thing the report told you?"
-          or "What changed after you got your GradeMysite report?"
-          Use their exact words — even short is fine.
-        */}
-        <section className="py-16 sm:py-20 px-5 bg-white border-t border-border">
-          <div className="max-w-4xl mx-auto">
-            <p className="eyebrow text-center mb-3">What business owners say</p>
-            <h2 className="text-2xl sm:text-3xl font-black text-center text-ink mb-10">
-              Real feedback from real businesses
-            </h2>
-            <div className="grid sm:grid-cols-3 gap-5">
-              {[
-                {
-                  quote: "REPLACE: Add a real customer quote here. Ask them what changed after reading the report.",
-                  name: "REPLACE: First Name Last Name",
-                  business: "REPLACE: Business type, Town",
-                },
-                {
-                  quote: "REPLACE: Add a real customer quote here. Short and specific is better than long and vague.",
-                  name: "REPLACE: First Name Last Name",
-                  business: "REPLACE: Business type, Town",
-                },
-                {
-                  quote: "REPLACE: Add a real customer quote here. Reference a specific finding or outcome if possible.",
-                  name: "REPLACE: First Name Last Name",
-                  business: "REPLACE: Business type, Town",
-                },
-              ].map((t, i) => (
-                <div key={i} className="rounded-2xl border border-border bg-surface p-6">
-                  <p className="text-sm text-ink leading-relaxed mb-4">&ldquo;{t.quote}&rdquo;</p>
-                  <div>
-                    <p className="text-sm font-bold text-ink">{t.name}</p>
-                    <p className="text-xs text-muted mt-0.5">{t.business}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ── Pricing ──────────────────────────────────────────────────── */}
         <section id="pricing" className="py-16 sm:py-20 px-5 bg-surface border-t border-border">
           <div className="max-w-4xl mx-auto">
@@ -553,7 +519,7 @@ export default function Home() {
                 </div>
                 <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
-                    "5 of the 22 conversion rules",
+                    "5 of the 22 rules",
                     "Pass/fail with specific findings",
                     "Your single biggest quick win",
                     "Results in ~30 seconds",
@@ -603,23 +569,18 @@ export default function Home() {
                   href="#top"
                   className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm text-center transition-colors"
                 >
-                  Get My Free Score — Upgrade for £49
+                  Get My Free Score — £49
                 </a>
               </div>
 
               {/* HTML Package */}
-              <div className="rounded-2xl border border-border bg-slate-900 p-6 flex flex-col text-[white] relative overflow-hidden dm-card">
-                <div className="absolute top-4 right-4">
-                  <span className="bg-blue/20 text-blue text-xs font-semibold px-2 py-0.5 rounded-full">
-                    NEW
-                  </span>
+              <div className="rounded-2xl border border-border bg-slate-900 p-6 flex flex-col text-[white] dm-card">
+                <div className="mb-4">
+                  <p className="font-bold text-base mb-0.5">Report + Homepage</p>
+                  <p className="text-slate-400 text-xs">Everything in the full report, plus a branded homepage file ready to hand to your developer — styled in your colours, your fonts, your logo. One payment, no briefing required.</p>
                 </div>
                 <div className="mb-4">
-                  <p className="font-bold text-base mb-0.5">Report + HTML</p>
-                  <p className="text-slate-400 text-xs">A ready-to-build homepage for your developer</p>
-                </div>
-                <div className="mb-4">
-                  <span className="text-4xl font-black">£149</span>
+                  <span className="text-4xl font-black">£99</span>
                   <span className="text-slate-400 text-sm ml-1">one-time</span>
                 </div>
                 <ul className="space-y-2 text-sm text-slate-300 flex-1 mb-5">
@@ -639,7 +600,7 @@ export default function Home() {
                   href="#top"
                   className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm text-center transition-colors"
                 >
-                  Get My Free Score — Upgrade for £149
+                  Get My Free Score — Upgrade for £99
                 </a>
               </div>
             </div>
