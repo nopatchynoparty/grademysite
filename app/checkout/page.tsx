@@ -10,10 +10,10 @@ export default async function CheckoutPage({
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-slate-100">
+      <header className="border-b border-border">
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center">
-          <a href="/" className="text-lg font-black text-slate-900 tracking-tight">
-            Grade<span className="text-orange-500">My</span>Site
+          <a href="/" className="text-lg font-black text-ink tracking-tight">
+            Grade<span className="text-blue">My</span>Site
           </a>
         </div>
       </header>
@@ -21,13 +21,13 @@ export default async function CheckoutPage({
       <main className="flex-1 flex items-center justify-center px-5 py-16">
         <div className="max-w-md w-full">
           <div className="mb-8">
-            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wider mb-2">
+            <p className="eyebrow mb-2">
               {validTier === "html" ? "Report + HTML Page" : "Full Report"}
             </p>
-            <h1 className="text-3xl font-black text-slate-900 mb-2">
+            <h1 className="text-3xl font-black text-ink mb-2">
               {validTier === "html" ? "£149 one-time" : "£49 one-time"}
             </h1>
-            <p className="text-slate-500">
+            <p className="text-muted">
               {validTier === "html"
                 ? "Full 20-rule analysis, rewritten copy, and a ready-to-build HTML homepage."
                 : "Full 20-rule analysis with rewritten headlines, CTAs, and copy for your business."}

@@ -36,7 +36,7 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-sm font-medium text-ink mb-1.5">
           Your website URL
         </label>
         <input
@@ -45,12 +45,12 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
           placeholder="https://yourwebsite.co.uk"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+          className="w-full px-4 py-3 rounded-xl border border-border text-ink placeholder:text-muted text-base focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent dm-input"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-sm font-medium text-ink mb-1.5">
           Your email address
         </label>
         <input
@@ -59,15 +59,15 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
           placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+          className="w-full px-4 py-3 rounded-xl border border-border text-ink placeholder:text-muted text-base focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent dm-input"
         />
-        <p className="text-xs text-slate-400 mt-1.5">
+        <p className="text-xs text-muted mt-1.5">
           Your report will be delivered here within 24 hours.
         </p>
       </div>
 
       {error && (
-        <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-700 text-sm">
+        <div className="px-4 py-3 rounded-xl bg-red-light border border-red-light text-red text-sm">
           {error}
         </div>
       )}
@@ -75,14 +75,14 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold text-base transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-base transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading
           ? "Redirecting to payment…"
           : `Pay ${tier === "html" ? "£149" : "£49"} →`}
       </button>
 
-      <p className="text-xs text-slate-400 text-center">
+      <p className="text-xs text-muted text-center">
         Secure payment via Stripe. One-time charge, no subscription.
       </p>
     </form>

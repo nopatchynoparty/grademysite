@@ -50,25 +50,27 @@ export default function Home() {
     <div id="top" className="flex flex-col min-h-screen bg-white">
 
       {/* ── Header ───────────────────────────────────────────────────── */}
-      <header className="border-b border-slate-100 sticky top-0 bg-white/95 backdrop-blur-sm z-50">
+      <header className="border-b border-border sticky top-0 bg-white/95 backdrop-blur-sm z-50 dm-nav">
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-          <a href="/" className="flex items-center">
+          <a href="/" className="flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="" className="h-7 w-7" aria-hidden="true" />
             <span className="text-lg font-black tracking-tight">
-              <span className="text-slate-900">Grade</span>
-              <span className="text-orange-500">My</span>
-              <span className="text-slate-900">Site</span>
+              <span className="text-ink">Grade</span>
+              <span className="text-blue">My</span>
+              <span className="text-ink">Site</span>
             </span>
           </a>
           <nav className="flex items-center gap-5">
-            <a href="#how-it-works" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors hidden sm:block">
+            <a href="#how-it-works" className="text-sm font-medium text-muted hover:text-ink transition-colors hidden sm:block">
               How it works
             </a>
-            <a href="#pricing" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors hidden sm:block">
+            <a href="#pricing" className="text-sm font-medium text-muted hover:text-ink transition-colors hidden sm:block">
               Pricing
             </a>
             <a
               href="mailto:hello@grademy.site"
-              className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors"
+              className="text-sm font-semibold text-blue hover:text-blue-dark transition-colors"
             >
               hello@grademy.site
             </a>
@@ -79,19 +81,20 @@ export default function Home() {
       <main className="flex-1">
 
         {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="max-w-3xl mx-auto px-5 pt-10 pb-14 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50 border border-orange-100 text-orange-600 text-xs font-semibold mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-            Free scan — results in 30 seconds
+        <section className="bg-surface px-5 pt-10 pb-14">
+          <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-light border border-blue-light mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" />
+            <span className="eyebrow">Free scan — results in 30 seconds</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.08] mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-ink tracking-tight leading-[1.08] mb-4">
             Find out why your website
             <br />
-            <span className="text-orange-500">isn&apos;t getting calls</span>
+            <span className="text-blue">isn&apos;t getting calls</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-500 max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="text-base sm:text-lg text-muted max-w-lg mx-auto mb-8 leading-relaxed">
             Paste your URL below. We check your homepage against 20 conversion
             principles and show you the 5 most critical in 30 seconds — free,
             with no account needed.
@@ -101,7 +104,7 @@ export default function Home() {
             <ScanForm />
           </div>
 
-          <div className="flex items-center justify-center gap-6 sm:gap-10 mt-10 pt-8 border-t border-slate-100">
+          <div className="flex items-center justify-center gap-6 sm:gap-10 mt-10 pt-8 border-t border-border">
             {[
               { stat: "20", label: "conversion rules" },
               { stat: "~30s", label: "free scan" },
@@ -109,17 +112,18 @@ export default function Home() {
               { stat: "Human", label: "reviewed" },
             ].map(({ stat, label }) => (
               <div key={label} className="text-center">
-                <p className="text-xl font-black text-slate-900">{stat}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{label}</p>
+                <p className="text-xl font-black text-ink">{stat}</p>
+                <p className="text-xs text-muted mt-0.5">{label}</p>
               </div>
             ))}
+          </div>
           </div>
         </section>
 
         {/* ── Problem ──────────────────────────────────────────────────── */}
-        <section className="bg-slate-900 text-white py-16 sm:py-20 px-5">
+        <section className="bg-slate-900 text-[white] py-16 sm:py-20 px-5 dm-section-base">
           <div className="max-w-4xl mx-auto">
-            <p className="text-orange-400 font-semibold text-sm uppercase tracking-wider text-center mb-3">
+            <p className="eyebrow text-center mb-3">
               Sound familiar?
             </p>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-center mb-10 leading-tight">
@@ -145,10 +149,10 @@ export default function Home() {
                   body: "Customers who found you and your competitors chose them. The difference is almost never the service — it's the website.",
                 },
               ].map((item) => (
-                <div key={item.heading} className="rounded-2xl bg-white/5 border border-white/10 p-5">
+                <div key={item.heading} className="rounded-2xl bg-white/5 border border-white/10 p-5 dm-card-raised">
                   <span className="text-2xl mb-3 block">{item.icon}</span>
-                  <h3 className="font-bold text-white mb-1.5 text-sm">{item.heading}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{item.body}</p>
+                  <h3 className="font-bold text-[white] mb-1.5 text-sm">{item.heading}</h3>
+                  <p className="text-[rgba(255,255,255,0.65)] text-sm leading-relaxed">{item.body}</p>
                 </div>
               ))}
             </div>
@@ -156,12 +160,12 @@ export default function Home() {
         </section>
 
         {/* ── How it works ─────────────────────────────────────────────── */}
-        <section id="how-it-works" className="py-16 sm:py-20 px-5 bg-slate-50">
+        <section id="how-it-works" className="py-16 sm:py-20 px-5 bg-surface">
           <div className="max-w-4xl mx-auto">
-            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wider text-center mb-3">
+            <p className="eyebrow text-center mb-3">
               How it works
             </p>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-center text-slate-900 mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-center text-ink mb-12">
               A free score in 30 seconds.<br className="hidden sm:block" /> A full report in 24 hours.
             </h2>
             <div className="grid sm:grid-cols-4 gap-6">
@@ -188,11 +192,9 @@ export default function Home() {
                 },
               ].map((item) => (
                 <div key={item.step} className="text-center">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-black text-sm mb-3">
-                    {item.step}
-                  </div>
-                  <h3 className="font-bold text-slate-900 mb-1.5 text-sm">{item.heading}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{item.body}</p>
+                  <p className="text-blue font-bold text-sm mb-3">{item.step}</p>
+                  <h3 className="font-bold text-ink mb-1.5 text-sm">{item.heading}</h3>
+                  <p className="text-muted text-sm leading-relaxed">{item.body}</p>
                 </div>
               ))}
             </div>
@@ -200,69 +202,69 @@ export default function Home() {
         </section>
 
         {/* ── Example free scan demo ───────────────────────────────────── */}
-        <section className="py-16 sm:py-20 px-5 bg-white border-t border-slate-100">
+        <section className="py-16 sm:py-20 px-5 bg-white border-t border-border">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center justify-center mb-8">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface text-muted text-xs font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-muted" />
                 Example — real scan output
               </span>
             </div>
 
             {/* Score header */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6 mb-3">
+            <div className="rounded-2xl border border-border bg-white shadow-sm p-6 mb-3 dm-card">
               <div className="flex items-center gap-4 mb-3">
-                <div className="bg-red-500 text-white rounded-2xl w-16 h-16 flex items-center justify-center text-3xl font-black shadow-sm flex-shrink-0">
+                <div className="bg-red text-white rounded-[8px] w-16 h-16 flex items-center justify-center text-3xl font-extrabold shadow-sm flex-shrink-0 tracking-[-0.04em]">
                   {EXAMPLE.grade}
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-slate-900">
+                  <p className="text-2xl font-black text-ink">
                     {EXAMPLE.score}
-                    <span className="text-base font-normal text-slate-400">/{EXAMPLE.outOf}</span>
+                    <span className="text-base font-normal text-muted">/{EXAMPLE.outOf}</span>
                   </p>
-                  <p className="text-sm text-slate-500">quick scan rules passed</p>
+                  <p className="text-sm text-muted">quick scan rules passed</p>
                 </div>
               </div>
-              <p className="text-slate-700 font-medium text-sm">{EXAMPLE.headline}</p>
-              <p className="text-xs text-slate-400 mt-1">{EXAMPLE.url}</p>
+              <p className="text-ink font-medium text-sm">{EXAMPLE.headline}</p>
+              <p className="text-xs text-muted mt-1">{EXAMPLE.url}</p>
             </div>
 
             {/* Rule breakdown */}
-            <div className="rounded-2xl border border-slate-100 bg-white shadow-sm p-5 mb-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+            <div className="rounded-2xl border border-border bg-white shadow-sm p-5 mb-3 dm-card">
+              <h3 className="eyebrow mb-3">
                 5-Rule Quick Scan
               </h3>
               {EXAMPLE.passes.map((r) => (
-                <div key={r.rule} className="flex items-start gap-3 py-2.5 border-b border-slate-100">
-                  <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">✓</span>
+                <div key={r.rule} className="flex items-start gap-3 py-2.5 border-b border-border">
+                  <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-green/20 text-green flex items-center justify-center text-xs font-bold">✓</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-700">Rule {r.rule} — {r.name}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
+                    <p className="text-sm font-semibold text-ink">Rule {r.rule} — {r.name}</p>
+                    <p className="text-xs text-muted mt-0.5">{r.finding}</p>
                   </div>
                 </div>
               ))}
               {EXAMPLE.fails.map((r, i) => (
-                <div key={r.rule} className={`flex items-start gap-3 py-2.5 ${i < EXAMPLE.fails.length - 1 ? "border-b border-slate-100" : ""}`}>
-                  <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold">✗</span>
+                <div key={r.rule} className={`flex items-start gap-3 py-2.5 ${i < EXAMPLE.fails.length - 1 ? "border-b border-border" : ""}`}>
+                  <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-red-light text-red flex items-center justify-center text-xs font-bold">✗</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-700">Rule {r.rule} — {r.name}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
+                    <p className="text-sm font-semibold text-ink">Rule {r.rule} — {r.name}</p>
+                    <p className="text-xs text-muted mt-0.5">{r.finding}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Biggest win */}
-            <div className="rounded-2xl bg-orange-50 border border-orange-100 p-5 mb-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-orange-500 mb-1">
+            <div className="rounded-2xl bg-blue-light border border-blue-light p-5 mb-4">
+              <p className="eyebrow mb-1">
                 Biggest Quick Win
               </p>
-              <p className="text-sm text-slate-800">{EXAMPLE.biggestWin}</p>
+              <p className="text-sm text-ink">{EXAMPLE.biggestWin}</p>
             </div>
 
             {/* Upgrade nudge */}
-            <div className="rounded-2xl border-2 border-slate-900 bg-slate-900 text-white p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <div className="rounded-2xl border-2 border-slate-900 bg-slate-900 text-[white] p-5 dm-section-surface">
+              <p className="eyebrow mb-1">
                 This was 5 of 20 rules — and the lighter half.
               </p>
               <p className="text-base font-bold mb-1">The full report checks all 20 and rewrites the copy for you.</p>
@@ -272,28 +274,28 @@ export default function Home() {
         </section>
 
         {/* ── What you get (email report mockup) ───────────────────────── */}
-        <section className="py-16 sm:py-20 px-5 bg-slate-50 border-t border-slate-100">
+        <section className="py-16 sm:py-20 px-5 bg-surface border-t border-border">
           <div className="max-w-2xl mx-auto">
-            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wider text-center mb-3">
+            <p className="eyebrow text-center mb-3">
               What you get
             </p>
-            <h2 className="text-2xl sm:text-3xl font-black text-center text-slate-900 mb-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-center text-ink mb-2">
               The full report, in your inbox
             </h2>
-            <p className="text-slate-500 text-center text-sm mb-8">
+            <p className="text-muted text-center text-sm mb-8">
               Real output from a real scan. Delivered within 24 hours.
             </p>
 
             {/* Email frame */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden">
+            <div className="rounded-2xl border border-border bg-white shadow-xl overflow-hidden dm-card">
               {/* Mail chrome */}
-              <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2">
+              <div className="bg-surface border-b border-border px-4 py-2.5 flex items-center gap-2">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-400" />
                   <div className="w-3 h-3 rounded-full bg-amber-400" />
                   <div className="w-3 h-3 rounded-full bg-emerald-400" />
                 </div>
-                <div className="flex-1 ml-3 bg-white border border-slate-200 rounded px-3 py-1 text-xs text-slate-400 truncate">
+                <div className="flex-1 ml-3 bg-white border border-border rounded px-3 py-1 text-xs text-muted truncate">
                   Your GradeMysite Report — 3/20 rules passed · tidalbespoke.com
                 </div>
               </div>
@@ -301,41 +303,41 @@ export default function Home() {
               {/* Email body */}
               <div className="p-6">
                 <p className="text-base font-black tracking-tight mb-5">
-                  <span className="text-slate-900">Grade</span>
-                  <span className="text-orange-500">My</span>
-                  <span className="text-slate-900">Site</span>
+                  <span className="text-ink">Grade</span>
+                  <span className="text-blue">My</span>
+                  <span className="text-ink">Site</span>
                 </p>
 
                 {/* Score card */}
-                <div className="border border-slate-200 rounded-2xl p-5 mb-3">
+                <div className="border border-border rounded-2xl p-5 mb-3">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-14 h-14 rounded-xl bg-red-500 flex items-center justify-center text-2xl font-black text-white flex-shrink-0">
+                    <div className="w-14 h-14 rounded-[8px] bg-red flex items-center justify-center text-2xl font-extrabold text-white flex-shrink-0 tracking-[-0.04em]">
                       F
                     </div>
                     <div>
-                      <p className="text-2xl font-black text-slate-900">
-                        3<span className="text-sm font-normal text-slate-400">/20</span>
+                      <p className="text-2xl font-black text-ink">
+                        3<span className="text-sm font-normal text-muted">/20</span>
                       </p>
-                      <p className="text-xs text-slate-500">conversion rules passed</p>
+                      <p className="text-xs text-muted">conversion rules passed</p>
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-slate-700">
+                  <p className="text-sm font-medium text-ink">
                     A beautiful but skeletal homepage that hides its phone number, prices, location, and proof — leaving visitors no clear reason or way to act.
                   </p>
                 </div>
 
                 {/* Biggest win */}
-                <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-orange-500 mb-1">Biggest Quick Win</p>
-                  <p className="text-sm text-slate-800">
+                <div className="bg-blue-light border border-blue-light rounded-xl p-4 mb-3">
+                  <p className="eyebrow mb-1">Biggest Quick Win</p>
+                  <p className="text-sm text-ink">
                     Replace &apos;We specialise in creating beautifully handcrafted homes&apos; with an outcome headline — e.g. &apos;Your Dream Bathroom, Built to Spec and Installed in 6 Weeks&apos;. This single change addresses Rule 1, the most critical failing on the page.
                   </p>
                 </div>
 
                 {/* Scorecard rows */}
-                <div className="border border-slate-200 rounded-xl overflow-hidden mb-3">
-                  <div className="px-4 py-2 border-b border-slate-100 bg-slate-50">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">20-Rule Scorecard (sample)</span>
+                <div className="border border-border rounded-xl overflow-hidden mb-3">
+                  <div className="px-4 py-2 border-b border-border bg-surface">
+                    <span className="eyebrow">20-Rule Scorecard (sample)</span>
                   </div>
                   {[
                     { pass: true,  label: "Rule 2 — At least one specific number",       finding: "'Over 10 years of experience' gives a measurable claim." },
@@ -345,13 +347,13 @@ export default function Home() {
                     { pass: false, label: "Rule 12 — Contact immediately accessible",     finding: "No phone number in the header. Contact requires navigating to a separate page." },
                     { pass: false, label: "Rule 20 — Next step after contact is clear",   finding: "Nothing on the page explains what happens after you submit the contact form." },
                   ].map((row, i, arr) => (
-                    <div key={i} className={`flex items-start gap-3 px-4 py-3 ${i < arr.length - 1 ? "border-b border-slate-100" : ""}`}>
-                      <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold ${row.pass ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
+                    <div key={i} className={`flex items-start gap-3 px-4 py-3 ${i < arr.length - 1 ? "border-b border-border" : ""}`}>
+                      <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold ${row.pass ? "bg-green/20 text-green" : "bg-red-light text-red"}`}>
                         {row.pass ? "✓" : "✗"}
                       </span>
                       <div>
-                        <p className="text-xs font-semibold text-slate-700">{row.label}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{row.finding}</p>
+                        <p className="text-xs font-semibold text-ink">{row.label}</p>
+                        <p className="text-xs text-muted mt-0.5">{row.finding}</p>
                       </div>
                     </div>
                   ))}
@@ -363,19 +365,19 @@ export default function Home() {
                     Rewritten Copy — Ready to Use
                   </p>
                   <div className="mb-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">New Headline</p>
-                    <p className="text-lg font-black text-white leading-tight">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">New Headline</p>
+                    <p className="text-lg font-black text-[white] leading-tight">
                       Your Dream Bathroom, Built to Spec and Installed on Time
                     </p>
                   </div>
                   <div className="mb-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">Subheadline</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Subheadline</p>
                     <p className="text-sm text-slate-300">
                       Bespoke bathroom installations across Surrey and the South East — over 10 years and 200+ projects completed.
                     </p>
                   </div>
                   <div className="mb-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-2">Problem Section</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Problem Section</p>
                     <ul className="space-y-1.5">
                       {[
                         "You've been quoted wildly different prices and don't know who to trust",
@@ -383,14 +385,14 @@ export default function Home() {
                         "You want something beautiful, but the whole process feels uncertain",
                       ].map((pt) => (
                         <li key={pt} className="flex gap-2 text-sm text-slate-300">
-                          <span className="text-orange-400 flex-shrink-0">•</span>{pt}
+                          <span className="text-blue flex-shrink-0">•</span>{pt}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-2">Primary CTA</p>
-                    <span className="inline-block bg-orange-500 text-white text-sm font-bold px-4 py-2 rounded-lg">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Primary CTA</p>
+                    <span className="inline-block bg-blue text-white text-sm font-bold px-4 py-2 rounded-lg">
                       Get a Free Design Consultation
                     </span>
                   </div>
@@ -398,19 +400,19 @@ export default function Home() {
               </div>
             </div>
 
-            <p className="text-center text-xs text-slate-400 mt-4">
+            <p className="text-center text-xs text-muted mt-4">
               Real output from a real scan of tidalbespoke.com — delivered within 24 hours of payment.
             </p>
           </div>
         </section>
 
         {/* ── Why us ───────────────────────────────────────────────────── */}
-        <section className="py-16 sm:py-20 px-5 bg-white border-t border-slate-100">
+        <section className="py-16 sm:py-20 px-5 bg-white border-t border-border">
           <div className="max-w-4xl mx-auto">
-            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wider text-center mb-3">
+            <p className="eyebrow text-center mb-3">
               Why GradeMysite
             </p>
-            <h2 className="text-2xl sm:text-3xl font-black text-center text-slate-900 mb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-center text-ink mb-10">
               Not an automated tool. Every report is human-reviewed.
             </h2>
             <div className="grid sm:grid-cols-3 gap-5 mb-10">
@@ -428,21 +430,21 @@ export default function Home() {
                   body: "The full report includes a rewritten headline, subheadline, CTA, and problem section — based on your business, ready to hand to a developer.",
                 },
               ].map((item) => (
-                <div key={item.heading} className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                  <h3 className="font-bold text-slate-900 mb-2 text-sm">{item.heading}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{item.body}</p>
+                <div key={item.heading} className="rounded-2xl border border-border bg-surface p-5">
+                  <h3 className="font-bold text-ink mb-2 text-sm">{item.heading}</h3>
+                  <p className="text-muted text-sm leading-relaxed">{item.body}</p>
                 </div>
               ))}
             </div>
 
             {/* Guarantee */}
-            <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="rounded-2xl border border-blue-light bg-blue-light p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="text-3xl flex-shrink-0">🛡️</div>
               <div>
-                <p className="font-bold text-slate-900 text-sm mb-1">7-day money-back guarantee</p>
-                <p className="text-slate-600 text-sm">
+                <p className="font-bold text-ink text-sm mb-1">7-day money-back guarantee</p>
+                <p className="text-ink text-sm">
                   If your full report doesn&apos;t identify at least 3 specific, actionable changes to your website copy, email{" "}
-                  <a href="mailto:hello@grademy.site" className="text-orange-600 font-medium hover:underline">
+                  <a href="mailto:hello@grademy.site" className="text-blue font-medium hover:underline">
                     hello@grademy.site
                   </a>{" "}
                   within 7 days and we&apos;ll refund you in full. No questions asked.
@@ -453,30 +455,30 @@ export default function Home() {
         </section>
 
         {/* ── Pricing ──────────────────────────────────────────────────── */}
-        <section id="pricing" className="py-16 sm:py-20 px-5 bg-slate-50 border-t border-slate-100">
+        <section id="pricing" className="py-16 sm:py-20 px-5 bg-surface border-t border-border">
           <div className="max-w-4xl mx-auto">
-            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wider text-center mb-3">
+            <p className="eyebrow text-center mb-3">
               Pricing
             </p>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-center text-slate-900 mb-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-center text-ink mb-3">
               One-time. No subscription.
             </h2>
-            <p className="text-slate-500 text-center mb-10 max-w-md mx-auto text-sm">
+            <p className="text-muted text-center mb-10 max-w-md mx-auto text-sm">
               Start with the free scan. Upgrade to the full report when you&apos;re ready.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
 
               {/* Free */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col">
+              <div className="rounded-2xl border border-border bg-white p-6 flex flex-col dm-card">
                 <div className="mb-4">
-                  <p className="font-bold text-slate-900 text-base mb-0.5">Quick Scan</p>
-                  <p className="text-slate-500 text-xs">See where you stand</p>
+                  <p className="font-bold text-ink text-base mb-0.5">Quick Scan</p>
+                  <p className="text-muted text-xs">See where you stand</p>
                 </div>
                 <div className="mb-4">
-                  <span className="text-4xl font-black text-slate-900">Free</span>
+                  <span className="text-4xl font-black text-ink">Free</span>
                 </div>
-                <ul className="space-y-2 text-sm text-slate-600 flex-1 mb-5">
+                <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
                     "5 of the 20 conversion rules",
                     "Pass/fail with specific findings",
@@ -484,34 +486,34 @@ export default function Home() {
                     "Results in ~30 seconds",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-emerald-500 font-bold flex-shrink-0 mt-0.5">✓</span> {f}
+                      <span className="text-green font-bold flex-shrink-0 mt-0.5">✓</span> {f}
                     </li>
                   ))}
                 </ul>
                 <a
                   href="#top"
-                  className="block w-full py-3 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm text-center hover:bg-slate-50 transition-colors"
+                  className="block w-full py-3 rounded-xl border border-border text-ink font-semibold text-sm text-center hover:bg-surface transition-colors"
                 >
                   Get My Free Score
                 </a>
               </div>
 
               {/* Full Report */}
-              <div className="rounded-2xl border-2 border-orange-500 bg-white p-6 flex flex-col relative mt-4 sm:mt-0">
+              <div className="rounded-2xl border border-blue bg-white p-6 flex flex-col relative mt-4 sm:mt-0 dm-card-raised">
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                  <span className="bg-blue text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
                     MOST POPULAR
                   </span>
                 </div>
                 <div className="mb-4">
-                  <p className="font-bold text-slate-900 text-base mb-0.5">Full Report</p>
-                  <p className="text-slate-500 text-xs">Know exactly what to fix</p>
+                  <p className="font-bold text-ink text-base mb-0.5">Full Report</p>
+                  <p className="text-muted text-xs">Know exactly what to fix</p>
                 </div>
                 <div className="mb-4">
-                  <span className="text-4xl font-black text-slate-900">£49</span>
-                  <span className="text-slate-400 text-sm ml-1">one-time</span>
+                  <span className="text-4xl font-black text-ink">£49</span>
+                  <span className="text-muted text-sm ml-1">one-time</span>
                 </div>
-                <ul className="space-y-2 text-sm text-slate-600 flex-1 mb-5">
+                <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
                     "Full 20-rule audit with specific findings from your actual copy",
                     "Rewritten headline, subheadline and CTA — ready to hand to your developer",
@@ -520,22 +522,22 @@ export default function Home() {
                     "Human-reviewed and delivered by email within 24 hours",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-emerald-500 font-bold flex-shrink-0 mt-0.5">✓</span> {f}
+                      <span className="text-green font-bold flex-shrink-0 mt-0.5">✓</span> {f}
                     </li>
                   ))}
                 </ul>
                 <a
                   href="#top"
-                  className="block w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm text-center transition-colors"
+                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-sm text-center transition-colors"
                 >
                   Get My Free Score — Upgrade for £49
                 </a>
               </div>
 
               {/* HTML Package */}
-              <div className="rounded-2xl border border-violet-500/30 bg-slate-900 p-6 flex flex-col text-white relative overflow-hidden">
+              <div className="rounded-2xl border border-border bg-slate-900 p-6 flex flex-col text-[white] relative overflow-hidden dm-card">
                 <div className="absolute top-4 right-4">
-                  <span className="bg-violet-500/20 text-violet-300 text-xs font-semibold px-2 py-0.5 rounded-full">
+                  <span className="bg-blue/20 text-blue text-xs font-semibold px-2 py-0.5 rounded-full">
                     NEW
                   </span>
                 </div>
@@ -556,32 +558,32 @@ export default function Home() {
                     "Drop-in replacement — no redesign needed",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-violet-400 font-bold flex-shrink-0 mt-0.5">✓</span> {f}
+                      <span className="text-green font-bold flex-shrink-0 mt-0.5">✓</span> {f}
                     </li>
                   ))}
                 </ul>
                 <a
                   href="#top"
-                  className="block w-full py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm text-center transition-colors"
+                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-sm text-center transition-colors"
                 >
                   Get My Free Score — Upgrade for £149
                 </a>
               </div>
             </div>
 
-            <p className="text-center text-slate-400 text-xs mt-6">
+            <p className="text-center text-muted text-xs mt-6">
               Every paid report is reviewed before delivery. Typical turnaround: under 24 hours. 7-day money-back guarantee.
             </p>
           </div>
         </section>
 
         {/* ── Final CTA ────────────────────────────────────────────────── */}
-        <section className="py-16 sm:py-20 px-5 bg-white border-t border-slate-100">
+        <section className="py-16 sm:py-20 px-5 bg-white border-t border-border">
           <div className="max-w-xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-3">
+            <h2 className="text-2xl sm:text-3xl font-black text-ink mb-3">
               See your score in 30 seconds
             </h2>
-            <p className="text-slate-500 text-sm mb-8">
+            <p className="text-muted text-sm mb-8">
               Free. No account. Paste your URL and we&apos;ll show you exactly what&apos;s stopping visitors from calling.
             </p>
             <div className="text-left">
@@ -593,15 +595,19 @@ export default function Home() {
       </main>
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-100 py-8 px-5">
+      <footer className="border-t border-border py-8 px-5 dm-footer">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm font-black tracking-tight">
-            <span className="text-slate-900">Grade</span>
-            <span className="text-orange-500">My</span>
-            <span className="text-slate-900">Site</span>
+          <span className="flex items-center gap-2 text-sm font-black tracking-tight">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="" className="h-6 w-6" aria-hidden="true" />
+            <span>
+              <span className="text-ink">Grade</span>
+              <span className="text-blue">My</span>
+              <span className="text-ink">Site</span>
+            </span>
           </span>
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-xs text-slate-400">
-            <a href="mailto:hello@grademy.site" className="hover:text-slate-600 transition-colors">
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-xs text-muted">
+            <a href="mailto:hello@grademy.site" className="hover:text-ink transition-colors">
               hello@grademy.site
             </a>
             <span className="hidden sm:block">·</span>

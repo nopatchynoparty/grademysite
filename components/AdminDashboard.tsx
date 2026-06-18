@@ -48,13 +48,13 @@ const STATUS_LABELS: Record<string, { label: string; colour: string }> = {
   pending_payment: { label: "Awaiting payment", colour: "bg-slate-700 text-slate-300" },
   pending:         { label: "Pending analysis", colour: "bg-amber-900/50 text-amber-300" },
   analysing:       { label: "Analysing…",       colour: "bg-blue-900/50 text-blue-300" },
-  review:          { label: "Ready to review",  colour: "bg-violet-900/50 text-violet-300" },
+  review:          { label: "Ready to review",  colour: "bg-blue/20 text-blue" },
   sent:            { label: "Report sent",       colour: "bg-emerald-900/50 text-emerald-300" },
   error:           { label: "Error",             colour: "bg-red-900/50 text-red-300" },
 };
 
 const GRADE_COLOURS: Record<string, string> = {
-  A: "bg-emerald-500", B: "bg-blue-500", C: "bg-amber-500", D: "bg-orange-500", F: "bg-red-500",
+  A: "bg-green", B: "bg-blue-500", C: "bg-amber-500", D: "bg-amber-500", F: "bg-red",
 };
 
 const RULE_NAMES: Record<number, string> = {
@@ -105,7 +105,7 @@ function HtmlPreviewPanel({ htmlOutput }: { htmlOutput: string }) {
           Open in new tab ↗
         </button>
       </div>
-      <div className="bg-white rounded-b-xl overflow-hidden" style={{ height: "360px" }}>
+      <div className="bg-[white] rounded-b-xl overflow-hidden" style={{ height: "360px" }}>
         <iframe
           srcDoc={htmlOutput}
           sandbox="allow-scripts allow-same-origin"
@@ -126,11 +126,11 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
     <div className="border-t border-white/10 pt-5 mt-2 space-y-5">
       {/* Score */}
       <div className="flex items-center gap-4">
-        <div className={`${gradeColour} w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-black text-white`}>
+        <div className={`${gradeColour} w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-black text-[white]`}>
           {analysis.grade}
         </div>
         <div>
-          <p className="text-2xl font-black text-white">
+          <p className="text-2xl font-black text-[white]">
             {analysis.score}<span className="text-base font-normal text-slate-400">/{analysis.out_of}</span>
           </p>
           <p className="text-sm text-slate-400">{analysis.headline}</p>
@@ -138,8 +138,8 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
       </div>
 
       {/* Biggest win */}
-      <div className="rounded-xl bg-orange-500/10 border border-orange-500/20 px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">Biggest Win</p>
+      <div className="rounded-xl bg-blue/10 border border-blue/20 px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Biggest Win</p>
         <p className="text-sm text-slate-200">{analysis.biggest_win}</p>
       </div>
 
@@ -186,29 +186,29 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
         </div>
         <div className="p-4 space-y-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">Headline</p>
-            <p className="text-sm font-bold text-white">{copy.headline}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Headline</p>
+            <p className="text-sm font-bold text-[white]">{copy.headline}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">Subheadline</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Subheadline</p>
             <p className="text-sm text-slate-300">{copy.subheadline}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">Problem Section</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Problem Section</p>
             <ul className="space-y-1">
               {copy.problem_section.map((pt, i) => (
                 <li key={i} className="flex gap-2 text-sm text-slate-300">
-                  <span className="text-orange-400 font-bold">•</span>{pt}
+                  <span className="text-blue font-bold">•</span>{pt}
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-1">Primary CTA</p>
-            <span className="inline-block bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg">{copy.primary_cta}</span>
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Primary CTA</p>
+            <span className="inline-block bg-blue text-[white] text-xs font-bold px-3 py-1.5 rounded-lg">{copy.primary_cta}</span>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-2">Testimonial Suggestions</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Testimonial Suggestions</p>
             <div className="space-y-2">
               {copy.testimonial_suggestions.map((s, i) => (
                 <div key={i} className="rounded-lg bg-white/5 border border-white/10 px-3 py-2">
@@ -282,11 +282,11 @@ function JobCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <StatusBadge status={job.status} />
-            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${job.tier === "html" ? "bg-violet-900/50 text-violet-300" : "bg-slate-700 text-slate-300"}`}>
+            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${job.tier === "html" ? "bg-blue/20 text-blue" : "bg-slate-700 text-slate-300"}`}>
               {job.tier === "html" ? "Report + HTML — £149" : "Full Report — £49"}
             </span>
           </div>
-          <p className="font-semibold text-white text-sm truncate">{job.url}</p>
+          <p className="font-semibold text-[white] text-sm truncate">{job.url}</p>
           <p className="text-xs text-slate-500 mt-0.5">{job.email} · {new Date(job.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -296,7 +296,7 @@ function JobCard({
             <button
               onClick={(e) => { e.stopPropagation(); onGenerateHtml(job.id); }}
               disabled={isGeneratingHtml}
-              className="px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-blue hover:bg-blue-dark text-[white] text-xs font-semibold transition-colors disabled:opacity-50"
             >
               {isGeneratingHtml ? "Sending…" : "Generate & Send HTML"}
             </button>
@@ -305,7 +305,7 @@ function JobCard({
             <button
               onClick={(e) => { e.stopPropagation(); onAnalyse(job.id); }}
               disabled={isAnalysing}
-              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-[white] text-xs font-semibold transition-colors disabled:opacity-50"
             >
               {isAnalysing ? "Running…" : "Run Analysis"}
             </button>
@@ -314,7 +314,7 @@ function JobCard({
             <button
               onClick={(e) => { e.stopPropagation(); onApprove(job.id); }}
               disabled={isApproving}
-              className={`px-3 py-1.5 rounded-lg text-white text-xs font-semibold transition-colors disabled:opacity-50 ${job.tier === "html" ? "bg-blue-600 hover:bg-blue-500" : "bg-emerald-600 hover:bg-emerald-500"}`}
+              className={`px-3 py-1.5 rounded-lg text-[white] text-xs font-semibold transition-colors disabled:opacity-50 ${job.tier === "html" ? "bg-blue-600 hover:bg-blue-500" : "bg-emerald-600 hover:bg-emerald-500"}`}
             >
               {isApproving ? "Sending…" : job.tier === "html" ? "Approve & Send HTML" : "Approve & Send"}
             </button>
@@ -374,7 +374,7 @@ function JobCard({
                   }
                 }}
                 disabled={isApproving || isGeneratingHtml}
-                className="px-3 py-1.5 rounded-lg border border-white/20 text-slate-400 hover:text-white text-xs font-semibold transition-colors disabled:opacity-50"
+                className="px-3 py-1.5 rounded-lg border border-white/20 text-slate-400 hover:text-[white] text-xs font-semibold transition-colors disabled:opacity-50"
               >
                 {(isApproving || isGeneratingHtml) ? "Resending…" : "Resend email"}
               </button>
@@ -513,17 +513,17 @@ export default function AdminDashboard() {
   const reviewCount = jobs.filter((j) => j.status === "review").length;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-slate-950 text-[white]">
       {/* Header */}
       <header className="border-b border-white/10 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-base font-black tracking-tight">
-              Grade<span className="text-orange-500">My</span>Site
+              Grade<span className="text-blue">My</span>Site
               <span className="text-slate-500 font-normal text-sm ml-1.5">Admin</span>
             </span>
             {reviewCount > 0 && (
-              <span className="bg-violet-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-blue text-[white] text-xs font-bold px-2 py-0.5 rounded-full">
                 {reviewCount} to review
               </span>
             )}
@@ -531,13 +531,13 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchJobs}
-              className="text-xs text-slate-400 hover:text-white transition-colors"
+              className="text-xs text-slate-400 hover:text-[white] transition-colors"
             >
               Refresh
             </button>
             <button
               onClick={handleLogout}
-              className="text-xs text-slate-400 hover:text-white transition-colors"
+              className="text-xs text-slate-400 hover:text-[white] transition-colors"
             >
               Logout
             </button>
@@ -554,16 +554,16 @@ export default function AdminDashboard() {
               onClick={() => setFilter(f)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${
                 filter === f
-                  ? "bg-white text-slate-900"
-                  : "bg-white/5 text-slate-400 hover:text-white"
+                  ? "bg-[white] text-slate-900"
+                  : "bg-white/5 text-slate-400 hover:text-[white]"
               }`}
             >
               {f}
               {f === "pending" && pendingCount > 0 && (
-                <span className="ml-1.5 bg-amber-500 text-white text-xs rounded-full px-1.5">{pendingCount}</span>
+                <span className="ml-1.5 bg-amber-500 text-[white] text-xs rounded-full px-1.5">{pendingCount}</span>
               )}
               {f === "review" && reviewCount > 0 && (
-                <span className="ml-1.5 bg-violet-500 text-white text-xs rounded-full px-1.5">{reviewCount}</span>
+                <span className="ml-1.5 bg-blue text-[white] text-xs rounded-full px-1.5">{reviewCount}</span>
               )}
             </button>
           ))}

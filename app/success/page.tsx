@@ -84,10 +84,10 @@ function SuccessLayout({
 }) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-slate-100">
+      <header className="border-b border-border">
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center">
-          <a href="/" className="text-lg font-black text-slate-900 tracking-tight">
-            Grade<span className="text-orange-500">My</span>Site
+          <a href="/" className="text-lg font-black text-ink tracking-tight">
+            Grade<span className="text-blue">My</span>Site
           </a>
         </div>
       </header>
@@ -96,12 +96,12 @@ function SuccessLayout({
         <div className="max-w-md w-full text-center">
           <div
             className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${
-              icon === "html" ? "bg-blue-100" : "bg-emerald-100"
+              icon === "html" ? "bg-blue-light" : "bg-green/20"
             }`}
           >
             {icon === "html" ? (
               <svg
-                className="w-8 h-8 text-blue-600"
+                className="w-8 h-8 text-blue"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -115,7 +115,7 @@ function SuccessLayout({
               </svg>
             ) : (
               <svg
-                className="w-8 h-8 text-emerald-600"
+                className="w-8 h-8 text-green"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -126,15 +126,15 @@ function SuccessLayout({
             )}
           </div>
 
-          <h1 className="text-3xl font-black text-slate-900 mb-3">{heading}</h1>
-          <p className="text-slate-500 text-lg leading-relaxed mb-8">{subheading}</p>
+          <h1 className="text-3xl font-black text-ink mb-3">{heading}</h1>
+          <p className="text-muted text-lg leading-relaxed mb-8">{subheading}</p>
 
-          <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5 text-left mb-8">
-            <p className="text-sm font-semibold text-slate-700 mb-3">What happens next</p>
-            <ul className="space-y-2.5 text-sm text-slate-500">
+          <div className="rounded-2xl bg-surface border border-border p-5 text-left mb-8">
+            <p className="text-sm font-semibold text-ink mb-3">What happens next</p>
+            <ul className="space-y-2.5 text-sm text-muted">
               {steps.map((step, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <span className="text-orange-500 font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
+                  <span className="text-blue font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
                   {step}
                 </li>
               ))}
@@ -143,7 +143,7 @@ function SuccessLayout({
 
           <a
             href="/"
-            className="inline-block px-6 py-3 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors"
+            className="inline-block px-6 py-3 rounded-xl border border-border text-ink font-semibold text-sm hover:bg-surface transition-colors"
           >
             Back to home
           </a>

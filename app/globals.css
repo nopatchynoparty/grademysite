@@ -1,22 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+@theme {
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* Colour tokens — light mode defaults */
+  --color-ink: #1B2534;
+  --color-blue: #3B6CF4;
+  --color-blue-dark: #2350D4;
+  --color-blue-light: #EEF2FF;
+  --color-red: #EF4444;
+  --color-red-light: #FEF2F2;
+  --color-green: #22C55E;
+  --color-surface: #F4F6F8;
+  --color-border: #E5E7EB;
+  --color-muted: #6B7280;
+  --color-white: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Semantic bg hierarchy — light mode fallbacks via existing tokens */
+:root {
+  --bg-base: var(--color-white);
+  --bg-surface: var(--color-surface);
+  --bg-raised: var(--color-white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink: #F9FAFB;
+    --color-blue: #4B7BF5;
+    --color-blue-light: rgba(59, 108, 244, 0.15);
+    --color-surface: #1B2534;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-muted: #9CA3AF;
+    --color-white: #0F1623;
+
+    --bg-base: #0F1623;
+    --bg-surface: #1B2534;
+    --bg-raised: #232F42;
+  }
+
+  /* Nav — surface bg with opacity so backdrop blur works, plus visible border */
+  .dm-nav {
+    background-color: color-mix(in oklab, var(--bg-surface) 95%, transparent);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Sections hardcoded dark in light mode — surface level in dark mode */
+  /* !important needed to override Tailwind's hardcoded bg-slate-* utilities */
+  .dm-section-surface {
+    background-color: var(--bg-surface) !important;
+  }
+
+  /* Sections that should sit at page-base level in dark mode */
+  .dm-section-base {
+    background-color: var(--bg-base) !important;
+  }
+
+  /* Cards that are bg-white in light — surface bg + 10% white border in dark */
+  .dm-card {
+    background-color: var(--bg-surface);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Featured / raised card — sits above surface */
+  .dm-card-raised {
+    background-color: var(--bg-raised);
+  }
+
+  /* Footer */
+  .dm-footer {
+    background-color: var(--bg-surface);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Input fields */
+  .dm-input {
+    background-color: var(--bg-surface);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  .dm-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+@utility eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-blue);
 }
 
 @keyframes fade-in {
