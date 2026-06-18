@@ -177,7 +177,7 @@ function RuleCard({ rule }: { rule: Rule }) {
             {tooltip && (
               <span className="relative inline-flex group ml-1.5 align-middle">
                 <span className="inline-flex w-4 h-4 rounded-full bg-slate-100 text-muted text-xs items-center justify-center cursor-help font-semibold">ⓘ</span>
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900 text-white text-xs rounded-lg px-3 py-2 hidden group-hover:block group-focus:block z-10 leading-relaxed shadow-xl">
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900 text-[white] text-xs rounded-lg px-3 py-2 hidden group-hover:block group-focus:block z-10 leading-relaxed shadow-xl">
                   <strong className="block text-blue mb-0.5">{rule.tooltipTerm}</strong>
                   {tooltip}
                 </span>
@@ -260,8 +260,8 @@ export default function RulesPage() {
 
         {/* CTA */}
         <section className="px-5 pb-16 pt-4">
-          <div className="max-w-2xl mx-auto rounded-2xl border-2 border-slate-900 bg-slate-900 text-white p-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-black mb-3 text-white">
+          <div className="max-w-2xl mx-auto rounded-2xl border-2 border-slate-900 bg-slate-900 text-[white] p-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-black mb-3 text-[white]">
               How does your site score against these?
             </h2>
             <p className="text-slate-300 text-sm mb-6 leading-relaxed">
@@ -269,7 +269,7 @@ export default function RulesPage() {
             </p>
             <Link
               href="/"
-              className="inline-block px-8 py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-sm transition-colors"
+              className="inline-block px-8 py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm transition-colors"
             >
               Get My Free Score →
             </Link>

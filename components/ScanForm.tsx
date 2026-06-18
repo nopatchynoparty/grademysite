@@ -51,7 +51,7 @@ function GradeBadge({ grade, score, outOf }: { grade: string; score: number; out
   return (
     <div className="flex items-center gap-4">
       <div
-        className={`${bg} text-white rounded-[8px] w-20 h-20 flex items-center justify-center text-4xl font-extrabold shadow-lg tracking-[-0.04em]`}
+        className={`${bg} text-[white] rounded-[8px] w-20 h-20 flex items-center justify-center text-4xl font-extrabold shadow-lg tracking-[-0.04em]`}
       >
         {grade}
       </div>
@@ -191,7 +191,7 @@ export default function ScanForm() {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+            className="px-6 py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
           >
             {loading ? "Scanning…" : "Get My Free Score →"}
           </button>

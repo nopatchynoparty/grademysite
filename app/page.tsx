@@ -111,7 +111,7 @@ export default function Home() {
               { stat: "22", label: "rules checked" },
               { stat: "~30s", label: "free scan" },
               { stat: "£49", label: "full report" },
-              { stat: "7-day", label: "money-back guarantee" },
+              { stat: "<24h", label: "delivery time" },
             ].map(({ stat, label }) => (
               <div key={label} className="text-center">
                 <p className="text-xl font-black text-ink">{stat}</p>
@@ -226,7 +226,7 @@ export default function Home() {
             {/* Score header */}
             <div className="rounded-2xl border border-border bg-white shadow-sm p-6 mb-3 dm-card">
               <div className="flex items-center gap-4 mb-3">
-                <div className="bg-amber-500 text-white rounded-[8px] w-16 h-16 flex items-center justify-center text-3xl font-extrabold shadow-sm flex-shrink-0 tracking-[-0.04em]">
+                <div className="bg-amber-500 text-[white] rounded-[8px] w-16 h-16 flex items-center justify-center text-3xl font-extrabold shadow-sm flex-shrink-0 tracking-[-0.04em]">
                   {EXAMPLE.grade}
                 </div>
                 <div>
@@ -324,7 +324,7 @@ export default function Home() {
                 {/* Score card */}
                 <div className="border border-border rounded-2xl p-5 mb-3">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-14 h-14 rounded-[8px] bg-amber-500 flex items-center justify-center text-2xl font-extrabold text-white flex-shrink-0 tracking-[-0.04em]">
+                    <div className="w-14 h-14 rounded-[8px] bg-amber-500 flex items-center justify-center text-2xl font-extrabold text-[white] flex-shrink-0 tracking-[-0.04em]">
                       D
                     </div>
                     <div>
@@ -361,7 +361,7 @@ export default function Home() {
                   ].map((win, i) => (
                     <div key={i} className={`${i > 0 ? "mt-3 pt-3 border-t border-white/10" : ""}`}>
                       <p className="text-xs font-semibold text-blue mb-1">{win.rule}</p>
-                      <p className="text-xs text-white mb-1 font-medium">{win.impact}</p>
+                      <p className="text-xs text-[white] mb-1 font-medium">{win.impact}</p>
                       <p className="text-xs text-slate-400"><span className="text-slate-300 font-medium">Fix:</span> {win.fix}</p>
                     </div>
                   ))}
@@ -436,7 +436,7 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Button text</p>
-                    <span className="inline-block bg-blue text-white text-sm font-bold px-4 py-2 rounded-lg">
+                    <span className="inline-block bg-blue text-[white] text-sm font-bold px-4 py-2 rounded-lg">
                       Call Us Now — We Pick Up 7 Days
                     </span>
                   </div>
@@ -481,20 +481,6 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Guarantee */}
-            <div className="rounded-2xl border border-blue-light bg-blue-light p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="text-3xl flex-shrink-0">🛡️</div>
-              <div>
-                <p className="font-bold text-ink text-sm mb-1">7-day money-back guarantee</p>
-                <p className="text-ink text-sm">
-                  If your full report doesn&apos;t identify at least 3 specific, actionable changes to your website, email{" "}
-                  <a href="mailto:hello@grademy.site" className="text-blue font-medium hover:underline">
-                    hello@grademy.site
-                  </a>{" "}
-                  within 7 days and we&apos;ll refund you in full. No questions asked.
-                </p>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -588,7 +574,7 @@ export default function Home() {
               {/* Full Report */}
               <div className="rounded-2xl border border-blue bg-white p-6 flex flex-col relative mt-4 sm:mt-0 dm-card-raised">
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-blue text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                  <span className="bg-blue text-[white] text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
                     MOST POPULAR
                   </span>
                 </div>
@@ -615,7 +601,7 @@ export default function Home() {
                 </ul>
                 <a
                   href="#top"
-                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-sm text-center transition-colors"
+                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm text-center transition-colors"
                 >
                   Get My Free Score — Upgrade for £49
                 </a>
@@ -651,7 +637,7 @@ export default function Home() {
                 </ul>
                 <a
                   href="#top"
-                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-sm text-center transition-colors"
+                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm text-center transition-colors"
                 >
                   Get My Free Score — Upgrade for £149
                 </a>
@@ -659,7 +645,7 @@ export default function Home() {
             </div>
 
             <p className="text-center text-muted text-xs mt-6">
-              Every paid report is reviewed before delivery. Typical turnaround: under 24 hours. 7-day money-back guarantee.
+              Every paid report is reviewed before delivery. Typical turnaround: under 24 hours.
             </p>
           </div>
         </section>
