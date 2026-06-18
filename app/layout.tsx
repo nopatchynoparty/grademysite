@@ -9,14 +9,14 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Grade My Site — Find out why your website isn't getting calls",
+  title: "Grade My Site — Free website check for local businesses",
   description:
-    "Free 30-second website scan for local businesses. See exactly what's stopping visitors from calling you.",
+    "Find out why your website isn't getting calls. Free 30-second audit checks 22 conversion rules — no account needed.",
   metadataBase: new URL("https://grademy.site"),
   openGraph: {
-    title: "Grade My Site — Find out why your website isn't getting calls",
+    title: "Grade My Site — Free website check for local businesses",
     description:
-      "Free 30-second website scan for local businesses. See exactly what's stopping visitors from calling you.",
+      "Find out why your website isn't getting calls. Free 30-second audit checks 22 conversion rules — no account needed.",
     url: "https://grademy.site",
     siteName: "GradeMysite",
     locale: "en_GB",
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Grade My Site — Find out why your website isn't getting calls",
+    title: "Grade My Site — Free website check for local businesses",
     description:
-      "Free 30-second website scan for local businesses. See exactly what's stopping visitors from calling you.",
+      "Find out why your website isn't getting calls. Free 30-second audit checks 22 conversion rules — no account needed.",
     images: ["/og.png"],
   },
 };

@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const LOADING_PHASES = [
+  "Fetching your website…",
+  "Reading your homepage…",
+  "Running conversion checks…",
+  "Almost there…",
+];
 
 interface RuleResult {
   rule: number;
@@ -24,11 +31,11 @@ interface ScanResult {
 }
 
 const RULE_NAMES: Record<number, string> = {
-  1: "Headline states a customer outcome",
-  3: "Single primary CTA",
-  4: "CTA describes what happens next",
-  6: "At least one testimonial",
-  9: "Homepage leads with primary service",
+  1: "Google can tell what your page is about",
+  3: "You use real numbers, not vague claims",
+  4: "There's one clear thing for visitors to do",
+  7: "At least one real customer quote on your homepage",
+  13: "Your phone number is visible the moment the page loads",
 };
 
 function GradeBadge({ grade, score, outOf }: { grade: string; score: number; outOf: number }) {
@@ -85,12 +92,26 @@ export default function ScanForm() {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingPhase, setLoadingPhase] = useState(0);
   const [result, setResult] = useState<ScanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState<"report" | "html" | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const paywallEmailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingPhase(0);
+      return;
+    }
+    // Phase 0→1 after 2s, 1→2 after 5s, 2→3 after 10s
+    const delays = [2000, 5000, 10000];
+    const timers = delays.map((delay, i) =>
+      setTimeout(() => setLoadingPhase(i + 1), delay)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [loading]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -176,7 +197,8 @@ export default function ScanForm() {
           </button>
         </div>
         <p className="text-xs text-muted text-center">
-          Free scan — no account needed. Results in ~30 seconds.
+          Free scan — no account needed. Results in ~30 seconds. Questions?{" "}
+          <a href="mailto:hello@grademy.site" className="text-blue hover:underline">hello@grademy.site</a>
         </p>
       </form>
 
@@ -187,16 +209,36 @@ export default function ScanForm() {
         </div>
       )}
 
-      {/* Loading pulse */}
+      {/* Loading — phased indicator */}
       {loading && (
         <div className="mt-8 animate-fade-in">
-          <div className="rounded-2xl border border-border bg-surface p-6 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex gap-3 items-center">
-                <div className="w-5 h-5 rounded-full bg-border animate-pulse" />
-                <div className="flex-1 h-4 rounded bg-border animate-pulse" style={{ animationDelay: `${i * 80}ms` }} />
-              </div>
-            ))}
+          <div className="rounded-2xl border border-border bg-surface p-6">
+            {/* Progress bar */}
+            <div className="w-full h-1.5 bg-border rounded-full mb-5 overflow-hidden">
+              <div
+                className="h-full bg-blue rounded-full transition-all duration-700 ease-out"
+                style={{ width: `${((loadingPhase + 1) / LOADING_PHASES.length) * 100}%` }}
+              />
+            </div>
+            {/* Phase steps */}
+            <div className="space-y-3">
+              {LOADING_PHASES.map((label, i) => {
+                const done = i < loadingPhase;
+                const active = i === loadingPhase;
+                return (
+                  <div key={i} className={`flex items-center gap-3 transition-opacity duration-300 ${i > loadingPhase ? "opacity-30" : "opacity-100"}`}>
+                    <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${done ? "bg-green/20 text-green" : active ? "bg-blue/20 text-blue" : "bg-border text-muted"}`}>
+                      {done ? "✓" : active ? (
+                        <span className="w-2 h-2 rounded-full bg-blue animate-pulse block" />
+                      ) : ""}
+                    </span>
+                    <span className={`text-sm font-medium ${active ? "text-ink" : done ? "text-muted" : "text-muted"}`}>
+                      {label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -273,11 +315,11 @@ export default function ScanForm() {
               Want the full picture?
             </p>
             <h3 className="text-xl font-bold mb-1">
-              This was 5 of 20 rules — and the lighter half.
+              This was 5 of 22 rules — and the lighter half.
             </h3>
             <p className="text-slate-300 text-sm mb-4">
-              The full report checks all 20 conversion principles and tells you
-              exactly what to rewrite — with new headlines, CTAs, and copy
+              The full report checks all 22 conversion principles and tells you
+              exactly what to rewrite — with new headlines, button text, and words
               already written for your business.
             </p>
             <input
@@ -307,7 +349,10 @@ export default function ScanForm() {
                 {checkoutLoading === "html" ? "Redirecting…" : "Report + HTML — £149"}
               </button>
             </div>
-            <p className="text-xs text-slate-500 text-center mt-3">
+            <p className="text-xs text-slate-400 text-center mt-2">
+              The HTML tier includes branding matched to your current site — your colours, your fonts, your logo.
+            </p>
+            <p className="text-xs text-slate-500 text-center mt-1">
               One-time payment. Delivered by email within 24 hours.
             </p>
           </div>

@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
       let htmlOutput: string | null = null;
       try {
-        htmlOutput = generateHtmlTemplate(job.url, job.full_analysis);
+        htmlOutput = generateHtmlTemplate(job.url, job.full_analysis, job.brand_data ?? undefined);
       } catch (htmlErr) {
         console.error("Upgrade: HTML generation failed:", htmlErr);
         return NextResponse.json({ error: "HTML generation failed" }, { status: 500 });

@@ -7,22 +7,33 @@ const STAGE1_SYSTEM_PROMPT = `You are a conversion rate expert evaluating a loca
 Evaluate the scraped page content against these 5 rules only. Be strict and specific — reference actual copy from the page where possible.
 
 RULES:
-Rule 1 — Headline states a customer outcome: PASS if the main headline describes a result the customer receives (e.g. "Get Your Boiler Fixed Today", "Clean Carpets in 3 Hours"). FAIL if it describes the business, its name, or a service category (e.g. "Expert Plumbers in Surrey", "ABC Building Services").
 
-Rule 3 — Single primary CTA: PASS if there is one dominant call-to-action button or link in the hero/above the fold. FAIL if two or more CTAs compete at equal visual weight.
+Rule 1 — Google can tell what your page is about
+PASS: H1 tag is present and contains a service description and/or location — not just the business name.
+FAIL: H1 tag is missing, contains only the business name, or contains a generic phrase like "Home" or "Welcome".
 
-Rule 4 — CTA describes what happens next: PASS if the primary CTA uses specific language about the next step ("Get a Free Quote", "Book Your Survey", "See Our Prices"). FAIL if it uses generic phrases ("Contact Us", "Learn More", "Find Out More", "Get in Touch").
+Rule 3 — You use real numbers, not vague claims
+PASS: Page contains at least one measurable claim — years trading, jobs completed, response time, price, rating.
+FAIL: Page contains only adjectives — experienced, professional, high quality, trusted — with no supporting numbers.
 
-Rule 6 — At least one testimonial on the homepage: PASS if there is one or more customer quotes with a name anywhere on the homepage. FAIL if there are none, or only star ratings without quotes.
+Rule 4 — There's one clear thing for visitors to do
+PASS: One button or link is visually dominant in the top section of the page.
+FAIL: Two or more buttons or links compete at equal prominence in the top section.
 
-Rule 9 — Homepage leads with primary service: PASS if one service is clearly the main offer with visual hierarchy. FAIL if four or more services are listed at equal prominence with no clear primary.
+Rule 7 — At least one real customer quote is on your homepage
+PASS: At least one customer quote with a name attached appears on the homepage.
+FAIL: No customer quotes appear on the homepage.
+
+Rule 13 — Your phone number is visible the moment the page loads
+PASS: A phone number appears in the page header or top section.
+FAIL: No phone number visible without scrolling, or contact requires navigating to a separate page.
 
 Return ONLY this exact JSON (no markdown, no explanation):
 {
   "score": <integer 0-5>,
   "out_of": 5,
   "grade": "<A|B|C|D|F>",
-  "headline": "<one sentence about the site's biggest strength or problem>",
+  "headline": "<one sentence about the site's biggest strength or problem — specific to this site>",
   "passes": [{ "rule": <rule number>, "finding": "<specific evidence from the page copy>" }],
   "fails": [{ "rule": <rule number>, "finding": "<specific evidence from the page copy>" }],
   "biggest_win": "<one specific, actionable change that would most improve enquiries>"

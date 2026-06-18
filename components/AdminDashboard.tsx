@@ -5,7 +5,16 @@ import { useRouter } from "next/navigation";
 
 interface RuleResult {
   rule: number;
+  rule_name?: string;
   finding: string;
+  rationale?: string;
+}
+
+interface TopWin {
+  rule: number;
+  rule_name?: string;
+  impact: string;
+  fix: string;
 }
 
 interface RewrittenCopy {
@@ -14,6 +23,8 @@ interface RewrittenCopy {
   problem_section: string[];
   primary_cta: string;
   testimonial_suggestions: string[];
+  sound_familiar?: string[];
+  section_headings?: Record<string, string>;
 }
 
 interface FullAnalysis {
@@ -24,6 +35,7 @@ interface FullAnalysis {
   passes: RuleResult[];
   fails: RuleResult[];
   unable_to_assess: RuleResult[];
+  top_3_wins?: TopWin[];
   biggest_win: string;
   rewritten_copy: RewrittenCopy;
 }
@@ -58,26 +70,28 @@ const GRADE_COLOURS: Record<string, string> = {
 };
 
 const RULE_NAMES: Record<number, string> = {
-  1: "Headline states a customer outcome",
-  2: "At least one specific number",
-  3: "Single primary CTA",
-  4: "CTA describes what happens next",
-  5: "Problem acknowledged before solution",
-  6: "At least one testimonial",
-  7: "Testimonials are specific",
-  8: "Geographic service area explicit",
-  9: "Homepage leads with primary service",
-  10: "Real work shown",
-  11: "Pricing or price indication",
-  12: "Contact immediately accessible",
-  13: "Copy specific to this business",
-  14: "Differentiator explicitly stated",
-  15: "Contact form friction is low",
-  16: "Best proof is above the fold",
-  17: "No weak placeholder words",
-  18: "Site appears current",
-  19: "Headline specific enough to challenge",
-  20: "Next step after contact is clear",
+  1: "Google can tell what your page is about",
+  2: "Your opening line tells visitors what they'll get",
+  3: "You use real numbers, not vague claims",
+  4: "There's one clear thing for visitors to do",
+  5: "Your main button tells people what happens when they click it",
+  6: "You acknowledge the customer's problem before pitching",
+  7: "At least one real customer quote on your homepage",
+  8: "Your customer quotes are specific",
+  9: "You clearly state where you work",
+  10: "Your main service is front and centre",
+  11: "You show photos of your actual work",
+  12: "You give at least a rough idea of your prices",
+  13: "Your phone number is visible the moment the page loads",
+  14: "Your page sounds like it was written for your specific business",
+  15: "You say what makes you different",
+  16: "Getting in touch doesn't require filling in an essay",
+  17: "Your strongest proof is the first thing people see",
+  18: "You avoid meaningless filler words",
+  19: "Your site looks like you're still in business",
+  20: "Your opening line makes a claim someone could actually disagree with",
+  21: "You tell people what happens after they get in touch",
+  22: "Your page title and description in Google look professional",
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -146,14 +160,14 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
       {/* Rule results */}
       <div className="rounded-xl border border-white/10 overflow-hidden">
         <div className="px-4 py-2 border-b border-white/10">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">20-Rule Scorecard</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">22-Rule Scorecard</span>
         </div>
         <div className="divide-y divide-white/5 max-h-80 overflow-y-auto">
           {analysis.passes.map((r) => (
             <div key={`p-${r.rule}`} className="flex items-start gap-3 px-4 py-2.5">
               <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-emerald-900/50 text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
               <div>
-                <p className="text-xs font-semibold text-slate-300">{RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
+                <p className="text-xs font-semibold text-slate-300">{r.rule_name ?? RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
               </div>
             </div>
@@ -162,8 +176,9 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
             <div key={`f-${r.rule}`} className="flex items-start gap-3 px-4 py-2.5">
               <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-red-900/50 text-red-400 flex items-center justify-center text-xs font-bold">✗</span>
               <div>
-                <p className="text-xs font-semibold text-slate-300">{RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
+                <p className="text-xs font-semibold text-slate-300">{r.rule_name ?? RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
+                {r.rationale && <p className="text-xs text-slate-600 mt-0.5 italic">{r.rationale}</p>}
               </div>
             </div>
           ))}
@@ -171,7 +186,7 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
             <div key={`u-${r.rule}`} className="flex items-start gap-3 px-4 py-2.5 opacity-50">
               <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-slate-700 text-slate-400 flex items-center justify-center text-xs font-bold">–</span>
               <div>
-                <p className="text-xs font-semibold text-slate-400">{RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
+                <p className="text-xs font-semibold text-slate-400">{r.rule_name ?? RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
               </div>
             </div>
@@ -335,7 +350,7 @@ function JobCard({
                     <div className="flex-1 h-3 rounded bg-white/10 animate-pulse" style={{ animationDelay: `${i * 80}ms` }} />
                   </div>
                 ))}
-                <p className="text-xs text-slate-500 pt-1">Running full 20-rule analysis with Claude Opus — this takes 1–2 minutes…</p>
+                <p className="text-xs text-slate-500 pt-1">Running full 22-rule analysis with Claude Opus — this takes 1–2 minutes…</p>
               </div>
             </div>
           )}

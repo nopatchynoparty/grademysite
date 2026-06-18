@@ -1,48 +1,47 @@
+import Link from "next/link";
 import ScanForm from "@/components/ScanForm";
 
-/* ─── Static example data (Tidal Bespoke free scan) ─────────────────── */
+/* ─── Static example data (fictional free scan — Acorn Plumbing) ───── */
 const EXAMPLE = {
-  url: "tidalbespoke.com",
-  grade: "F",
-  score: 1,
+  url: "acornplumbing.co.uk",
+  grade: "D",
+  score: 2,
   outOf: 5,
   headline:
-    "Strong design, but nothing here would make a visitor pick up the phone",
+    "Contact details are missing and there's no reason for a visitor to pick you over the next plumber on the list",
   passes: [
     {
-      rule: 9,
-      name: "Homepage leads with primary service",
-      finding:
-        "The hero clearly focuses on one thing: bespoke bathroom creation.",
+      rule: 3,
+      name: "You use real numbers, not vague claims",
+      finding: "Page states '18 years in business' and 'over 400 jobs completed in Bristol'.",
+    },
+    {
+      rule: 4,
+      name: "There's one clear thing for visitors to do",
+      finding: "A single 'Request a Quote' button sits at the top of the page with no competing buttons.",
     },
   ],
   fails: [
     {
       rule: 1,
-      name: "Headline states a customer outcome",
+      name: "Google can tell what your page is about",
       finding:
-        "Headline reads 'We specialise in creating beautifully handcrafted homes' — describes the business, not a result the customer gets.",
+        "The main heading reads 'Welcome to Acorn Plumbing' — tells Google nothing about what the business does or where it works.",
     },
     {
-      rule: 3,
-      name: "Single primary CTA",
-      finding:
-        "Two CTAs compete above the fold at equal weight: 'Our Designs' and 'Contact Us'.",
+      rule: 7,
+      name: "At least one real customer quote on your homepage",
+      finding: "No customer quotes appear on the page — only a '5 stars' badge with no supporting text.",
     },
     {
-      rule: 4,
-      name: "CTA describes what happens next",
+      rule: 13,
+      name: "Your phone number is visible the moment the page loads",
       finding:
-        "Primary CTA reads 'Contact Us' — no indication of what happens when you click it.",
-    },
-    {
-      rule: 6,
-      name: "At least one testimonial",
-      finding: "No customer quotes visible anywhere on the homepage.",
+        "No phone number in the header. The only contact option is a form on a separate 'Contact' page.",
     },
   ],
   biggestWin:
-    "Replace 'We specialise in creating beautifully handcrafted homes' with an outcome headline — e.g. 'Your Dream Bathroom, Built to Spec and Installed in 6 Weeks'. Then make one CTA dominant: 'Get a Free Design Consultation'.",
+    "Add your phone number to the top of every page so mobile visitors can tap to call immediately. Change 'Welcome to Acorn Plumbing' to something like 'Emergency Plumber in Bristol — We Pick Up 7 Days a Week'. These two changes alone would get more calls within days.",
 };
 
 export default function Home() {
@@ -65,6 +64,9 @@ export default function Home() {
             <a href="#how-it-works" className="text-sm font-medium text-muted hover:text-ink transition-colors hidden sm:block">
               How it works
             </a>
+            <Link href="/rules" className="text-sm font-medium text-muted hover:text-ink transition-colors hidden sm:block">
+              What we check
+            </Link>
             <a href="#pricing" className="text-sm font-medium text-muted hover:text-ink transition-colors hidden sm:block">
               Pricing
             </a>
@@ -89,15 +91,15 @@ export default function Home() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-ink tracking-tight leading-[1.08] mb-4">
-            Find out why your website
+            Free website check for local businesses —
             <br />
-            <span className="text-blue">isn&apos;t getting calls</span>
+            <span className="text-blue">find out why visitors aren&apos;t calling</span>
           </h1>
 
           <p className="text-base sm:text-lg text-muted max-w-lg mx-auto mb-8 leading-relaxed">
-            Paste your URL below. We check your homepage against 20 conversion
-            principles and show you the 5 most critical in 30 seconds — free,
-            with no account needed.
+            Paste your URL below. We check your homepage against 22 rules and
+            show you exactly what&apos;s stopping people from getting in touch — free,
+            in about 30 seconds, no account needed.
           </p>
 
           <div className="max-w-xl mx-auto text-left">
@@ -106,10 +108,10 @@ export default function Home() {
 
           <div className="flex items-center justify-center gap-6 sm:gap-10 mt-10 pt-8 border-t border-border">
             {[
-              { stat: "20", label: "conversion rules" },
+              { stat: "22", label: "rules checked" },
               { stat: "~30s", label: "free scan" },
               { stat: "£49", label: "full report" },
-              { stat: "Human", label: "reviewed" },
+              { stat: "7-day", label: "money-back guarantee" },
             ].map(({ stat, label }) => (
               <div key={label} className="text-center">
                 <p className="text-xl font-black text-ink">{stat}</p>
@@ -188,7 +190,7 @@ export default function Home() {
                 {
                   step: "04",
                   heading: "Upgrade for the full report",
-                  body: "All 20 rules, rewritten copy ready to hand to your developer — delivered by email within 24 hours.",
+                  body: "All 22 rules checked, copy rewritten for your business — delivered to your inbox within 24 hours.",
                 },
               ].map((item) => (
                 <div key={item.step} className="text-center">
@@ -201,20 +203,30 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Rules reference ──────────────────────────────────────────── */}
+        <div className="text-center py-5 border-b border-border bg-surface">
+          <p className="text-sm text-muted">
+            We check 22 things most local business websites get wrong.{" "}
+            <Link href="/rules" className="text-blue font-medium hover:underline">
+              See the full list →
+            </Link>
+          </p>
+        </div>
+
         {/* ── Example free scan demo ───────────────────────────────────── */}
         <section className="py-16 sm:py-20 px-5 bg-white border-t border-border">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center justify-center mb-8">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface text-muted text-xs font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-muted" />
-                Example — real scan output
+                Example — fictional scan output
               </span>
             </div>
 
             {/* Score header */}
             <div className="rounded-2xl border border-border bg-white shadow-sm p-6 mb-3 dm-card">
               <div className="flex items-center gap-4 mb-3">
-                <div className="bg-red text-white rounded-[8px] w-16 h-16 flex items-center justify-center text-3xl font-extrabold shadow-sm flex-shrink-0 tracking-[-0.04em]">
+                <div className="bg-amber-500 text-white rounded-[8px] w-16 h-16 flex items-center justify-center text-3xl font-extrabold shadow-sm flex-shrink-0 tracking-[-0.04em]">
                   {EXAMPLE.grade}
                 </div>
                 <div>
@@ -265,9 +277,9 @@ export default function Home() {
             {/* Upgrade nudge */}
             <div className="rounded-2xl border-2 border-slate-900 bg-slate-900 text-[white] p-5 dm-section-surface">
               <p className="eyebrow mb-1">
-                This was 5 of 20 rules — and the lighter half.
+                This was 5 of 22 rules — and the lighter half.
               </p>
-              <p className="text-base font-bold mb-1">The full report checks all 20 and rewrites the copy for you.</p>
+              <p className="text-base font-bold mb-1">The full report checks all 22 and rewrites the words for you.</p>
               <p className="text-slate-400 text-xs">Scroll down to see exactly what&apos;s in the paid report ↓</p>
             </div>
           </div>
@@ -283,7 +295,7 @@ export default function Home() {
               The full report, in your inbox
             </h2>
             <p className="text-muted text-center text-sm mb-8">
-              Real output from a real scan. Delivered within 24 hours.
+              Example output from a fictional plumbing business scan. Delivered within 24 hours.
             </p>
 
             {/* Email frame */}
@@ -296,93 +308,125 @@ export default function Home() {
                   <div className="w-3 h-3 rounded-full bg-emerald-400" />
                 </div>
                 <div className="flex-1 ml-3 bg-white border border-border rounded px-3 py-1 text-xs text-muted truncate">
-                  Your GradeMysite Report — 3/20 rules passed · tidalbespoke.com
+                  Your GradeMysite Report — D grade (7/22 rules passed) · acornplumbing.co.uk
                 </div>
               </div>
 
               {/* Email body */}
               <div className="p-6">
-                <p className="text-base font-black tracking-tight mb-5">
+                <p className="text-base font-black tracking-tight mb-1">
                   <span className="text-ink">Grade</span>
                   <span className="text-blue">My</span>
                   <span className="text-ink">Site</span>
                 </p>
+                <p className="text-xs text-muted mb-5">Your report for: acornplumbing.co.uk</p>
 
                 {/* Score card */}
                 <div className="border border-border rounded-2xl p-5 mb-3">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-14 h-14 rounded-[8px] bg-red flex items-center justify-center text-2xl font-extrabold text-white flex-shrink-0 tracking-[-0.04em]">
-                      F
+                    <div className="w-14 h-14 rounded-[8px] bg-amber-500 flex items-center justify-center text-2xl font-extrabold text-white flex-shrink-0 tracking-[-0.04em]">
+                      D
                     </div>
                     <div>
                       <p className="text-2xl font-black text-ink">
-                        3<span className="text-sm font-normal text-muted">/20</span>
+                        7<span className="text-sm font-normal text-muted">/22</span>
                       </p>
                       <p className="text-xs text-muted">conversion rules passed</p>
                     </div>
                   </div>
                   <p className="text-sm font-medium text-ink">
-                    A beautiful but skeletal homepage that hides its phone number, prices, location, and proof — leaving visitors no clear reason or way to act.
+                    Acorn Plumbing has a solid track record buried behind a homepage that hides the phone number, has no customer quotes, and gives Google nothing to work with.
                   </p>
                 </div>
 
-                {/* Biggest win */}
-                <div className="bg-blue-light border border-blue-light rounded-xl p-4 mb-3">
-                  <p className="eyebrow mb-1">Biggest Quick Win</p>
-                  <p className="text-sm text-ink">
-                    Replace &apos;We specialise in creating beautifully handcrafted homes&apos; with an outcome headline — e.g. &apos;Your Dream Bathroom, Built to Spec and Installed in 6 Weeks&apos;. This single change addresses Rule 1, the most critical failing on the page.
-                  </p>
-                </div>
-
-                {/* Scorecard rows */}
-                <div className="border border-border rounded-xl overflow-hidden mb-3">
-                  <div className="px-4 py-2 border-b border-border bg-surface">
-                    <span className="eyebrow">20-Rule Scorecard (sample)</span>
-                  </div>
+                {/* 3 biggest wins */}
+                <div className="bg-slate-900 rounded-xl p-4 mb-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Your 3 Biggest Wins</p>
                   {[
-                    { pass: true,  label: "Rule 2 — At least one specific number",       finding: "'Over 10 years of experience' gives a measurable claim." },
-                    { pass: true,  label: "Rule 9 — Homepage leads with primary service", finding: "The hero clearly positions bespoke bathroom creation as the main offer." },
-                    { pass: false, label: "Rule 1 — Headline states a customer outcome",  finding: "Headline describes the business, not a result the visitor gets." },
-                    { pass: false, label: "Rule 11 — Pricing or price indication",        finding: "No price or 'from £X' figure anywhere on the page. Visitors can't self-qualify." },
-                    { pass: false, label: "Rule 12 — Contact immediately accessible",     finding: "No phone number in the header. Contact requires navigating to a separate page." },
-                    { pass: false, label: "Rule 20 — Next step after contact is clear",   finding: "Nothing on the page explains what happens after you submit the contact form." },
-                  ].map((row, i, arr) => (
-                    <div key={i} className={`flex items-start gap-3 px-4 py-3 ${i < arr.length - 1 ? "border-b border-border" : ""}`}>
-                      <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold ${row.pass ? "bg-green/20 text-green" : "bg-red-light text-red"}`}>
-                        {row.pass ? "✓" : "✗"}
-                      </span>
-                      <div>
-                        <p className="text-xs font-semibold text-ink">{row.label}</p>
-                        <p className="text-xs text-muted mt-0.5">{row.finding}</p>
-                      </div>
+                    {
+                      rule: "Rule 13 — Your phone number is visible the moment the page loads",
+                      impact: "Most of your visitors are on a phone. If your number isn't at the top of the page, they'll call the next plumber on the list.",
+                      fix: "Add your mobile number to the header — it takes 10 minutes and will get you calls this week."
+                    },
+                    {
+                      rule: "Rule 1 — Google can tell what your page is about",
+                      impact: "Your main heading says 'Welcome to Acorn Plumbing' — Google reads this and doesn't know you fix boilers in Bristol, so it shows you to the wrong people.",
+                      fix: "Change the main heading to something like 'Emergency Plumber in Bristol — 18 Years, 400+ Jobs'."
+                    },
+                    {
+                      rule: "Rule 7 — At least one real customer quote on your homepage",
+                      impact: "You have a 5-star badge but no actual words from a customer. Anyone can buy a badge — a specific quote from a named person is what makes people trust you.",
+                      fix: "Ask your last three customers for a short sentence. One good quote on the homepage is worth more than any badge."
+                    }
+                  ].map((win, i) => (
+                    <div key={i} className={`${i > 0 ? "mt-3 pt-3 border-t border-white/10" : ""}`}>
+                      <p className="text-xs font-semibold text-blue mb-1">{win.rule}</p>
+                      <p className="text-xs text-white mb-1 font-medium">{win.impact}</p>
+                      <p className="text-xs text-slate-400"><span className="text-slate-300 font-medium">Fix:</span> {win.fix}</p>
                     </div>
                   ))}
+                </div>
+
+                {/* Scorecard rows — sample */}
+                <div className="border border-border rounded-xl overflow-hidden mb-3">
+                  <div className="px-4 py-2 border-b border-border bg-surface">
+                    <span className="eyebrow">22-Rule Scorecard (sample)</span>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x divide-border">
+                    <div className="p-3">
+                      <p className="text-xs font-semibold text-green mb-2">What&apos;s working ✓</p>
+                      {[
+                        { label: "Real numbers on the page", finding: "'18 years in business and 400+ jobs completed in Bristol' — specific and credible." },
+                        { label: "One clear button to click", finding: "'Request a Quote' is the only button in the header — no competing options." },
+                        { label: "Where you work is clear", finding: "Bristol is mentioned four times on the page, plus Clifton, Redland, and Westbury." },
+                      ].map((row, i) => (
+                        <div key={i} className="mb-2 last:mb-0">
+                          <p className="text-xs font-semibold text-ink leading-snug">{row.label}</p>
+                          <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="p-3">
+                      <p className="text-xs font-semibold text-red mb-2">What needs fixing ✗</p>
+                      {[
+                        { label: "Google can't tell what you do", finding: "Main heading reads 'Welcome to Acorn Plumbing' — no service or location." },
+                        { label: "No phone number visible", finding: "No number in the header. Contact is a form on a separate page." },
+                        { label: "No customer quotes", finding: "No testimonials anywhere. A 5-star badge with no words is meaningless." },
+                        { label: "No prices mentioned", finding: "Nothing to indicate what a call-out costs. Many visitors will just move on." },
+                      ].map((row, i) => (
+                        <div key={i} className="mb-2 last:mb-0">
+                          <p className="text-xs font-semibold text-ink leading-snug">{row.label}</p>
+                          <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Rewritten copy */}
                 <div className="bg-slate-900 rounded-xl p-5">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">
-                    Rewritten Copy — Ready to Use
+                    Rewritten words — ready to use
                   </p>
                   <div className="mb-4">
                     <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">New Headline</p>
                     <p className="text-lg font-black text-[white] leading-tight">
-                      Your Dream Bathroom, Built to Spec and Installed on Time
+                      Bristol&apos;s Emergency Plumber — We Pick Up 7 Days a Week
                     </p>
                   </div>
                   <div className="mb-4">
                     <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Subheadline</p>
                     <p className="text-sm text-slate-300">
-                      Bespoke bathroom installations across Surrey and the South East — over 10 years and 200+ projects completed.
+                      18 years fixing boilers, burst pipes, and blocked drains across Bristol and South Gloucestershire. Over 400 jobs. We arrive the same day.
                     </p>
                   </div>
                   <div className="mb-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Problem Section</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Problem section</p>
                     <ul className="space-y-1.5">
                       {[
-                        "You've been quoted wildly different prices and don't know who to trust",
-                        "The last contractor left a job half-finished or over budget",
-                        "You want something beautiful, but the whole process feels uncertain",
+                        "You called three companies and only one called back — three days later.",
+                        "The last plumber said the job would take an afternoon and was gone by lunchtime, unfinished.",
+                        "You just want someone reliable who turns up when they say they will.",
                       ].map((pt) => (
                         <li key={pt} className="flex gap-2 text-sm text-slate-300">
                           <span className="text-blue flex-shrink-0">•</span>{pt}
@@ -391,9 +435,9 @@ export default function Home() {
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Primary CTA</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Button text</p>
                     <span className="inline-block bg-blue text-white text-sm font-bold px-4 py-2 rounded-lg">
-                      Get a Free Design Consultation
+                      Call Us Now — We Pick Up 7 Days
                     </span>
                   </div>
                 </div>
@@ -401,7 +445,7 @@ export default function Home() {
             </div>
 
             <p className="text-center text-xs text-muted mt-4">
-              Real output from a real scan of tidalbespoke.com — delivered within 24 hours of payment.
+              Fictional example scan — representative of the kind of output delivered within 24 hours of payment.
             </p>
           </div>
         </section>
@@ -419,7 +463,7 @@ export default function Home() {
               {[
                 {
                   heading: "Specific to your site",
-                  body: "Every finding references your actual copy — not a generic checklist. If your headline says 'Quality Plumbers in Kent', the report says so.",
+                  body: "Every finding references your actual website — not a generic checklist. If your headline says 'Quality Plumbers in Kent', the report says so.",
                 },
                 {
                   heading: "Reviewed before it's sent",
@@ -427,7 +471,7 @@ export default function Home() {
                 },
                 {
                   heading: "Copy you can use immediately",
-                  body: "The full report includes a rewritten headline, subheadline, CTA, and problem section — based on your business, ready to hand to a developer.",
+                  body: "The full report includes a new headline, subheadline, button text, and problem section — based on your business, ready to hand to a developer.",
                 },
               ].map((item) => (
                 <div key={item.heading} className="rounded-2xl border border-border bg-surface p-5">
@@ -443,13 +487,56 @@ export default function Home() {
               <div>
                 <p className="font-bold text-ink text-sm mb-1">7-day money-back guarantee</p>
                 <p className="text-ink text-sm">
-                  If your full report doesn&apos;t identify at least 3 specific, actionable changes to your website copy, email{" "}
+                  If your full report doesn&apos;t identify at least 3 specific, actionable changes to your website, email{" "}
                   <a href="mailto:hello@grademy.site" className="text-blue font-medium hover:underline">
                     hello@grademy.site
                   </a>{" "}
                   within 7 days and we&apos;ll refund you in full. No questions asked.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Testimonials ─────────────────────────────────────────────── */}
+        {/*
+          IMPORTANT: Replace these placeholder quotes with real customer words.
+          Ask each customer: "What was the most useful thing the report told you?"
+          or "What changed after you got your GradeMysite report?"
+          Use their exact words — even short is fine.
+        */}
+        <section className="py-16 sm:py-20 px-5 bg-white border-t border-border">
+          <div className="max-w-4xl mx-auto">
+            <p className="eyebrow text-center mb-3">What business owners say</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-center text-ink mb-10">
+              Real feedback from real businesses
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-5">
+              {[
+                {
+                  quote: "REPLACE: Add a real customer quote here. Ask them what changed after reading the report.",
+                  name: "REPLACE: First Name Last Name",
+                  business: "REPLACE: Business type, Town",
+                },
+                {
+                  quote: "REPLACE: Add a real customer quote here. Short and specific is better than long and vague.",
+                  name: "REPLACE: First Name Last Name",
+                  business: "REPLACE: Business type, Town",
+                },
+                {
+                  quote: "REPLACE: Add a real customer quote here. Reference a specific finding or outcome if possible.",
+                  name: "REPLACE: First Name Last Name",
+                  business: "REPLACE: Business type, Town",
+                },
+              ].map((t, i) => (
+                <div key={i} className="rounded-2xl border border-border bg-surface p-6">
+                  <p className="text-sm text-ink leading-relaxed mb-4">&ldquo;{t.quote}&rdquo;</p>
+                  <div>
+                    <p className="text-sm font-bold text-ink">{t.name}</p>
+                    <p className="text-xs text-muted mt-0.5">{t.business}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -480,7 +567,7 @@ export default function Home() {
                 </div>
                 <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
-                    "5 of the 20 conversion rules",
+                    "5 of the 22 conversion rules",
                     "Pass/fail with specific findings",
                     "Your single biggest quick win",
                     "Results in ~30 seconds",
@@ -515,9 +602,9 @@ export default function Home() {
                 </div>
                 <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
-                    "Full 20-rule audit with specific findings from your actual copy",
-                    "Rewritten headline, subheadline and CTA — ready to hand to your developer",
-                    "Problem section rewrite in customer language",
+                    "Full 22-rule audit with specific findings from your actual website",
+                    "New headline, subheadline and button text — ready to hand to your developer",
+                    "Problem section rewritten in plain language your customers recognise",
                     "Testimonial prompts — exact questions to ask your best customers",
                     "Human-reviewed and delivered by email within 24 hours",
                   ].map((f) => (
@@ -552,10 +639,10 @@ export default function Home() {
                 <ul className="space-y-2 text-sm text-slate-300 flex-1 mb-5">
                   {[
                     "Everything in Full Report",
-                    "Complete HTML homepage file",
-                    "Tailwind-styled, mobile-ready",
-                    "Developer handoff notes included",
-                    "Drop-in replacement — no redesign needed",
+                    "Complete HTML homepage file — ready to hand to your developer",
+                    "Styled in your existing colours and fonts — looks like your business, not a template",
+                    "Your logo included in the header",
+                    "Developer handoff notes — no briefing required",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <span className="text-green font-bold flex-shrink-0 mt-0.5">✓</span> {f}
@@ -610,6 +697,10 @@ export default function Home() {
             <a href="mailto:hello@grademy.site" className="hover:text-ink transition-colors">
               hello@grademy.site
             </a>
+            <span className="hidden sm:block">·</span>
+            <Link href="/rules" className="hover:text-ink transition-colors">
+              What we check
+            </Link>
             <span className="hidden sm:block">·</span>
             <span>grademy.site</span>
             <span className="hidden sm:block">·</span>

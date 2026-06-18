@@ -107,9 +107,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // For html tier jobs, fetch brand data from context.dev in parallel with Claude
+    let brandData: Record<string, unknown> | null = null;
+    if (job.tier === "html" && process.env.CONTEXT_DEV_API_KEY) {
+      const contextApiKey = process.env.CONTEXT_DEV_API_KEY;
+      const contextBase = `https://api.context.dev/v1`;
+      const timeoutMs = 10000;
+
+      const withTimeout = <T>(promise: Promise<T>): Promise<T | null> =>
+        Promise.race([
+          promise,
+          new Promise<null>((resolve) => setTimeout(() => resolve(null), timeoutMs)),
+        ]);
+
+      const endpoints = ["colors", "fonts", "logo", "styleguide"] as const;
+      const results = await Promise.allSettled(
+        endpoints.map((ep) =>
+          withTimeout(
+            fetch(`${contextBase}/brand/${ep}?url=${encodeURIComponent(job.url)}`, {
+              headers: { Authorization: `Bearer ${contextApiKey}` },
+            }).then((r) => (r.ok ? r.json() : null))
+          )
+        )
+      );
+
+      brandData = {};
+      endpoints.forEach((ep, i) => {
+        const r = results[i];
+        if (r.status === "fulfilled" && r.value) {
+          brandData![ep] = r.value;
+        } else {
+          console.log(`[analyse] context.dev ${ep} failed or timed out — continuing without it`);
+        }
+      });
+    }
+
     // Build user message — include Stage 1 context if available
     const stage1Context = job.scan_results
-      ? `\n\n---\nSTAGE 1 QUICK SCAN RESULTS (for context — rules 1, 3, 4, 6, 9 only):\n${JSON.stringify(job.scan_results, null, 2)}\n---`
+      ? `\n\n---\nSTAGE 1 QUICK SCAN RESULTS (for context — rules 1, 3, 4, 7, 13 only):\n${JSON.stringify(job.scan_results, null, 2)}\n---`
       : "";
 
     const userMessage = `URL: ${job.url}${stage1Context}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}`;
@@ -154,7 +189,7 @@ export async function POST(req: NextRequest) {
     let htmlOutput: string | null = null;
     if (job.tier === "html") {
       try {
-        htmlOutput = generateHtmlTemplate(job.url, analysis);
+        htmlOutput = generateHtmlTemplate(job.url, analysis, brandData ?? undefined);
       } catch (htmlErr) {
         console.error("[analyse] HTML generation failed:", htmlErr);
       }
@@ -170,6 +205,7 @@ export async function POST(req: NextRequest) {
         ...(resolvedOgImage ? { og_image: resolvedOgImage } : {}),
         ...(screenshotUrl ? { screenshot_url: screenshotUrl } : {}),
         ...(htmlOutput ? { html_output: htmlOutput } : {}),
+        ...(brandData && Object.keys(brandData).length > 0 ? { brand_data: brandData } : {}),
       })
       .eq("id", jobId)
       .select();
