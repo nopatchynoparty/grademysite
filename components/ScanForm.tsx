@@ -105,8 +105,8 @@ export default function ScanForm() {
       setLoadingPhase(0);
       return;
     }
-    // Phase 0→1 after 2s, 1→2 after 5s, 2→3 after 10s
-    const delays = [2000, 5000, 10000];
+    // Phase 0→1 after 8s, 1→2 after 20s, 2→3 after 40s (scan takes ~60s)
+    const delays = [8000, 20000, 40000];
     const timers = delays.map((delay, i) =>
       setTimeout(() => setLoadingPhase(i + 1), delay)
     );
@@ -119,11 +119,14 @@ export default function ScanForm() {
     setError(null);
     setResult(null);
 
+    let normalised = url.trim();
+    if (!/^https?:\/\//i.test(normalised)) normalised = `https://${normalised}`;
+
     try {
       const res = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, email }),
+        body: JSON.stringify({ url: normalised, email }),
       });
       const data = await res.json();
 
@@ -181,7 +184,7 @@ export default function ScanForm() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-3">
           <input
-            type="url"
+            type="text"
             required
             placeholder="yourwebsite.co.uk"
             value={url}

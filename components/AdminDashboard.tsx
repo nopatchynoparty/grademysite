@@ -412,6 +412,12 @@ export default function AdminDashboard() {
   const [generatingHtmlId, setGeneratingHtmlId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "pending" | "review" | "sent">("all");
+  const [testJobOpen, setTestJobOpen] = useState(false);
+  const [testUrl, setTestUrl] = useState("");
+  const [testEmail, setTestEmail] = useState("");
+  const [testTier, setTestTier] = useState<"report" | "html">("html");
+  const [testLoading, setTestLoading] = useState(false);
+  const [testError, setTestError] = useState<string | null>(null);
 
   const fetchJobs = useCallback(async () => {
     try {
@@ -511,6 +517,31 @@ export default function AdminDashboard() {
     }
   }
 
+  async function handleCreateTestJob(e: React.FormEvent) {
+    e.preventDefault();
+    setTestLoading(true);
+    setTestError(null);
+    try {
+      const res = await fetch("/api/admin/create-job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: testUrl, email: testEmail, tier: testTier }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setTestUrl("");
+      setTestEmail("");
+      setTestJobOpen(false);
+      setFilter("pending");
+      await fetchJobs();
+      setExpandedJob(data.jobId);
+    } catch (err) {
+      setTestError(err instanceof Error ? err.message : "Failed to create job");
+    } finally {
+      setTestLoading(false);
+    }
+  }
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
     router.replace("/admin/login");
@@ -561,6 +592,53 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-4xl mx-auto px-5 py-8">
+        {/* Test job creator */}
+        <div className="mb-6 rounded-xl border border-dashed border-white/20 overflow-hidden">
+          <button
+            onClick={() => setTestJobOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-slate-400 hover:text-[white] transition-colors"
+          >
+            <span>⚙ Create test job (bypass payment)</span>
+            <span>{testJobOpen ? "▲" : "▼"}</span>
+          </button>
+          {testJobOpen && (
+            <form onSubmit={handleCreateTestJob} className="px-4 pb-4 flex flex-col sm:flex-row gap-2">
+              <input
+                required
+                type="text"
+                placeholder="URL (e.g. grademy.site)"
+                value={testUrl}
+                onChange={(e) => setTestUrl(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-[white] placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue"
+              />
+              <input
+                required
+                type="email"
+                placeholder="Email for delivery"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-[white] placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue"
+              />
+              <select
+                value={testTier}
+                onChange={(e) => setTestTier(e.target.value as "report" | "html")}
+                className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-[white] focus:outline-none focus:ring-1 focus:ring-blue"
+              >
+                <option value="report">£49 report</option>
+                <option value="html">£149 HTML</option>
+              </select>
+              <button
+                type="submit"
+                disabled={testLoading}
+                className="px-4 py-2 rounded-lg bg-blue hover:bg-blue-dark text-[white] text-sm font-semibold transition-colors disabled:opacity-50 whitespace-nowrap"
+              >
+                {testLoading ? "Creating…" : "Create & open"}
+              </button>
+              {testError && <p className="text-red-400 text-xs mt-1 w-full">{testError}</p>}
+            </form>
+          )}
+        </div>
+
         {/* Filter tabs */}
         <div className="flex gap-2 mb-6">
           {(["all", "pending", "review", "sent"] as const).map((f) => (
