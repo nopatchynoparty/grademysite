@@ -28,8 +28,8 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
       (pain, i) => `
       <!-- Pain point ${i + 1} — edit the text if needed but keep it specific -->
       <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6">
-        <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center mb-4">
-          <span class="text-orange-600 font-black text-lg">${i + 1}</span>
+        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+          <span class="text-blue-600 font-black text-lg">${i + 1}</span>
         </div>
         <p class="text-slate-700 font-medium leading-relaxed">${esc(pain)}</p>
       </div>`
@@ -51,11 +51,11 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
            ============================================================ -->
       <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
         <div class="flex gap-0.5 mb-4">
-          <span class="text-orange-400 text-base">★</span>
-          <span class="text-orange-400 text-base">★</span>
-          <span class="text-orange-400 text-base">★</span>
-          <span class="text-orange-400 text-base">★</span>
-          <span class="text-orange-400 text-base">★</span>
+          <span class="text-blue-500 text-base">★</span>
+          <span class="text-blue-500 text-base">★</span>
+          <span class="text-blue-500 text-base">★</span>
+          <span class="text-blue-500 text-base">★</span>
+          <span class="text-blue-500 text-base">★</span>
         </div>
         <p class="text-slate-700 mb-5 leading-relaxed italic text-sm">
           <!-- REPLACE: Paste your customer's actual quote here.
@@ -134,7 +134,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
       <!-- REPLACE: Update href to your phone, email, or booking link -->
       <a
         href="#contact"
-        class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
+        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
       >
         ${esc(copy.primary_cta)}
       </a>
@@ -173,7 +173,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
     <!-- REPLACE: Update href to your phone, email, or booking form -->
     <a
       href="#contact"
-      class="inline-block bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold px-8 py-4 rounded-xl transition-colors shadow-lg shadow-orange-500/25"
+      class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold px-8 py-4 rounded-xl transition-colors shadow-lg shadow-blue-600/25"
     >
       ${esc(copy.primary_cta)}
     </a>
@@ -223,7 +223,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
   <div class="max-w-4xl mx-auto">
 
     <div class="text-center mb-12">
-      <p class="text-orange-500 font-semibold text-sm uppercase tracking-wider mb-3">Sound familiar?</p>
+      <p class="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-3">Sound familiar?</p>
       <h2 class="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
         You know your work is good.<br class="hidden sm:block">
         Your website doesn't show it.
@@ -254,7 +254,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
     <div class="grid sm:grid-cols-2 gap-12 items-center">
 
       <div>
-        <p class="text-orange-400 font-semibold text-sm uppercase tracking-wider mb-3">The solution</p>
+        <p class="text-blue-500 font-semibold text-sm uppercase tracking-wider mb-3">The solution</p>
         <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight mb-5">
           ${esc(copy.headline)}
         </h2>
@@ -264,7 +264,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
         <!-- REPLACE: Update href to your booking/contact link -->
         <a
           href="#contact"
-          class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold px-7 py-3.5 rounded-xl transition-colors"
+          class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-7 py-3.5 rounded-xl transition-colors"
         >
           ${esc(copy.primary_cta)}
         </a>
@@ -276,17 +276,17 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
         <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-5">Why customers choose us</p>
         <ul class="space-y-4">
           <li class="flex items-start gap-3 text-slate-300">
-            <span class="text-orange-400 font-bold mt-0.5 flex-shrink-0">✓</span>
+            <span class="text-blue-500 font-bold mt-0.5 flex-shrink-0">✓</span>
             <!-- REPLACE: Your first key benefit — e.g. "Fixed-price quotes with no hidden extras" -->
             <span>REPLACE: Your first key differentiator or benefit</span>
           </li>
           <li class="flex items-start gap-3 text-slate-300">
-            <span class="text-orange-400 font-bold mt-0.5 flex-shrink-0">✓</span>
+            <span class="text-blue-500 font-bold mt-0.5 flex-shrink-0">✓</span>
             <!-- REPLACE: Your second key benefit — something specific to your business -->
             <span>REPLACE: Your second key differentiator or benefit</span>
           </li>
           <li class="flex items-start gap-3 text-slate-300">
-            <span class="text-orange-400 font-bold mt-0.5 flex-shrink-0">✓</span>
+            <span class="text-blue-500 font-bold mt-0.5 flex-shrink-0">✓</span>
             <!-- REPLACE: What happens after the customer contacts you -->
             <span>REPLACE: What happens next after a customer gets in touch</span>
           </li>
@@ -315,7 +315,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
   <div class="max-w-4xl mx-auto">
 
     <div class="text-center mb-12">
-      <p class="text-orange-500 font-semibold text-sm uppercase tracking-wider mb-3">What customers say</p>
+      <p class="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-3">What customers say</p>
       <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Real results, real people</h2>
     </div>
 
@@ -346,7 +346,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
   <div class="max-w-4xl mx-auto">
 
     <div class="text-center mb-12">
-      <p class="text-orange-500 font-semibold text-sm uppercase tracking-wider mb-3">Pricing</p>
+      <p class="text-blue-600 font-semibold text-sm uppercase tracking-wider mb-3">Pricing</p>
       <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mb-3">Simple, transparent pricing</h2>
       <!-- REPLACE: Describe your pricing model in one line -->
       <p class="text-slate-500 max-w-md mx-auto text-sm">
@@ -384,9 +384,9 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
 
       <!-- TIER 2: BETTER (MOST POPULAR) -->
       <!-- REPLACE: Rename to your mid-tier package name. This is the one to highlight. -->
-      <div class="rounded-2xl border-2 border-orange-500 bg-white p-7 flex flex-col relative mt-4 sm:mt-0">
+      <div class="rounded-2xl border-2 border-blue-600 bg-white p-7 flex flex-col relative mt-4 sm:mt-0">
         <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-          <span class="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">MOST POPULAR</span>
+          <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">MOST POPULAR</span>
         </div>
         <div class="mb-5">
           <p class="font-bold text-slate-900 text-base mb-1">Better</p>
@@ -407,7 +407,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
           <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold flex-shrink-0 mt-0.5">✓</span> REPLACE: Key extra feature 3</li>
         </ul>
         <!-- REPLACE: Update href to your booking/contact link -->
-        <a href="#contact" class="block w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm text-center transition-colors">
+        <a href="#contact" class="block w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm text-center transition-colors">
           ${esc(copy.primary_cta)}
         </a>
       </div>
@@ -473,7 +473,7 @@ export function generateHtmlTemplate(url: string, analysis: FullAnalysis): strin
     <!-- REPLACE: Update href to your phone (tel:01234567890), email (mailto:), or booking page -->
     <a
       href="#"
-      class="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xl font-bold px-10 py-5 rounded-2xl transition-colors shadow-xl shadow-orange-500/20"
+      class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold px-10 py-5 rounded-2xl transition-colors shadow-xl shadow-blue-600/20"
     >
       ${esc(copy.primary_cta)}
     </a>

@@ -286,7 +286,7 @@ export default function ScanForm() {
               placeholder="your@email.com — for report delivery"
               value={email}
               onChange={(e) => { setEmail(e.target.value); setCheckoutError(null); }}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-[white] placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
             />
             {checkoutError && (
               <p className="text-red text-xs mb-3">{checkoutError}</p>
@@ -295,14 +295,14 @@ export default function ScanForm() {
               <button
                 onClick={() => handleCheckout("report")}
                 disabled={checkoutLoading !== null}
-                className="flex-1 py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex-1 py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {checkoutLoading === "report" ? "Redirecting…" : "Full Report — £49"}
               </button>
               <button
                 onClick={() => handleCheckout("html")}
                 disabled={checkoutLoading !== null}
-                className="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex-1 py-3 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {checkoutLoading === "html" ? "Redirecting…" : "Report + HTML — £149"}
               </button>
