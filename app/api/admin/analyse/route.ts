@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import FirecrawlApp from "@mendable/firecrawl-js";
 import { FULL_ANALYSIS_SYSTEM_PROMPT } from "@/lib/fullAnalysisPrompt";
+import { generateHtmlTemplate } from "@/lib/htmlTemplate";
 
 export const maxDuration = 300;
 
@@ -149,6 +150,16 @@ export async function POST(req: NextRequest) {
       analysis.grade = gradeFromScore(analysis.score, analysis.out_of);
     }
 
+    // Generate HTML page for html tier jobs
+    let htmlOutput: string | null = null;
+    if (job.tier === "html") {
+      try {
+        htmlOutput = generateHtmlTemplate(job.url, analysis);
+      } catch (htmlErr) {
+        console.error("[analyse] HTML generation failed:", htmlErr);
+      }
+    }
+
     // Store and mark as review
     const { data: updateData, error: updateError } = await supabase
       .from("jobs")
@@ -158,6 +169,7 @@ export async function POST(req: NextRequest) {
         updated_at: new Date().toISOString(),
         ...(resolvedOgImage ? { og_image: resolvedOgImage } : {}),
         ...(screenshotUrl ? { screenshot_url: screenshotUrl } : {}),
+        ...(htmlOutput ? { html_output: htmlOutput } : {}),
       })
       .eq("id", jobId)
       .select();

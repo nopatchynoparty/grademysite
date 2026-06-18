@@ -70,14 +70,82 @@ function ruleRow(r: RuleResult, pass: boolean): string {
     </tr>`;
 }
 
+export function buildHtmlDeliveryEmail(
+  url: string,
+  analysis: FullAnalysis
+): { subject: string; html: string } {
+  const copy = analysis.rewritten_copy;
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<div style="max-width:600px;margin:0 auto;padding:32px 16px;">
+
+  <!-- Header -->
+  <div style="margin-bottom:24px;">
+    <span style="font-size:18px;font-weight:900;color:#0f172a;letter-spacing:-0.5px;">
+      Grade<span style="color:#f97316;">My</span>Site
+    </span>
+  </div>
+
+  <!-- Main delivery block -->
+  <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#3b82f6;margin-bottom:10px;">Your new homepage is attached</div>
+    <p style="margin:0 0 12px;font-size:22px;font-weight:800;color:#0f172a;line-height:1.3;">Your HTML homepage is ready.</p>
+    <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">Attached to this email is a complete HTML file for your new homepage. All the copy has been written based on your existing report.</p>
+    <div style="background:#f1f5f9;border-radius:10px;padding:16px 18px;margin-bottom:0;">
+      <p style="margin:0 0 6px;font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Send this note to your developer</p>
+      <p style="margin:0;font-size:14px;color:#1e293b;line-height:1.6;font-style:italic;">"Please replace my current homepage with the attached HTML file. The copy is already written — just add a real photo in the hero section, replace the testimonial placeholders with real quotes, and update the pricing tiers and contact links before going live."</p>
+    </div>
+  </div>
+
+  <!-- Copy reminder -->
+  <div style="background:#0f172a;border-radius:16px;padding:24px;margin-bottom:16px;color:#ffffff;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;margin-bottom:14px;">What's in the file — key copy</div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#f97316;margin-bottom:4px;">Headline</div>
+      <div style="font-size:16px;font-weight:800;color:#ffffff;">${copy.headline}</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#f97316;margin-bottom:4px;">Subheadline</div>
+      <div style="font-size:13px;color:#cbd5e1;">${copy.subheadline}</div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#f97316;margin-bottom:4px;">Primary CTA</div>
+      <div style="display:inline-block;background:#f97316;color:#ffffff;font-weight:700;font-size:13px;padding:8px 16px;border-radius:7px;">${copy.primary_cta}</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;padding:16px 0;">
+    <p style="margin:0;font-size:12px;color:#94a3b8;">
+      GradeMysite &middot; HTML homepage for <strong>${url}</strong><br>
+      Questions? Reply to this email.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>`;
+
+  return {
+    subject: "Your homepage HTML is ready — Grade My Site",
+    html,
+  };
+}
+
 export function buildReportEmail(
   url: string,
   tier: "report" | "html",
   analysis: FullAnalysis,
-  screenshotUrl?: string | null
+  screenshotUrl?: string | null,
+  options?: { jobId?: string; baseUrl?: string }
 ): { subject: string; html: string } {
   const gradeColour = GRADE_COLOURS[analysis.grade] ?? "#64748b";
   const copy = analysis.rewritten_copy;
+  const jobId = options?.jobId;
+  const baseUrl = options?.baseUrl ?? "https://grademy.site";
 
   const passRows = analysis.passes.map((r) => ruleRow(r, true)).join("");
   const failRows = analysis.fails.map((r) => ruleRow(r, false)).join("");
@@ -94,6 +162,17 @@ export function buildReportEmail(
       Grade<span style="color:#f97316;">My</span>Site
     </span>
   </div>
+
+  ${
+    tier === "html"
+      ? `<!-- HTML file explanation block -->
+  <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#3b82f6;margin-bottom:8px;">Your new homepage is attached</div>
+    <p style="margin:0 0 8px;font-size:14px;color:#1e40af;font-weight:600;">Attached to this email is your new homepage as an HTML file.</p>
+    <p style="margin:0;font-size:14px;color:#1e40af;">Send it to your web developer with this note: <em>"Please replace my current homepage with this file. All the copy is already written — just update the prices, add a photo, and add real customer testimonials before going live."</em></p>
+  </div>`
+      : ""
+  }
 
   <!-- Score card -->
   <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;margin-bottom:16px;">
@@ -186,10 +265,14 @@ export function buildReportEmail(
   </div>
 
   ${
-    tier === "html"
-      ? `<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:16px;">
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#3b82f6;margin-bottom:6px;">HTML Page</div>
-    <p style="margin:0;font-size:14px;color:#1e40af;">Your ready-to-build HTML homepage is being prepared and will be sent in a follow-up email shortly.</p>
+    tier === "report" && jobId
+      ? `<!-- Upsell block — report tier only -->
+  <div style="background:#0f172a;border-radius:16px;padding:28px;margin-bottom:16px;color:#ffffff;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;margin-bottom:12px;">Want this built for you?</div>
+    <p style="margin:0 0 8px;font-size:18px;font-weight:800;color:#ffffff;">Want this built for you?</p>
+    <p style="margin:0 0 20px;font-size:14px;color:#cbd5e1;line-height:1.6;">We've taken your rewritten copy and built it into a complete HTML page — styled, mobile-ready, and ready for your developer to drop straight in. No briefing required.</p>
+    <a href="${baseUrl}/upgrade?jobId=${jobId}" style="display:inline-block;background:#f97316;color:#ffffff;font-weight:700;font-size:14px;padding:14px 24px;border-radius:10px;text-decoration:none;">Get the HTML page — £100 →</a>
+    <p style="margin:12px 0 0;font-size:12px;color:#475569;">One-time payment. Upgrade price for existing report customers — £149 for new customers.</p>
   </div>`
       : ""
   }

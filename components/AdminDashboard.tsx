@@ -36,6 +36,7 @@ interface Job {
   status: "pending_payment" | "pending" | "analysing" | "review" | "sent" | "error";
   scan_results: unknown;
   full_analysis: FullAnalysis | null;
+  html_output: string | null;
   stripe_session_id: string | null;
   og_image: string | null;
   screenshot_url: string | null;
@@ -85,6 +86,35 @@ function StatusBadge({ status }: { status: string }) {
     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${cfg.colour}`}>
       {cfg.label}
     </span>
+  );
+}
+
+function HtmlPreviewPanel({ htmlOutput }: { htmlOutput: string }) {
+  return (
+    <div className="rounded-xl border border-blue-500/30 overflow-hidden">
+      <div className="px-4 py-2 border-b border-blue-500/20 bg-blue-900/20 flex items-center justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">HTML Page Preview</span>
+        <button
+          onClick={() => {
+            const blob = new Blob([htmlOutput], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+            window.open(url, "_blank");
+          }}
+          className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+        >
+          Open in new tab ↗
+        </button>
+      </div>
+      <div className="bg-white rounded-b-xl overflow-hidden" style={{ height: "360px" }}>
+        <iframe
+          srcDoc={htmlOutput}
+          sandbox="allow-scripts allow-same-origin"
+          title="HTML Page Preview"
+          className="w-full border-0"
+          style={{ height: "600px", transform: "scale(0.6)", transformOrigin: "top left", width: "167%" }}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -200,19 +230,30 @@ function JobCard({
   onToggle,
   onAnalyse,
   onApprove,
+  onGenerateHtml,
   analysingId,
   approvingId,
+  generatingHtmlId,
 }: {
   job: Job;
   expanded: boolean;
   onToggle: () => void;
   onAnalyse: (id: string) => void;
   onApprove: (id: string) => void;
+  onGenerateHtml: (id: string) => void;
   analysingId: string | null;
   approvingId: string | null;
+  generatingHtmlId: string | null;
 }) {
   const isAnalysing = analysingId === job.id || job.status === "analysing";
   const isApproving = approvingId === job.id;
+  const isGeneratingHtml = generatingHtmlId === job.id;
+
+  // An upgrade job has existing full_analysis but is html tier and needs HTML sent
+  const isUpgradeJob =
+    job.tier === "html" &&
+    !!job.full_analysis &&
+    (job.status === "pending" || job.status === "error");
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
@@ -250,7 +291,17 @@ function JobCard({
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Action buttons */}
-          {(job.status === "pending" || job.status === "error") && (
+          {isUpgradeJob ? (
+            // Upgrade path: full_analysis exists, just need to generate HTML and send delivery email
+            <button
+              onClick={(e) => { e.stopPropagation(); onGenerateHtml(job.id); }}
+              disabled={isGeneratingHtml}
+              className="px-3 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+            >
+              {isGeneratingHtml ? "Sending…" : "Generate & Send HTML"}
+            </button>
+          ) : (job.status === "pending" || job.status === "error") ? (
+            // Normal path: no analysis yet, run Opus
             <button
               onClick={(e) => { e.stopPropagation(); onAnalyse(job.id); }}
               disabled={isAnalysing}
@@ -258,14 +309,14 @@ function JobCard({
             >
               {isAnalysing ? "Running…" : "Run Analysis"}
             </button>
-          )}
+          ) : null}
           {job.status === "review" && (
             <button
               onClick={(e) => { e.stopPropagation(); onApprove(job.id); }}
               disabled={isApproving}
-              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+              className={`px-3 py-1.5 rounded-lg text-white text-xs font-semibold transition-colors disabled:opacity-50 ${job.tier === "html" ? "bg-blue-600 hover:bg-blue-500" : "bg-emerald-600 hover:bg-emerald-500"}`}
             >
-              {isApproving ? "Sending…" : "Approve & Send"}
+              {isApproving ? "Sending…" : job.tier === "html" ? "Approve & Send HTML" : "Approve & Send"}
             </button>
           )}
           <span className="text-slate-500 text-sm">{expanded ? "▲" : "▼"}</span>
@@ -289,22 +340,43 @@ function JobCard({
             </div>
           )}
           {job.full_analysis && !isAnalysing && (
-            <AnalysisPanel analysis={job.full_analysis} />
+            <>
+              <AnalysisPanel analysis={job.full_analysis} />
+              {job.tier === "html" && job.html_output && (
+                <div className="mt-5">
+                  <HtmlPreviewPanel htmlOutput={job.html_output} />
+                </div>
+              )}
+              {job.tier === "html" && !job.html_output && (
+                <div className="mt-4 px-4 py-3 rounded-xl bg-amber-900/20 border border-amber-500/20 text-amber-400 text-xs">
+                  HTML not generated yet — re-run analysis to generate it.
+                </div>
+              )}
+            </>
           )}
           {!job.full_analysis && !isAnalysing && (
             <div className="border-t border-white/10 pt-5">
               <p className="text-sm text-slate-500">No analysis yet.</p>
             </div>
           )}
-          {/* Re-approve for sent jobs */}
+          {/* Resend for sent jobs */}
           {job.status === "sent" && job.full_analysis && (
             <div className="mt-4 pt-4 border-t border-white/10">
               <button
-                onClick={(e) => { e.stopPropagation(); onApprove(job.id); }}
-                disabled={isApproving}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // html tier: resend the delivery-only email via generate-html
+                  // report tier: resend full report via approve
+                  if (job.tier === "html") {
+                    onGenerateHtml(job.id);
+                  } else {
+                    onApprove(job.id);
+                  }
+                }}
+                disabled={isApproving || isGeneratingHtml}
                 className="px-3 py-1.5 rounded-lg border border-white/20 text-slate-400 hover:text-white text-xs font-semibold transition-colors disabled:opacity-50"
               >
-                {isApproving ? "Resending…" : "Resend email"}
+                {(isApproving || isGeneratingHtml) ? "Resending…" : "Resend email"}
               </button>
             </div>
           )}
@@ -322,6 +394,7 @@ export default function AdminDashboard() {
   const [expandedJob, setExpandedJob] = useState<string | null>(null);
   const [analysingId, setAnalysingId] = useState<string | null>(null);
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [generatingHtmlId, setGeneratingHtmlId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "pending" | "review" | "sent">("all");
 
@@ -398,6 +471,28 @@ export default function AdminDashboard() {
       setActionError("Network error while sending report");
     } finally {
       setApprovingId(null);
+    }
+  }
+
+  async function handleGenerateHtml(jobId: string) {
+    setGeneratingHtmlId(jobId);
+    setActionError(null);
+    try {
+      const res = await fetch("/api/admin/generate-html", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setActionError(data.error ?? "Generate & send failed");
+      } else {
+        await fetchJobs();
+      }
+    } catch {
+      setActionError("Network error while generating HTML");
+    } finally {
+      setGeneratingHtmlId(null);
     }
   }
 
@@ -516,8 +611,10 @@ export default function AdminDashboard() {
               onToggle={() => setExpandedJob(expandedJob === job.id ? null : job.id)}
               onAnalyse={handleAnalyse}
               onApprove={handleApprove}
+              onGenerateHtml={handleGenerateHtml}
               analysingId={analysingId}
               approvingId={approvingId}
+              generatingHtmlId={generatingHtmlId}
             />
           ))}
         </div>

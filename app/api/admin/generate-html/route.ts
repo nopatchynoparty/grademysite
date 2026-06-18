@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
-import { buildReportEmail } from "@/lib/reportEmail";
+import { generateHtmlTemplate } from "@/lib/htmlTemplate";
+import { buildHtmlDeliveryEmail } from "@/lib/reportEmail";
 
 function isAuthed(req: NextRequest) {
   return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
@@ -14,6 +15,8 @@ const supabase = createClient(
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
+// Used when a job already has full_analysis (upgrade path) and just needs
+// HTML generated and sent — skips Opus re-run and admin review step.
 export async function POST(req: NextRequest) {
   if (!isAuthed(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -34,62 +37,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Job not found" }, { status: 404 });
   }
 
-  if (job.status !== "review") {
-    return NextResponse.json(
-      { error: `Job must be in 'review' status to approve (currently '${job.status}')` },
-      { status: 409 }
-    );
-  }
-
   if (!job.full_analysis) {
     return NextResponse.json(
-      { error: "No analysis found on this job — run analysis first" },
+      { error: "No analysis on this job — run analysis first" },
       { status: 400 }
     );
   }
 
-  if (job.tier === "html" && !job.html_output) {
-    return NextResponse.json(
-      { error: "HTML output not yet generated — re-run analysis to generate it" },
-      { status: 400 }
-    );
-  }
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://grademy.site";
-
-  const { subject, html } = buildReportEmail(
-    job.url,
-    job.tier,
-    job.full_analysis,
-    job.screenshot_url ?? null,
-    { jobId: job.id, baseUrl }
-  );
-
-  // Build domain-safe filename for HTML attachment
-  let domain = "homepage";
+  let htmlOutput: string;
   try {
-    domain = new URL(job.url).hostname.replace(/\./g, "-");
-  } catch {
-    /* leave default */
+    htmlOutput = generateHtmlTemplate(job.url, job.full_analysis);
+  } catch (err) {
+    console.error("HTML generation failed:", err);
+    return NextResponse.json({ error: "HTML generation failed" }, { status: 500 });
   }
 
+  let domain = "homepage";
+  try { domain = new URL(job.url).hostname.replace(/\./g, "-"); } catch { /* leave default */ }
+
+  const { subject, html } = buildHtmlDeliveryEmail(job.url, job.full_analysis);
   const from = process.env.RESEND_FROM_EMAIL ?? "GradeMysite <reports@grademy.site>";
 
-  const { error: emailError } =
-    job.tier === "html" && job.html_output
-      ? await resend.emails.send({
-          from,
-          to: job.email,
-          subject,
-          html,
-          attachments: [
-            {
-              filename: `grademysite-${domain}-homepage.html`,
-              content: Buffer.from(job.html_output),
-            },
-          ],
-        })
-      : await resend.emails.send({ from, to: job.email, subject, html });
+  const { error: emailError } = await resend.emails.send({
+    from,
+    to: job.email,
+    subject,
+    html,
+    attachments: [
+      {
+        filename: `grademysite-${domain}-homepage.html`,
+        content: Buffer.from(htmlOutput),
+      },
+    ],
+  });
 
   if (emailError) {
     console.error("Resend error:", emailError);
@@ -101,7 +81,12 @@ export async function POST(req: NextRequest) {
 
   await supabase
     .from("jobs")
-    .update({ status: "sent", updated_at: new Date().toISOString() })
+    .update({
+      tier: "html",
+      html_output: htmlOutput,
+      status: "sent",
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", jobId);
 
   return NextResponse.json({ success: true });

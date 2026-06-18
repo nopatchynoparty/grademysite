@@ -532,11 +532,11 @@ export default function Home() {
                 </a>
               </div>
 
-              {/* HTML Package — coming soon */}
-              <div className="rounded-2xl border border-white/10 bg-slate-900 p-6 flex flex-col text-white relative overflow-hidden">
+              {/* HTML Package */}
+              <div className="rounded-2xl border border-violet-500/30 bg-slate-900 p-6 flex flex-col text-white relative overflow-hidden">
                 <div className="absolute top-4 right-4">
-                  <span className="bg-white/10 text-slate-400 text-xs font-semibold px-2 py-0.5 rounded-full">
-                    Coming soon
+                  <span className="bg-violet-500/20 text-violet-300 text-xs font-semibold px-2 py-0.5 rounded-full">
+                    NEW
                   </span>
                 </div>
                 <div className="mb-4">
@@ -547,7 +547,7 @@ export default function Home() {
                   <span className="text-4xl font-black">£149</span>
                   <span className="text-slate-400 text-sm ml-1">one-time</span>
                 </div>
-                <ul className="space-y-2 text-sm text-slate-400 flex-1 mb-5">
+                <ul className="space-y-2 text-sm text-slate-300 flex-1 mb-5">
                   {[
                     "Everything in Full Report",
                     "Complete HTML homepage file",
@@ -556,15 +556,15 @@ export default function Home() {
                     "Drop-in replacement — no redesign needed",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-slate-600 font-bold flex-shrink-0 mt-0.5">✓</span> {f}
+                      <span className="text-violet-400 font-bold flex-shrink-0 mt-0.5">✓</span> {f}
                     </li>
                   ))}
                 </ul>
                 <a
-                  href="mailto:hello@grademy.site?subject=Report + HTML — notify me"
-                  className="block w-full py-3 rounded-xl border border-white/20 text-slate-400 font-semibold text-sm text-center hover:border-white/40 hover:text-white transition-colors"
+                  href="#top"
+                  className="block w-full py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm text-center transition-colors"
                 >
-                  Notify me when available
+                  Get My Free Score — Upgrade for £149
                 </a>
               </div>
             </div>
