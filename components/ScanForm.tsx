@@ -105,8 +105,8 @@ export default function ScanForm() {
       setLoadingPhase(0);
       return;
     }
-    // Phase 0→1 after 8s, 1→2 after 20s, 2→3 after 40s (scan takes ~60s)
-    const delays = [8000, 20000, 40000];
+    // Phase 0→1 after 2s, 1→2 after 5s, 2→3 after 10s
+    const delays = [2000, 5000, 10000];
     const timers = delays.map((delay, i) =>
       setTimeout(() => setLoadingPhase(i + 1), delay)
     );
