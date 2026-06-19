@@ -198,6 +198,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.log("[analyse] Parsed analysis — score:", analysis.score, "grade:", analysis.grade, "keys:", Object.keys(analysis));
+    console.log("[analyse] rewritten_copy.solution_bullets:", analysis?.rewritten_copy?.solution_bullets);
 
     if (!analysis.grade) {
       analysis.grade = gradeFromScore(analysis.score, analysis.out_of);

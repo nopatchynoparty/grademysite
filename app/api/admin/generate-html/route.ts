@@ -44,6 +44,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  console.log("[generate-html] rewritten_copy keys:", Object.keys(job.full_analysis?.rewritten_copy ?? {}));
+  console.log("[generate-html] solution_bullets:", job.full_analysis?.rewritten_copy?.solution_bullets);
+
   let htmlOutput: string;
   try {
     htmlOutput = generateHtmlTemplate(job.url, job.full_analysis, job.brand_data ?? undefined);

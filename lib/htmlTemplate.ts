@@ -27,6 +27,7 @@ interface FullAnalysis {
   headline?: string;
   phone?: string | null;
   has_pricing?: boolean;
+  passes?: Array<{ rule: number; finding: string }>;
 }
 
 // context.dev API response shapes (actual, from /brand/fonts and /brand/styleguide)
@@ -327,6 +328,16 @@ export function generateHtmlTemplate(
   companyName?: string
 ): string {
   const copy = analysis.rewritten_copy;
+
+  const BULLET_RULES = new Set([3, 14, 15]);
+  const solutionBullets: string[] =
+    copy.solution_bullets && copy.solution_bullets.length > 0
+      ? copy.solution_bullets.slice(0, 3)
+      : (analysis.passes ?? [])
+          .filter((p) => BULLET_RULES.has(p.rule))
+          .slice(0, 3)
+          .map((p) => p.finding.split(/\s+/).slice(0, 12).join(" "));
+
   const year = new Date().getFullYear();
   const dateStr = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
@@ -584,8 +595,8 @@ export function generateHtmlTemplate(
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;">
         <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#475569;margin:0 0 20px;">Why customers choose us</p>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px;">
-          ${(copy.solution_bullets && copy.solution_bullets.length > 0
-            ? copy.solution_bullets.slice(0, 3)
+          ${(solutionBullets.length > 0
+            ? solutionBullets
             : ["REPLACE: Your first key benefit", "REPLACE: Your second key benefit", "REPLACE: What happens after you get in touch"]
           ).map((bullet) => `
           <li style="display:flex;gap:12px;align-items:flex-start;color:#cbd5e1;font-size:14px;">
@@ -656,68 +667,21 @@ ${analysis.has_pricing === false
   </div>
 </section>`
   : `<!-- ============================================================
-     PRICING — REPLACE with your actual prices
-     The three-tier structure is intentional — it anchors value.
-     Most customers will choose the middle option.
+     PRICING — pricing WAS found on the original site.
+     Add it here — check the original site for their actual
+     pricing structure and copy it across. Do not guess.
      ============================================================ -->
 <section id="pricing" style="background:#ffffff;padding:80px 24px;">
-  <div style="max-width:800px;margin:0 auto;">
-
-    <div style="text-align:center;margin-bottom:48px;">
-      <p style="color:${primaryColour};font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 12px;">Pricing</p>
-      <h2 style="font-size:clamp(26px,4vw,40px);font-weight:900;color:#0f172a;margin:0 0 12px;">Simple, transparent pricing</h2>
-      <!-- REPLACE: Your pricing model in one line -->
-      <p style="color:#64748b;max-width:400px;margin:0 auto;font-size:14px;">REPLACE: e.g. "Fixed price. Written quote before any work starts."</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
-
-      <!-- TIER 1 — REPLACE name and price -->
-      <div style="border:1px solid #e2e8f0;border-radius:16px;padding:28px;display:flex;flex-direction:column;">
-        <p style="font-weight:700;font-size:15px;margin:0 0 4px;color:#0f172a;">Good</p>
-        <p style="color:#64748b;font-size:13px;margin:0 0 20px;">REPLACE: Ideal for...</p>
-        <p style="font-size:36px;font-weight:900;color:#0f172a;margin:0 0 20px;">£0 <span style="font-size:13px;font-weight:400;color:#94a3b8;">REPLACE</span></p>
-        <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;flex:1;">
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Feature 1</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Feature 2</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Feature 3</li>
-        </ul>
-        <a href="#contact" style="display:block;text-align:center;padding:12px;border:1px solid #e2e8f0;border-radius:10px;color:#374151;font-weight:600;font-size:13px;text-decoration:none;">${esc(copy.primary_cta)}</a>
-      </div>
-
-      <!-- TIER 2 (MOST POPULAR) — REPLACE name and price -->
-      <div style="border:2px solid ${primaryColour};border-radius:16px;padding:28px;display:flex;flex-direction:column;position:relative;margin-top:-8px;">
-        <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);background:${primaryColour};color:#ffffff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;white-space:nowrap;">MOST POPULAR</div>
-        <p style="font-weight:700;font-size:15px;margin:0 0 4px;color:#0f172a;">Better</p>
-        <p style="color:#64748b;font-size:13px;margin:0 0 20px;">REPLACE: Ideal for...</p>
-        <p style="font-size:36px;font-weight:900;color:#0f172a;margin:0 0 20px;">£0 <span style="font-size:13px;font-weight:400;color:#94a3b8;">REPLACE</span></p>
-        <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;flex:1;">
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Everything in Good</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Key extra 1</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Key extra 2</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Key extra 3</li>
-        </ul>
-        <a href="#contact" class="btn-primary" style="display:block;text-align:center;padding:12px;font-size:13px;text-decoration:none;">${esc(copy.primary_cta)}</a>
-      </div>
-
-      <!-- TIER 3 — REPLACE name and price -->
-      <div style="border:1px solid #e2e8f0;border-radius:16px;padding:28px;display:flex;flex-direction:column;">
-        <p style="font-weight:700;font-size:15px;margin:0 0 4px;color:#0f172a;">Best</p>
-        <p style="color:#64748b;font-size:13px;margin:0 0 20px;">REPLACE: Ideal for...</p>
-        <p style="font-size:36px;font-weight:900;color:#0f172a;margin:0 0 20px;">£0 <span style="font-size:13px;font-weight:400;color:#94a3b8;">REPLACE</span></p>
-        <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;flex:1;">
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Everything in Better</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Premium extra 1</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Premium extra 2</li>
-          <li style="display:flex;gap:8px;font-size:13px;color:#475569;"><span style="color:#10b981;font-weight:700;">✓</span> REPLACE: Premium extra 3</li>
-        </ul>
-        <a href="#contact" style="display:block;text-align:center;padding:12px;border:1px solid #e2e8f0;border-radius:10px;color:#374151;font-weight:600;font-size:13px;text-decoration:none;">${esc(copy.primary_cta)}</a>
-      </div>
-
-    </div>
-
-    <p style="text-align:center;color:#94a3b8;font-size:13px;margin:24px 0 0;">${brandSlogan ? esc(brandSlogan) : "REPLACE: e.g. \"Fixed price. Written quote before any work begins.\""}</p>
-
+  <div style="max-width:640px;margin:0 auto;text-align:center;">
+    <p style="color:${primaryColour};font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 12px;">Pricing</p>
+    <h2 style="font-size:clamp(26px,4vw,40px);font-weight:900;color:#0f172a;margin:0 0 16px;">Every project is different</h2>
+    <p style="color:#64748b;font-size:17px;line-height:1.7;margin:0 0 40px;max-width:480px;margin-left:auto;margin-right:auto;">
+      We give fixed-price quotes — no surprises, no hidden extras. Get in touch and we'll put together a quote tailored to your requirements.
+    </p>
+    <a href="#contact" class="btn-primary" style="display:inline-block;font-size:16px;padding:16px 36px;text-decoration:none;">
+      ${esc(copy.primary_cta)}
+    </a>
+    ${brandSlogan ? `<p style="color:#94a3b8;font-size:13px;margin:24px 0 0;">${esc(brandSlogan)}</p>` : ""}
   </div>
 </section>`
 }
