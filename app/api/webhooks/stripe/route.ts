@@ -49,6 +49,21 @@ export async function POST(req: NextRequest) {
     }
 
     const isUpgrade = session.metadata?.upgrade === "true";
+    const isHtmlTier = session.metadata?.tier === "html" || isUpgrade;
+    const CONTEXT_DEV_ENABLED = process.env.CONTEXT_DEV_ENABLED === "true";
+
+    if (!CONTEXT_DEV_ENABLED && isHtmlTier) {
+      console.error(
+        `[webhook] £99 purchase received while tier is disabled — session: ${session.id}, jobId: ${jobId}, email: ${session.customer_email ?? "unknown"}`
+      );
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL ?? "GradeMysite <reports@grademy.site>",
+        to: "hello@grademy.site",
+        subject: `£99 purchase received while tier is disabled — ${jobId}`,
+        text: `A £99 purchase was received while the HTML tier is disabled.\n\nSession ID: ${session.id}\nJob ID: ${jobId}\nCustomer email: ${session.customer_email ?? "unknown"}\nURL: ${session.metadata?.url ?? "unknown"}\n\nPlease review and process manually.`,
+      });
+      return NextResponse.json({ received: true });
+    }
 
     if (isUpgrade) {
       // £100 upgrade: use existing full_analysis to generate HTML + send delivery email.

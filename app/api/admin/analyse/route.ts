@@ -109,7 +109,8 @@ export async function POST(req: NextRequest) {
 
     // For html tier jobs, fetch brand data from context.dev in parallel with Claude
     let brandData: Record<string, unknown> | null = null;
-    if (job.tier === "html" && process.env.CONTEXT_DEV_API_KEY) {
+    const CONTEXT_DEV_ENABLED = process.env.CONTEXT_DEV_ENABLED === "true";
+    if (CONTEXT_DEV_ENABLED && job.tier === "html" && process.env.CONTEXT_DEV_API_KEY) {
       const contextApiKey = process.env.CONTEXT_DEV_API_KEY;
       const contextBase = `https://api.context.dev/v1`;
       const timeoutMs = 10000;

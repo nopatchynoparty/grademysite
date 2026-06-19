@@ -336,24 +336,15 @@ export default function ScanForm() {
             {checkoutError && (
               <p className="text-red text-xs mb-3">{checkoutError}</p>
             )}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => handleCheckout("report")}
-                disabled={checkoutLoading !== null}
-                className="flex-1 py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {checkoutLoading === "report" ? "Redirecting…" : "Full Report — £49"}
-              </button>
-              <button
-                onClick={() => handleCheckout("html")}
-                disabled={checkoutLoading !== null}
-                className="flex-1 py-3 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {checkoutLoading === "html" ? "Redirecting…" : "Report + Homepage — £99"}
-              </button>
-            </div>
-            <p className="text-xs text-slate-400 text-center mt-2">
-              The HTML tier includes branding matched to your current site — your colours, your fonts, your logo.
+            <button
+              onClick={() => handleCheckout("report")}
+              disabled={checkoutLoading !== null}
+              className="w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {checkoutLoading === "report" ? "Redirecting…" : "Full Report — £49"}
+            </button>
+            <p className="text-xs text-slate-400 text-center mt-3">
+              Homepage service coming soon — upgrade to the full report to see your rewritten copy now.
             </p>
             <p className="text-xs text-slate-500 text-center mt-1">
               One-time payment. Delivered by email within 24 hours.

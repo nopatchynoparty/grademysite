@@ -574,7 +574,12 @@ export default function Home() {
               </div>
 
               {/* HTML Package */}
-              <div className="rounded-2xl border border-border bg-slate-900 p-6 flex flex-col text-[white] dm-card">
+              <div className="rounded-2xl border border-border bg-slate-900 p-6 flex flex-col text-[white] dm-card relative mt-4 sm:mt-0">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="bg-slate-600 text-slate-200 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                    COMING SOON
+                  </span>
+                </div>
                 <div className="mb-4">
                   <p className="font-bold text-base mb-0.5">Report + Homepage</p>
                   <p className="text-slate-400 text-xs">Everything in the full report, plus a branded homepage file ready to hand to your developer — styled in your colours, your fonts, your logo. One payment, no briefing required.</p>
@@ -596,12 +601,12 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="#top"
-                  className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm text-center transition-colors"
+                <button
+                  disabled
+                  className="block w-full py-3 rounded-[7px] bg-slate-700 text-slate-500 font-bold text-sm text-center cursor-not-allowed"
                 >
-                  Get My Free Score — Upgrade for £99
-                </a>
+                  Coming Soon
+                </button>
               </div>
             </div>
 
