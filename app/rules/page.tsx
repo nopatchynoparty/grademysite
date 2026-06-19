@@ -176,8 +176,12 @@ function RuleCard({ rule }: { rule: Rule }) {
             {rule.name}
             {tooltip && (
               <span className="relative inline-flex group ml-1.5 align-middle">
-                <span className="inline-flex w-4 h-4 rounded-full bg-slate-100 text-muted text-xs items-center justify-center cursor-help font-semibold">ⓘ</span>
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900 text-[white] text-xs rounded-lg px-3 py-2 hidden group-hover:block group-focus:block z-10 leading-relaxed shadow-xl">
+                <button
+                  type="button"
+                  aria-label={`What is ${rule.tooltipTerm}?`}
+                  className="inline-flex w-4 h-4 rounded-full bg-slate-100 text-muted text-xs items-center justify-center font-semibold focus:outline-none"
+                >ⓘ</button>
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900 text-[white] text-xs rounded-lg px-3 py-2 invisible group-hover:visible group-focus-within:visible z-10 leading-relaxed shadow-xl pointer-events-none">
                   <strong className="block text-blue mb-0.5">{rule.tooltipTerm}</strong>
                   {tooltip}
                 </span>
