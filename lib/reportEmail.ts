@@ -289,32 +289,20 @@ export function buildReportEmail(
     <p style="margin:0;font-size:14px;color:#1e293b;font-weight:500;">${esc(analysis.biggest_win)}</p>
   </div>`}
 
-  <!-- Rule scorecard — two columns -->
+  <!-- Rule scorecard — single column -->
   <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:16px;">
     <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;">
       <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;">22-Rule Scorecard</span>
     </div>
-
-    <!-- Two-column layout: passes on left, fails on right -->
-    <table style="width:100%;border-collapse:collapse;">
-      <tr>
-        <td style="vertical-align:top;width:50%;padding:16px 20px;border-right:1px solid #f1f5f9;">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#10b981;margin-bottom:10px;">What's working ✓</div>
-          ${passCells || '<p style="font-size:12px;color:#9ca3af;margin:0;">No rules passed</p>'}
-        </td>
-        <td style="vertical-align:top;width:50%;padding:16px 20px;">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#ef4444;margin-bottom:10px;">What needs fixing ✗</div>
-          ${failCells || '<p style="font-size:12px;color:#9ca3af;margin:0;">No issues found</p>'}
-        </td>
-      </tr>
-    </table>
-
-    ${unableCells ? `
-    <!-- Unable to assess -->
-    <div style="padding:16px 20px;border-top:1px solid #f1f5f9;">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#9ca3af;margin-bottom:10px;">What we couldn't check –</div>
-      ${unableCells}
-    </div>` : ""}
+    <div style="padding:16px 20px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#10b981;margin-bottom:10px;">What's working ✓</div>
+      ${passCells || '<p style="font-size:12px;color:#9ca3af;margin:0;">No rules passed</p>'}
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#ef4444;margin-top:20px;margin-bottom:10px;">What needs fixing ✗</div>
+      ${failCells || '<p style="font-size:12px;color:#9ca3af;margin:0;">No issues found</p>'}
+      ${unableCells ? `
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#9ca3af;margin-top:20px;margin-bottom:10px;">What we couldn't check –</div>
+      ${unableCells}` : ""}
+    </div>
   </div>
 
   <!-- Rewritten copy -->
