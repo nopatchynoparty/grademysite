@@ -13,8 +13,8 @@ THE 22 RULES
 ═══════════════════════════════════════
 
 Rule 1 — Google can tell what your page is about
-PASS: H1 tag is present and contains a service description and/or location — not just the business name.
-FAIL: H1 tag is missing, contains only the business name, or contains a generic phrase like "Home" or "Welcome".
+PASS: H1 tag is present and describes what the business does, who it helps, or what outcome the customer receives — not just the business name or a generic greeting. An outcome-focused headline that makes the service clearly inferrable also passes (e.g. "Find out why your website isn't getting calls" tells Google this page is about website audits).
+FAIL: H1 tag is missing, contains only the business name, or contains a generic phrase like "Home" or "Welcome" that gives Google no signal about the service.
 (If H1 cannot be determined from the scraped content, mark as unable_to_assess.)
 
 Rule 2 — Your opening line tells visitors what they'll get
@@ -79,8 +79,8 @@ Apply the rule accordingly:
     Finding must reference the business type, e.g. "For an emergency plumber, a tap-to-call number in the header is essential — visitors in a crisis won't hunt for a contact page."
 
   APPOINTMENT-BASED
-    PASS: A phone number or email address appears in the page header or top section.
-    FAIL: Neither a phone number nor an email address is visible without scrolling.
+    PASS: A phone number or email address appears in the page header or top section. Note: Firecrawl markdown does not always preserve layout — if an email address appears alongside navigation links, at the very top of the scraped content, or in what looks like a site header block, treat it as being in the header.
+    FAIL: Neither a phone number nor an email address is found anywhere in the scraped content, or contact requires navigating to a separate page.
     Finding must reference the business type, e.g. "A solicitor's clients expect to email first — but there's no email address or phone number visible without scrolling."
 
   RETAIL/HOSPITALITY
