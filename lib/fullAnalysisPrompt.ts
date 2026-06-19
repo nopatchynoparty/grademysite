@@ -47,8 +47,8 @@ FAIL: All testimonials are generic — great service, highly recommend, very pro
 SKIP: unable_to_assess if Rule 7 failed.
 
 Rule 9 — You clearly state where you work
-PASS: Page names specific towns, counties, postcodes, or a stated radius of operation.
-FAIL: Page uses only vague terms — nationwide, across the UK, the South East — with no specific places named.
+PASS: Page names specific towns, counties, postcodes, or a stated radius of operation. For online or national services, also PASS if the page clearly states who it serves by country or audience type (e.g. "UK local service businesses", "for UK tradespeople").
+FAIL: Page gives no indication of geography or target audience — neither a location nor a stated customer type.
 
 Rule 10 — Your main service is front and centre
 PASS: One service is clearly the primary offer in the top section with visual hierarchy.
@@ -114,7 +114,7 @@ FAIL: Page uses two or more of these words as primary descriptors without accomp
 Rule 19 — Your site looks like you're still in business
 PASS: Copyright year is current, and any blog has posts within 12 months, or no blog exists.
 FAIL: Copyright footer shows a year more than 2 years ago, or a blog exists with no posts in over 12 months.
-SKIP: Return unable_to_assess if no copyright year or blog dates are visible.
+SKIP: Return unable_to_assess if no copyright year or blog dates are visible in the scraped content. IMPORTANT — if you simply cannot find a copyright year, you MUST mark this as unable_to_assess, not as a fail. Absence of scraped footer content is not evidence of a missing or outdated copyright year.
 
 Rule 20 — Your opening line makes a claim someone could actually disagree with
 PASS: The headline makes a specific, challengeable claim.

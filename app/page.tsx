@@ -101,10 +101,13 @@ export default function Home() {
             <span className="text-blue">find out why visitors aren&apos;t calling</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-muted max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="text-base sm:text-lg text-muted max-w-lg mx-auto mb-2 leading-relaxed">
             Paste your URL below. We check your homepage against 22 rules and
             show you exactly what&apos;s stopping people from getting in touch — free,
             in about 30 seconds, no account needed.
+          </p>
+          <p className="text-sm text-muted max-w-lg mx-auto mb-8">
+            For UK local service businesses — builders, plumbers, decorators, valuers and more.
           </p>
 
           <div className="max-w-xl mx-auto text-left">
