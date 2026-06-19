@@ -165,7 +165,18 @@ export async function POST(req: NextRequest) {
       ? `\n\n---\nSTAGE 1 QUICK SCAN RESULTS (for context — rules 1, 3, 4, 7, 13 only):\n${JSON.stringify(job.scan_results, null, 2)}\n---`
       : "";
 
-    const userMessage = `URL: ${job.url}${stage1Context}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}`;
+    const industryContext = brandData?.retrieve
+      ? (() => {
+          const eic = ((brandData.retrieve as Record<string, unknown>)?.brand as Record<string, unknown>)?.industries as Record<string, unknown>;
+          const eicArr = eic?.eic;
+          if (Array.isArray(eicArr) && eicArr.length > 0) {
+            return `\n\nBUSINESS INDUSTRY (from context.dev): ${(eicArr as Array<Record<string, string>>).map((e) => `${e.industry} / ${e.subindustry}`).join(", ")}`;
+          }
+          return "";
+        })()
+      : "";
+
+    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}`;
 
     // Claude Opus full analysis
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });

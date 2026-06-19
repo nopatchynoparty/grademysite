@@ -69,9 +69,54 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "No analysis on job" }, { status: 400 });
       }
 
+      // If brand_data was never fetched (original job ran without tier="html"), fetch it now.
+      let brandDataForHtml: Record<string, unknown> | null = job.brand_data ?? null;
+
+      if (!brandDataForHtml && process.env.CONTEXT_DEV_API_KEY) {
+        const contextApiKey = process.env.CONTEXT_DEV_API_KEY;
+        const contextBase = `https://api.context.dev/v1`;
+        const timeoutMs = 10000;
+
+        const withTimeout = <T>(promise: Promise<T>): Promise<T | null> =>
+          Promise.race([
+            promise,
+            new Promise<null>((resolve) => setTimeout(() => resolve(null), timeoutMs)),
+          ]);
+
+        const contextCalls = {
+          retrieve:   () => fetch(`${contextBase}/brand/retrieve?domain=${encodeURIComponent(new URL(job.url).hostname)}`, { headers: { Authorization: `Bearer ${contextApiKey}` } }),
+          styleguide: () => fetch(`${contextBase}/brand/styleguide?directUrl=${encodeURIComponent(job.url)}`, { headers: { Authorization: `Bearer ${contextApiKey}` } }),
+          images:     () => fetch(`${contextBase}/web/scrape/images?url=${encodeURIComponent(job.url)}`, { headers: { Authorization: `Bearer ${contextApiKey}` } }),
+        } as const;
+
+        try {
+          const contextResults = await Promise.allSettled(
+            (Object.entries(contextCalls) as [string, () => Promise<Response>][]).map(([, fn]) =>
+              withTimeout(fn().then((r) => (r.ok ? r.json() : null)))
+            )
+          );
+
+          const fetched: Record<string, unknown> = {};
+          (Object.keys(contextCalls) as (keyof typeof contextCalls)[]).forEach((key, i) => {
+            const r = contextResults[i];
+            if (r.status === "fulfilled" && r.value) fetched[key] = r.value;
+          });
+
+          if (Object.keys(fetched).length > 0) {
+            brandDataForHtml = fetched;
+            await supabase
+              .from("jobs")
+              .update({ brand_data: brandDataForHtml, updated_at: new Date().toISOString() })
+              .eq("id", jobId);
+          }
+        } catch (brandErr) {
+          console.error("Upgrade: brand fetch failed:", brandErr);
+        }
+      }
+
       let htmlOutput: string | null = null;
       try {
-        htmlOutput = generateHtmlTemplate(job.url, job.full_analysis, job.brand_data ?? undefined);
+        htmlOutput = generateHtmlTemplate(job.url, job.full_analysis, brandDataForHtml ?? undefined);
       } catch (htmlErr) {
         console.error("Upgrade: HTML generation failed:", htmlErr);
         return NextResponse.json({ error: "HTML generation failed" }, { status: 500 });
@@ -142,6 +187,7 @@ export async function POST(req: NextRequest) {
         .from("jobs")
         .update({
           status: "pending",
+          tier: "html",
           updated_at: new Date().toISOString(),
         })
         .eq("id", jobId);

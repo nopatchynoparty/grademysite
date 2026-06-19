@@ -64,7 +64,7 @@ PASS: A price, price range, or starting-from figure appears anywhere on the page
 FAIL: No pricing information or indication exists anywhere on the page.
 
 Rule 13 — Contact details are visible the moment the page loads
-Before assessing this rule, classify the business into one of these contact expectation categories based on the scraped content:
+Before assessing this rule, classify the business into one of these contact expectation categories. If a BUSINESS INDUSTRY classification is provided above, use it to determine the category — it takes precedence over inference from scraped text. Otherwise, infer from the scraped content:
 
   URGENT/TRADE — plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire. These businesses lose enquiries without a phone number. Email alone does not pass.
   APPOINTMENT-BASED — solicitor, accountant, architect, therapist, physio, dentist, consultant, financial advisor. Phone or email visible in the header both pass.

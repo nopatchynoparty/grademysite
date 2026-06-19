@@ -88,7 +88,8 @@ function extractBrand(brand?: BrandData) {
     title?: string;
     description?: string;
     slogan?: string;
-    logos?: Array<{ url?: string; type?: string }>;
+    logos?: Array<{ url?: string; type?: string; mode?: string }>;
+    backdrops?: Array<{ url?: string }>;
     colors?: Array<{ hex?: string; name?: string }>;
     email?: string;
     phone?: string;
@@ -172,18 +173,20 @@ function extractBrand(brand?: BrandData) {
   const bgHex = sg?.colors?.background ?? "#ffffff";
   const isDark = sg?.mode === "dark" || luma(bgHex) < 80;
 
-  // Logos — pick the variant that's appropriate for the header background colour.
-  // "light" logos (white) are for dark backgrounds; "dark" logos are for light backgrounds.
+  // Logos — pick the variant appropriate for the header background.
+  // context.dev: l.type = "logo" | "icon" (shape), l.mode = "light" | "dark" | "has_opaque_background" (background suitability).
   const logos = retrieveResp.logos ?? [];
   const retrieveLogo = (() => {
+    // Prefer full logos over icons
+    const fullLogos = logos.filter((l) => l.type === "logo");
+    const pool = fullLogos.length > 0 ? fullLogos : logos;
     if (isDark) {
-      return logos.find((l) => l.type === "light" || l.type === "primary")?.url ?? logos[0]?.url ?? null;
+      return pool.find((l) => l.mode === "dark" || l.mode === "has_opaque_background")?.url
+        ?? pool[0]?.url ?? null;
     }
-    // Light mode: prefer dark/color variants; if only "light" (white) logos exist, skip them
-    const darkVariant = logos.find((l) => l.type === "dark" || l.type === "color" || l.type === "primary");
-    if (darkVariant?.url) return darkVariant.url;
-    if (logos.length > 0 && logos.every((l) => l.type === "light")) return null;
-    return logos[0]?.url ?? null;
+    return pool.find((l) => l.mode === "light" || l.mode === "has_opaque_background")?.url
+      ?? pool.find((l) => l.mode !== "dark")?.url
+      ?? pool[0]?.url ?? null;
   })();
 
   const scrapedLogo = pickLogoImage((brand as Record<string, unknown>)?.images);
@@ -258,10 +261,16 @@ function pickLogoImage(imagesData: unknown): string | null {
   return null;
 }
 
-function pickHeroImage(imagesData: unknown): string | null {
+function pickHeroImage(imagesData: unknown, backdropUrls?: string[]): string | null {
   const d = imagesData as Record<string, unknown> | null;
   const raw = Array.isArray(d) ? d : Array.isArray(d?.images) ? (d.images as unknown[]) : null;
-  if (!raw || raw.length === 0) return null;
+  if (!raw || raw.length === 0) {
+    if (backdropUrls && backdropUrls.length > 0) {
+      console.log(`[htmlTemplate] pickHeroImage — no page images, using backdrop: ${backdropUrls[0]}`);
+      return backdropUrls[0];
+    }
+    return null;
+  }
 
   const candidates = raw
     .map((img) => {
@@ -305,8 +314,17 @@ function pickHeroImage(imagesData: unknown): string | null {
 
   scored.sort((a, b) => b.score - a.score);
   const picked = scored[0]?.src ?? null;
-  console.log(`[htmlTemplate] pickHeroImage — ${raw.length} total, ${candidates.length} after filter, picked: ${picked}`);
-  return picked;
+  if (picked) {
+    console.log(`[htmlTemplate] pickHeroImage — ${raw.length} total, ${candidates.length} after filter, picked: ${picked}`);
+    return picked;
+  }
+  // Fall back to brand backdrops if no suitable page image found
+  if (backdropUrls && backdropUrls.length > 0) {
+    console.log(`[htmlTemplate] pickHeroImage — no page image found, using backdrop: ${backdropUrls[0]}`);
+    return backdropUrls[0];
+  }
+  console.log(`[htmlTemplate] pickHeroImage — ${raw.length} total, ${candidates.length} after filter, picked: null`);
+  return null;
 }
 
 function darken(hex: string): string {
@@ -365,7 +383,11 @@ export function generateHtmlTemplate(
   const rawPhone: string | null = (analysis.phone && analysis.phone !== "null") ? analysis.phone : null;
   const brandPhone: string | null = rawPhone ?? retrieveBrand.phone ?? null;
 
-  const heroImage = pickHeroImage((brand as Record<string, unknown>)?.images);
+  const backdropsRaw = ((brand as Record<string, unknown>)?.retrieve as { brand?: { backdrops?: Array<{ url?: string }> } })?.brand?.backdrops;
+  const backdropUrls = Array.isArray(backdropsRaw)
+    ? (backdropsRaw as Array<{ url?: string }>).map((b) => b.url).filter((u): u is string => !!u)
+    : undefined;
+  const heroImage = pickHeroImage((brand as Record<string, unknown>)?.images, backdropUrls);
 
   // Adaptive theme — header and hero adapt to site's light/dark mode;
   // solution and CTA sections stay dark for visual contrast/rhythm
