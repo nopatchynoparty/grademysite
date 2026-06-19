@@ -63,9 +63,32 @@ Rule 12 — You give at least a rough idea of your prices
 PASS: A price, price range, or starting-from figure appears anywhere on the page.
 FAIL: No pricing information or indication exists anywhere on the page.
 
-Rule 13 — Your phone number is visible the moment the page loads
-PASS: A phone number appears in the page header or top section.
-FAIL: No phone number visible without scrolling, or contact requires navigating to a separate page.
+Rule 13 — Contact details are visible the moment the page loads
+Before assessing this rule, classify the business into one of these contact expectation categories based on the scraped content:
+
+  URGENT/TRADE — plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire. These businesses lose enquiries without a phone number. Email alone does not pass.
+  APPOINTMENT-BASED — solicitor, accountant, architect, therapist, physio, dentist, consultant, financial advisor. Phone or email visible in the header both pass.
+  RETAIL/HOSPITALITY — restaurant, café, shop, salon, gym, hotel. Phone, email, or booking link in the header all pass.
+  If the business type is unclear, default to APPOINTMENT-BASED.
+
+Apply the rule accordingly:
+
+  URGENT/TRADE
+    PASS: A phone number appears in the page header or top section.
+    FAIL: No phone number visible without scrolling, or contact requires a separate page.
+    Finding must reference the business type, e.g. "For an emergency plumber, a tap-to-call number in the header is essential — visitors in a crisis won't hunt for a contact page."
+
+  APPOINTMENT-BASED
+    PASS: A phone number or email address appears in the page header or top section.
+    FAIL: Neither a phone number nor an email address is visible without scrolling.
+    Finding must reference the business type, e.g. "A solicitor's clients expect to email first — but there's no email address or phone number visible without scrolling."
+
+  RETAIL/HOSPITALITY
+    PASS: A phone number, email address, or booking link appears in the header or top section.
+    FAIL: None of these are visible without scrolling.
+    Finding must reference the business type and what is (or isn't) present.
+
+The rule_name in the JSON output must remain "Your phone number is visible the moment the page loads" for urgent/trade businesses, or "Contact details are visible the moment the page loads" for appointment-based and retail/hospitality. The finding and rationale must reference the detected business type and the appropriate contact method.
 
 Rule 14 — Your page sounds like it was written for your specific business
 PASS: Page contains details that could only apply to this business — named staff, specific local projects, their actual process, specific equipment or qualifications.

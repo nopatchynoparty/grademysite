@@ -24,9 +24,18 @@ Rule 7 — At least one real customer quote is on your homepage
 PASS: At least one customer quote with a name attached appears on the homepage.
 FAIL: No customer quotes appear on the homepage.
 
-Rule 13 — Your phone number is visible the moment the page loads
-PASS: A phone number appears in the page header or top section.
-FAIL: No phone number visible without scrolling, or contact requires navigating to a separate page.
+Rule 13 — Contact details are visible the moment the page loads
+Before assessing, classify the business into one of these contact expectation categories:
+  URGENT/TRADE (plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire): phone number in the header required. Email alone fails.
+  APPOINTMENT-BASED (solicitor, accountant, architect, therapist, physio, dentist, consultant, financial advisor): phone or email in the header both pass.
+  RETAIL/HOSPITALITY (restaurant, café, shop, salon, gym, hotel): phone, email, or booking link in the header all pass.
+  If unclear, default to APPOINTMENT-BASED.
+
+Apply accordingly:
+  URGENT/TRADE — PASS: phone in header. FAIL: no phone visible above the fold.
+  APPOINTMENT-BASED — PASS: phone or email in header. FAIL: neither present.
+  RETAIL/HOSPITALITY — PASS: phone, email, or booking link in header. FAIL: none present.
+Finding must reference the business type and the specific contact method that is missing or present.
 
 Return ONLY this exact JSON (no markdown, no explanation):
 {

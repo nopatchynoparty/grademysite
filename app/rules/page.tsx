@@ -100,9 +100,9 @@ const RULES: Rule[] = [
   },
   {
     number: 13,
-    name: "Your phone number is visible the moment the page loads",
-    whyItMatters: "Most people searching for a local tradesperson are on their phone. If they have to go hunting for your number, most of them won't bother — they'll just call the next person on the list.",
-    whatGoodLooksLike: "Phone number visible at the very top of the page, tap-to-call on mobile.",
+    name: "Contact details are visible the moment the page loads",
+    whyItMatters: "For trade businesses, a visible phone number is essential — someone with a burst pipe won't hunt for a contact page. For appointment-based businesses like solicitors or therapists, a phone number or email in the header is enough. Either way, visitors shouldn't have to scroll to find how to reach you.",
+    whatGoodLooksLike: "Trade: phone number at the top of every page, tap-to-call on mobile. Appointment-based: phone or email clearly visible in the header. Retail or hospitality: phone, email, or a booking link.",
   },
   {
     number: 14,

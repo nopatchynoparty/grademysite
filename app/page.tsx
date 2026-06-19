@@ -96,7 +96,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-ink tracking-tight leading-[1.08] mb-4">
-            Free website check for local businesses —
+            Free website audit for local businesses —
             <br />
             <span className="text-blue">find out why visitors aren&apos;t calling</span>
           </h1>

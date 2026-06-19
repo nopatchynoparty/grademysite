@@ -35,7 +35,7 @@ const RULE_NAMES: Record<number, string> = {
   3: "You use real numbers, not vague claims",
   4: "There's one clear thing for visitors to do",
   7: "At least one real customer quote on your homepage",
-  13: "Your phone number is visible the moment the page loads",
+  13: "Contact details are visible the moment the page loads",
 };
 
 function GradeBadge({ grade, score, outOf }: { grade: string; score: number; outOf: number }) {

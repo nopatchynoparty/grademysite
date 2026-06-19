@@ -82,7 +82,7 @@ const RULE_NAMES: Record<number, string> = {
   10: "Your main service is front and centre",
   11: "You show photos of your actual work",
   12: "You give at least a rough idea of your prices",
-  13: "Your phone number is visible the moment the page loads",
+  13: "Contact details are visible the moment the page loads",
   14: "Your page sounds like it was written for your specific business",
   15: "You say what makes you different",
   16: "Getting in touch doesn't require filling in an essay",
