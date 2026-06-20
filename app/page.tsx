@@ -380,36 +380,24 @@ export default function Home() {
                   <div className="px-4 py-2 border-b border-border bg-surface">
                     <span className="eyebrow">22-Rule Scorecard (sample)</span>
                   </div>
-                  <div className="grid grid-cols-2 divide-x divide-border">
-                    <div className="p-3">
-                      <p className="text-xs font-semibold text-green mb-2">What&apos;s working ✓</p>
-                      {[
-                        { rule: 3, label: "You use real numbers, not vague claims", finding: "'18 years in business and 400+ jobs completed in Bristol' — specific and credible.", rationale: "Numbers beat adjectives. '400+ jobs' is something a visitor can weigh. 'Experienced team' isn't." },
-                        { rule: 4, label: "There's one clear thing for visitors to do", finding: "'Request a Quote' is the only button in the header — no competing options.", rationale: "When there's one button, visitors know exactly what to do. When there are five, they leave." },
-                        { rule: 9, label: "You clearly state where you work", finding: "Bristol is mentioned four times on the page, plus Clifton, Redland, and Westbury.", rationale: "Local searchers need to know you cover their area before they'll read anything else." },
-                      ].map((row, i) => (
-                        <div key={i} className="mb-3 last:mb-0">
-                          <p className="text-xs font-semibold text-ink leading-snug">Rule {row.rule} — {row.label}</p>
-                          <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
-                          <p className="text-xs text-muted mt-0.5 leading-snug italic opacity-75">{row.rationale}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="p-3">
-                      <p className="text-xs font-semibold text-red mb-2">What needs fixing ✗</p>
-                      {[
-                        { rule: 1, label: "Google can tell what your page is about", finding: "Main heading reads 'Welcome to Acorn Plumbing' — no service or location mentioned.", rationale: "Google reads your H1 to decide what searches to show you for. A generic welcome heading means poor rankings." },
-                        { rule: 13, label: "Your phone number is visible the moment the page loads", finding: "No number in the header. Contact is a form on a separate page.", rationale: "Most visitors are on a phone. If they can't tap to call from the top of the page, they'll call the next plumber." },
-                        { rule: 7, label: "At least one real customer quote on your homepage", finding: "No testimonials anywhere. A 5-star badge with no words is meaningless.", rationale: "A specific quote from a named person is worth more than any badge or star rating." },
-                        { rule: 12, label: "You give at least a rough idea of your prices", finding: "Nothing to indicate what a call-out costs. Many visitors will assume the worst and move on.", rationale: "Visitors who can't see a rough price don't know if they can afford you — many just leave." },
-                      ].map((row, i) => (
-                        <div key={i} className="mb-3 last:mb-0">
-                          <p className="text-xs font-semibold text-ink leading-snug">Rule {row.rule} — {row.label}</p>
-                          <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
-                          <p className="text-xs text-muted mt-0.5 leading-snug italic opacity-75">{row.rationale}</p>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="p-3">
+                    {[
+                      { rule: 1, pass: false, label: "Google can tell what your page is about", finding: "Main heading reads 'Welcome to Acorn Plumbing' — no service or location mentioned.", rationale: "Google reads your H1 to decide what searches to show you for. A generic welcome heading means poor rankings." },
+                      { rule: 3, pass: true,  label: "You use real numbers, not vague claims", finding: "'18 years in business and 400+ jobs completed in Bristol' — specific and credible.", rationale: "Numbers beat adjectives. '400+ jobs' is something a visitor can weigh. 'Experienced team' isn't." },
+                      { rule: 4, pass: true,  label: "There's one clear thing for visitors to do", finding: "'Request a Quote' is the only button in the header — no competing options.", rationale: "When there's one button, visitors know exactly what to do. When there are five, they leave." },
+                      { rule: 7, pass: false, label: "At least one real customer quote on your homepage", finding: "No testimonials anywhere. A 5-star badge with no words is meaningless.", rationale: "A specific quote from a named person is worth more than any badge or star rating." },
+                      { rule: 9, pass: true,  label: "You clearly state where you work", finding: "Bristol is mentioned four times on the page, plus Clifton, Redland, and Westbury.", rationale: "Local searchers need to know you cover their area before they'll read anything else." },
+                      { rule: 12, pass: false, label: "You give at least a rough idea of your prices", finding: "Nothing to indicate what a call-out costs. Many visitors will assume the worst and move on.", rationale: "Visitors who can't see a rough price don't know if they can afford you — many just leave." },
+                      { rule: 13, pass: false, label: "Your phone number is visible the moment the page loads", finding: "No number in the header. Contact is a form on a separate page.", rationale: "Most visitors are on a phone. If they can't tap to call from the top of the page, they'll call the next plumber." },
+                    ].map((row, i) => (
+                      <div key={i} className={`mb-3 last:mb-0 ${i > 0 ? "pt-3 border-t border-border" : ""}`}>
+                        <p className={`text-xs font-semibold leading-snug ${row.pass ? "text-green" : "text-red"}`}>
+                          Rule {row.rule} {row.pass ? "✓" : "✗"} — {row.label}
+                        </p>
+                        <p className="text-xs text-muted mt-0.5 leading-snug">{row.finding}</p>
+                        <p className="text-xs text-muted mt-0.5 leading-snug italic opacity-75">{row.rationale}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
