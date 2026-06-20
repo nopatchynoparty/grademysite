@@ -132,7 +132,7 @@ function HtmlPreviewPanel({ htmlOutput }: { htmlOutput: string }) {
   );
 }
 
-function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
+function AnalysisPanel({ analysis, jobId }: { analysis: FullAnalysis; jobId: string }) {
   const gradeColour = GRADE_COLOURS[analysis.grade] ?? "bg-slate-500";
   const copy = analysis.rewritten_copy;
 
@@ -159,8 +159,14 @@ function AnalysisPanel({ analysis }: { analysis: FullAnalysis }) {
 
       {/* Rule results */}
       <div className="rounded-xl border border-white/10 overflow-hidden">
-        <div className="px-4 py-2 border-b border-white/10">
+        <div className="px-4 py-2 border-b border-white/10 flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">22-Rule Scorecard</span>
+          <button
+            onClick={() => window.open(`/api/admin/preview-pdf?jobId=${jobId}`, "_blank")}
+            className="text-xs text-blue hover:text-blue-dark transition-colors"
+          >
+            Preview PDF ↗
+          </button>
         </div>
         <div className="divide-y divide-white/5 max-h-80 overflow-y-auto">
           {analysis.passes.map((r) => (
@@ -356,7 +362,7 @@ function JobCard({
           )}
           {job.full_analysis && !isAnalysing && (
             <>
-              <AnalysisPanel analysis={job.full_analysis} />
+              <AnalysisPanel analysis={job.full_analysis} jobId={job.id} />
               {job.tier === "html" && job.html_output && (
                 <div className="mt-5">
                   <HtmlPreviewPanel htmlOutput={job.html_output} />

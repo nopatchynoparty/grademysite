@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { buildReportEmail } from "@/lib/reportEmail";
+import { generateReportPdf } from "@/lib/pdfReport";
 
 function isAuthed(req: NextRequest) {
   return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
@@ -75,21 +76,24 @@ export async function POST(req: NextRequest) {
 
   const from = process.env.RESEND_FROM_EMAIL ?? "GradeMysite <reports@grademy.site>";
 
-  const { error: emailError } =
-    job.tier === "html" && job.html_output
-      ? await resend.emails.send({
-          from,
-          to: job.email,
-          subject,
-          html,
-          attachments: [
-            {
-              filename: `grademysite-${domain}-homepage.html`,
-              content: Buffer.from(job.html_output),
-            },
-          ],
-        })
-      : await resend.emails.send({ from, to: job.email, subject, html });
+  const pdfBuffer = await generateReportPdf(job.url, job.full_analysis, job.tier, job.screenshot_url ?? null);
+  const attachments: { filename: string; content: Buffer }[] = [
+    { filename: `grademysite-report-${domain}.pdf`, content: pdfBuffer },
+  ];
+  if (job.tier === "html" && job.html_output) {
+    attachments.push({
+      filename: `grademysite-${domain}-homepage.html`,
+      content: Buffer.from(job.html_output),
+    });
+  }
+
+  const { error: emailError } = await resend.emails.send({
+    from,
+    to: job.email,
+    subject,
+    html,
+    attachments,
+  });
 
   if (emailError) {
     console.error("Resend error:", emailError);

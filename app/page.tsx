@@ -477,7 +477,7 @@ export default function Home() {
                 },
                 {
                   heading: "Copy you can use immediately",
-                  body: "The full report includes a new headline, subheadline, button text, and problem section — based on your business, ready to hand to a developer.",
+                  body: "The full report includes a new headline, subheadline, button text, and problem section — based on your business, ready to hand to a developer. A printable PDF is attached to every report.",
                 },
               ].map((item) => (
                 <div key={item.heading} className="rounded-2xl border border-border bg-surface p-5">
@@ -555,6 +555,7 @@ export default function Home() {
                     "New headline, subheadline and button text — ready to hand to your developer",
                     "Problem section rewritten in plain language your customers recognise",
                     "Testimonial prompts — exact questions to ask your best customers",
+                    "Printable PDF report attached — professional, shareable, ready to hand to a developer",
                     "Human-reviewed and delivered by email within 24 hours",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
