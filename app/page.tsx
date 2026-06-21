@@ -652,11 +652,15 @@ export default function Home() {
               What we check
             </Link>
             <span className="hidden sm:block">·</span>
-            <span>grademy.site</span>
+            <Link href="/privacy" className="hover:text-ink transition-colors">
+              Privacy
+            </Link>
+            <span className="hidden sm:block">·</span>
+            <Link href="/terms" className="hover:text-ink transition-colors">
+              Terms
+            </Link>
             <span className="hidden sm:block">·</span>
             <span>© {new Date().getFullYear()}</span>
-            <span className="hidden sm:block">·</span>
-            <span>One-time payments. No subscription.</span>
           </div>
         </div>
       </footer>
