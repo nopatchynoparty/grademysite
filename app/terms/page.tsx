@@ -10,7 +10,7 @@ const LAST_UPDATED = "21 June 2026";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {/* Nav */}
       <header className="border-b border-border px-5 py-4">
         <div className="max-w-3xl mx-auto">
@@ -57,10 +57,11 @@ export default function TermsPage() {
             <p>If we are unable to scan your website (e.g. it is password-protected, returns errors, or contains no meaningful content), we will contact you to discuss options including a full refund.</p>
           </Section>
 
-          <Section title="Refunds">
-            <p>Because reports are digital goods prepared specifically for your website, we do not offer refunds once a report has been delivered to your email address.</p>
-            <p>If you believe there is a factual error in your report — a finding that is demonstrably incorrect based on what is actually on your homepage — contact us at <a href="mailto:hello@grademy.site">hello@grademy.site</a> and we will review and correct it at no charge.</p>
-            <p>If your report has not yet been delivered and you wish to cancel, contact us and we will issue a full refund.</p>
+          <Section title="Cancellation rights and refunds">
+            <p>Under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013, you have a 14-day right to cancel a purchase of digital content. However, by ticking the consent box at checkout, you expressly request that we begin delivering your report immediately and acknowledge that you lose your right to cancel once delivery has started.</p>
+            <p>Once your report has been delivered to your email address, no refund is available.</p>
+            <p>If your report has not yet been delivered and you wish to cancel, contact us at <a href="mailto:hello@grademy.site">hello@grademy.site</a> and we will issue a full refund.</p>
+            <p>If you believe there is a factual error in your report — a finding that is demonstrably incorrect based on what is actually on your homepage — we will review and correct it at no charge.</p>
           </Section>
 
           <Section title="Your responsibilities">
@@ -101,12 +102,12 @@ export default function TermsPage() {
       </footer>
 
       <style>{`
-        .prose-legal p { margin-bottom: 1rem; line-height: 1.7; color: #374151; font-size: 0.9375rem; }
+        .prose-legal p { margin-bottom: 1rem; line-height: 1.7; color: var(--color-ink); font-size: 0.9375rem; }
         .prose-legal ul { margin: 0.75rem 0 1rem 1.25rem; list-style: disc; }
-        .prose-legal ul li { margin-bottom: 0.4rem; line-height: 1.6; color: #374151; font-size: 0.9375rem; }
-        .prose-legal a { color: #3B6CF4; text-decoration: underline; text-decoration-color: transparent; }
-        .prose-legal a:hover { text-decoration-color: #3B6CF4; }
-        .prose-legal strong { color: #1B2534; }
+        .prose-legal ul li { margin-bottom: 0.4rem; line-height: 1.6; color: var(--color-ink); font-size: 0.9375rem; }
+        .prose-legal a { color: var(--color-blue); text-decoration: underline; text-decoration-color: transparent; }
+        .prose-legal a:hover { text-decoration-color: var(--color-blue); }
+        .prose-legal strong { color: var(--color-ink); }
       `}</style>
     </div>
   );

@@ -13,7 +13,7 @@ const TIERS = {
   report: {
     amountPence: 4900,
     label: "Full Conversion Report",
-    description: "20-rule analysis + rewritten copy for your business",
+    description: "22-rule analysis + rewritten copy for your business",
   },
   html: {
     amountPence: 9900,

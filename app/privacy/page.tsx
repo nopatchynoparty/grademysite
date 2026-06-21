@@ -10,7 +10,7 @@ const LAST_UPDATED = "21 June 2026";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {/* Nav */}
       <header className="border-b border-border px-5 py-4">
         <div className="max-w-3xl mx-auto">
@@ -119,15 +119,15 @@ export default function PrivacyPage() {
       </footer>
 
       <style>{`
-        .prose-legal p { margin-bottom: 1rem; line-height: 1.7; color: #374151; font-size: 0.9375rem; }
+        .prose-legal p { margin-bottom: 1rem; line-height: 1.7; color: var(--color-ink); font-size: 0.9375rem; }
         .prose-legal ul { margin: 0.75rem 0 1rem 1.25rem; list-style: disc; }
-        .prose-legal ul li { margin-bottom: 0.4rem; line-height: 1.6; color: #374151; font-size: 0.9375rem; }
-        .prose-legal a { color: #3B6CF4; text-decoration: underline; text-decoration-color: transparent; }
-        .prose-legal a:hover { text-decoration-color: #3B6CF4; }
-        .prose-legal strong { color: #1B2534; }
+        .prose-legal ul li { margin-bottom: 0.4rem; line-height: 1.6; color: var(--color-ink); font-size: 0.9375rem; }
+        .prose-legal a { color: var(--color-blue); text-decoration: underline; text-decoration-color: transparent; }
+        .prose-legal a:hover { text-decoration-color: var(--color-blue); }
+        .prose-legal strong { color: var(--color-ink); }
         .prose-legal table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1rem; font-size: 0.875rem; }
-        .prose-legal th { text-align: left; padding: 8px 12px; background: #F4F6F8; font-weight: 600; color: #1B2534; border-bottom: 1px solid #E5E7EB; }
-        .prose-legal td { padding: 8px 12px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
+        .prose-legal th { text-align: left; padding: 8px 12px; background: var(--color-surface); font-weight: 600; color: var(--color-ink); border-bottom: 1px solid var(--color-border); }
+        .prose-legal td { padding: 8px 12px; border-bottom: 1px solid var(--color-border); color: var(--color-ink); vertical-align: top; }
         .prose-legal td:first-child { font-weight: 500; white-space: nowrap; }
       `}</style>
     </div>

@@ -7,6 +7,7 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [waived, setWaived] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,6 +67,19 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
         </p>
       </div>
 
+      <label className="flex items-start gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          required
+          checked={waived}
+          onChange={(e) => setWaived(e.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0 rounded accent-blue cursor-pointer"
+        />
+        <span className="text-xs text-muted leading-relaxed">
+          I agree to immediate delivery of my report and acknowledge that I waive my 14-day right to cancel under the Consumer Contracts Regulations 2013.
+        </span>
+      </label>
+
       {error && (
         <div className="px-4 py-3 rounded-xl bg-red-light border border-red-light text-red text-sm">
           {error}
@@ -74,7 +88,7 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !waived}
         className="w-full py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-bold text-base transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading

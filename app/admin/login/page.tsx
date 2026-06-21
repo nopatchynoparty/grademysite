@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center px-5">
       <div className="w-full max-w-sm">
-        <p className="text-lg font-black text-white tracking-tight text-center mb-8">
+        <p className="text-lg font-black text-[white] tracking-tight text-center mb-8">
           Grade<span className="text-blue">My</span>Site
           <span className="text-slate-400 font-normal text-sm ml-2">Admin</span>
         </p>
@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-[white] placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent"
             autoFocus
           />
           {error && (
@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-white font-semibold transition-colors disabled:opacity-60"
+            className="w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-semibold transition-colors disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
