@@ -272,7 +272,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  backLogo: { fontSize: 18, fontWeight: 800, color: C.ink, marginBottom: 8 },
+  backLogo: { fontSize: 18, fontWeight: 800, color: C.ink },
   backLogoAccent: { color: C.blue },
   backUrl: { fontSize: 11, color: C.muted, marginBottom: 4 },
   backTagline: { fontSize: 10, color: C.muted, marginBottom: 24 },
@@ -635,7 +635,7 @@ function BackCoverPage() {
   return (
     <Page size="A4" style={s.page}>
       <View style={s.backCoverWrap}>
-        <LogoBrand iconSize={22} textStyle={s.backLogo} accentStyle={s.backLogoAccent} />
+        <LogoBrand iconSize={22} textStyle={s.backLogo} accentStyle={s.backLogoAccent} wrapperStyle={{ marginBottom: 8 }} />
         <Text style={s.backUrl}>grademy.site</Text>
         <Text style={s.backTagline}>Free website check for local businesses</Text>
         <Text style={s.backCopyright}>
