@@ -97,6 +97,7 @@ export default function ScanForm() {
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState<"report" | "html" | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [waived, setWaived] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
   const paywallEmailRef = useRef<HTMLInputElement>(null);
 
@@ -333,12 +334,23 @@ export default function ScanForm() {
               onChange={(e) => { setEmail(e.target.value); setCheckoutError(null); }}
               className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-[white] placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
             />
+            <label className="flex items-start gap-2.5 cursor-pointer mb-3">
+              <input
+                type="checkbox"
+                checked={waived}
+                onChange={(e) => setWaived(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded accent-blue cursor-pointer"
+              />
+              <span className="text-xs text-slate-400 leading-relaxed">
+                I agree to immediate delivery of my report and acknowledge that I waive my 14-day right to cancel under the Consumer Contracts Regulations 2013.
+              </span>
+            </label>
             {checkoutError && (
               <p className="text-red text-xs mb-3">{checkoutError}</p>
             )}
             <button
               onClick={() => handleCheckout("report")}
-              disabled={checkoutLoading !== null}
+              disabled={checkoutLoading !== null || !waived}
               className="w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {checkoutLoading === "report" ? "Redirecting…" : "Full Report — £49"}
