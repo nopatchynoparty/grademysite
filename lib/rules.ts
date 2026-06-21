@@ -18,6 +18,7 @@ export interface SectionHeadings {
   solution?: string;
   social_proof?: string;
   cta?: string;
+  [key: string]: string | undefined;
 }
 
 export interface RewrittenCopy {
@@ -28,6 +29,7 @@ export interface RewrittenCopy {
   testimonial_suggestions: string[];
   sound_familiar?: string[];
   section_headings?: SectionHeadings;
+  solution_bullets?: string[];
 }
 
 export interface FullAnalysis {
@@ -41,6 +43,9 @@ export interface FullAnalysis {
   top_3_wins?: TopWin[];
   biggest_win: string;
   rewritten_copy: RewrittenCopy;
+  company_name?: string;
+  phone?: string | null;
+  has_pricing?: boolean;
 }
 
 export const RULE_NAMES: Record<number, string> = {

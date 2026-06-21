@@ -7,6 +7,8 @@ import {
   getRuleName,
 } from "@/lib/rules";
 
+const HEADING_ORDER = ["hero", "problem", "solution", "social_proof", "cta"];
+
 function esc(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -204,7 +206,7 @@ export function buildReportEmail(
   <!-- 3 Biggest Wins -->
   <div style="background:#0f172a;border-radius:16px;padding:24px;margin-bottom:16px;">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;margin-bottom:14px;">Your 3 Biggest Wins</div>
-    <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;">These are the three issues most likely to be costing you enquiries right now. Fix these first.</p>
+    <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;">${["C", "D", "F"].includes(analysis.grade) ? "These are the three issues most likely to be costing you enquiries right now — and the fastest way to a better grade." : "These are the three issues most likely to be costing you enquiries right now."}</p>
     ${top3.map((win, i) => `
     <div style="margin-bottom:${i < top3.length - 1 ? "16px" : "0"};padding-bottom:${i < top3.length - 1 ? "16px" : "0"};border-bottom:${i < top3.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none"};">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#3B6CF4;margin-bottom:6px;">Win ${i + 1} — ${esc(win.rule_name ?? `Rule ${win.rule}`)}</div>
@@ -248,6 +250,8 @@ export function buildReportEmail(
       <div style="font-size:15px;color:#cbd5e1;">${esc(copy.subheadline)}</div>
     </div>
 
+    <!-- problem_section = external/factual problem (situational events) -->
+    <!-- sound_familiar  = internal/emotional problem (how it feels) — must NOT restate problem_section -->
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#3B6CF4;margin-bottom:8px;">Problem section (3 pain points)</div>
       ${copy.problem_section
@@ -281,12 +285,22 @@ export function buildReportEmail(
     ${copy.section_headings ? `
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#3B6CF4;margin-bottom:8px;">Suggested section headings</div>
-      ${Object.entries(copy.section_headings).filter(([,v]) => v).map(([k, v]) =>
+      ${HEADING_ORDER.filter(k => copy.section_headings?.[k]).map(k =>
         `<div style="display:flex;gap:8px;margin-bottom:6px;">
         <span style="font-size:11px;font-weight:600;color:#475569;flex-shrink:0;width:80px;text-transform:capitalize;">${esc(k.replace("_", " "))}:</span>
-        <span style="font-size:13px;color:#e2e8f0;">${esc(v as string)}</span>
+        <span style="font-size:13px;color:#e2e8f0;">${esc(copy.section_headings![k] ?? "")}</span>
       </div>`
       ).join("")}
+    </div>` : ""}
+
+    ${copy.solution_bullets && copy.solution_bullets.length > 0 ? `
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#3B6CF4;margin-bottom:8px;">Why customers choose you</div>
+      ${copy.solution_bullets.map((bullet, i) => `
+      <div style="display:flex;gap:8px;margin-bottom:6px;">
+        <span style="color:#3B6CF4;font-weight:700;flex-shrink:0;font-size:11px;">${i + 1}.</span>
+        <span style="font-size:14px;color:#cbd5e1;">${esc(bullet)}</span>
+      </div>`).join("")}
     </div>` : ""}
 
     <div>

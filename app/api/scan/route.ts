@@ -97,8 +97,24 @@ export async function POST(req: NextRequest) {
     // Extract og:image from metadata (present even without requesting html format)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const meta = (scrapeResult as any).metadata ?? {};
-    const ogImage: string | null =
-      meta.ogImage ?? meta["og:image"] ?? null;
+    let ogImage: string | null = meta.ogImage ?? meta["og:image"] ?? null;
+
+    // Firecrawl sometimes misses og:image — fall back to a plain HTML fetch
+    if (!ogImage) {
+      try {
+        const htmlRes = await fetch(targetUrl, {
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; GradeMyBot/1.0)" },
+          signal: AbortSignal.timeout(5000),
+        });
+        const html = await htmlRes.text();
+        const match =
+          html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ??
+          html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+        if (match?.[1]) ogImage = match[1];
+      } catch {
+        // silent — og:image is cosmetic, not worth failing the scan
+      }
+    }
 
     if (!pageContent || pageContent.length < 50) {
       return NextResponse.json(

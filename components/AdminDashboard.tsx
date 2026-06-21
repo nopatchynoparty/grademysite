@@ -25,6 +25,7 @@ interface RewrittenCopy {
   testimonial_suggestions: string[];
   sound_familiar?: string[];
   section_headings?: Record<string, string>;
+  solution_bullets?: string[];
 }
 
 interface FullAnalysis {
@@ -38,6 +39,9 @@ interface FullAnalysis {
   top_3_wins?: TopWin[];
   biggest_win: string;
   rewritten_copy: RewrittenCopy;
+  company_name?: string;
+  phone?: string | null;
+  has_pricing?: boolean;
 }
 
 interface Job {
@@ -48,6 +52,7 @@ interface Job {
   status: "pending_payment" | "pending" | "analysing" | "review" | "sent" | "error";
   scan_results: unknown;
   full_analysis: FullAnalysis | null;
+  analysis_history?: FullAnalysis[];
   html_output: string | null;
   stripe_session_id: string | null;
   og_image: string | null;
@@ -94,6 +99,11 @@ const RULE_NAMES: Record<number, string> = {
   22: "Your page title and description in Google look professional",
 };
 
+const HEADING_ORDER = ["hero", "problem", "solution", "social_proof", "cta"];
+
+const EDIT_INPUT = "w-full px-2 py-1 rounded bg-white/10 border border-white/20 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue resize-none";
+const EDIT_LABEL = "text-xs font-semibold uppercase tracking-wider text-blue mb-1";
+
 function StatusBadge({ status }: { status: string }) {
   const cfg = STATUS_LABELS[status] ?? { label: status, colour: "bg-slate-700 text-slate-300" };
   return (
@@ -132,30 +142,284 @@ function HtmlPreviewPanel({ htmlOutput }: { htmlOutput: string }) {
   );
 }
 
-function AnalysisPanel({ analysis, jobId }: { analysis: FullAnalysis; jobId: string }) {
+function AnalysisPanel({
+  analysis,
+  jobId,
+  isHtmlTier,
+  onSave,
+  savingAnalysis,
+}: {
+  analysis: FullAnalysis;
+  jobId: string;
+  isHtmlTier: boolean;
+  onSave: (updated: FullAnalysis) => Promise<void>;
+  savingAnalysis: boolean;
+}) {
   const gradeColour = GRADE_COLOURS[analysis.grade] ?? "bg-slate-500";
-  const copy = analysis.rewritten_copy;
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<FullAnalysis>(analysis);
+
+  useEffect(() => {
+    if (!editing) setDraft(analysis);
+  }, [analysis, editing]);
+
+  async function handleSave() {
+    try {
+      await onSave(draft);
+      setEditing(false);
+    } catch {
+      // parent surfaces error via actionError; stay in edit mode
+    }
+  }
+
+  function updateCopy(field: keyof RewrittenCopy, value: unknown) {
+    setDraft((prev) => ({ ...prev, rewritten_copy: { ...prev.rewritten_copy, [field]: value } }));
+  }
+
+  function updateCopyArray(field: keyof RewrittenCopy, index: number, value: string) {
+    setDraft((prev) => {
+      const arr = [...((prev.rewritten_copy[field] as string[]) ?? [])];
+      arr[index] = value;
+      return { ...prev, rewritten_copy: { ...prev.rewritten_copy, [field]: arr } };
+    });
+  }
+
+  function updateSectionHeading(key: string, value: string) {
+    setDraft((prev) => ({
+      ...prev,
+      rewritten_copy: {
+        ...prev.rewritten_copy,
+        section_headings: { ...(prev.rewritten_copy.section_headings ?? {}), [key]: value },
+      },
+    }));
+  }
+
+  function updateRuleResult(
+    bucket: "passes" | "fails" | "unable_to_assess",
+    index: number,
+    field: "finding" | "rationale",
+    value: string
+  ) {
+    setDraft((prev) => {
+      const arr = structuredClone(prev[bucket]);
+      arr[index] = { ...arr[index], [field]: value };
+      return { ...prev, [bucket]: arr };
+    });
+  }
+
+  function updateTopWin(index: number, field: "impact" | "fix", value: string) {
+    setDraft((prev) => {
+      const arr = structuredClone(prev.top_3_wins ?? []);
+      arr[index] = { ...arr[index], [field]: value };
+      return { ...prev, top_3_wins: arr };
+    });
+  }
+
+  const copy = editing ? draft.rewritten_copy : analysis.rewritten_copy;
+  const displayAnalysis = editing ? draft : analysis;
+  const top3 = displayAnalysis.top_3_wins?.filter(Boolean) ?? [];
 
   return (
     <div className="border-t border-white/10 pt-5 mt-2 space-y-5">
-      {/* Score */}
-      <div className="flex items-center gap-4">
-        <div className={`${gradeColour} w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-black text-[white]`}>
-          {analysis.grade}
-        </div>
-        <div>
-          <p className="text-2xl font-black text-[white]">
-            {analysis.score}<span className="text-base font-normal text-slate-400">/{analysis.out_of}</span>
-          </p>
-          <p className="text-sm text-slate-400">{analysis.headline}</p>
+      {/* Edit toolbar */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-slate-500">
+          {editing ? (
+            <span className="text-amber-400">
+              Editing…{isHtmlTier ? " (editing does not update the HTML file — re-run to regenerate)" : ""}
+            </span>
+          ) : null}
+        </span>
+        <div className="flex items-center gap-2">
+          {editing ? (
+            <>
+              <button
+                onClick={() => { setEditing(false); setDraft(analysis); }}
+                className="px-3 py-1 rounded-lg border border-white/20 text-xs text-slate-400 hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={savingAnalysis}
+                className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+              >
+                {savingAnalysis ? "Saving…" : "Save Changes"}
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setEditing(true)}
+              className="px-3 py-1 rounded-lg border border-white/20 text-xs text-slate-400 hover:text-white transition-colors"
+            >
+              Edit
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Biggest win */}
-      <div className="rounded-xl bg-blue/10 border border-blue/20 px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Biggest Win</p>
-        <p className="text-sm text-slate-200">{analysis.biggest_win}</p>
+      {/* Score */}
+      <div className="flex items-center gap-4">
+        {editing ? (
+          <>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500">Grade</span>
+              <select
+                value={draft.grade}
+                onChange={(e) => setDraft((p) => ({ ...p, grade: e.target.value }))}
+                className="bg-white/10 border border-white/20 text-white text-sm rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue"
+              >
+                {["A", "B", "C", "D", "F"].map((g) => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500">Score / Out of</span>
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  value={draft.score}
+                  onChange={(e) => setDraft((p) => ({ ...p, score: Number(e.target.value) }))}
+                  className="w-14 bg-white/10 border border-white/20 text-white text-sm rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue"
+                />
+                <span className="text-slate-400">/</span>
+                <input
+                  type="number"
+                  value={draft.out_of}
+                  onChange={(e) => setDraft((p) => ({ ...p, out_of: Number(e.target.value) }))}
+                  className="w-14 bg-white/10 border border-white/20 text-white text-sm rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue"
+                />
+              </div>
+            </div>
+            <div className="flex-1">
+              <span className="text-xs text-slate-500">Headline</span>
+              <textarea
+                value={draft.headline}
+                onChange={(e) => setDraft((p) => ({ ...p, headline: e.target.value }))}
+                rows={2}
+                className={EDIT_INPUT}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={`${gradeColour} w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-black text-[white]`}>
+              {displayAnalysis.grade}
+            </div>
+            <div>
+              <p className="text-2xl font-black text-[white]">
+                {displayAnalysis.score}<span className="text-base font-normal text-slate-400">/{displayAnalysis.out_of}</span>
+              </p>
+              <p className="text-sm text-slate-400">{displayAnalysis.headline}</p>
+            </div>
+          </>
+        )}
       </div>
+
+      {/* Metadata strip */}
+      {(displayAnalysis.company_name || displayAnalysis.phone || displayAnalysis.has_pricing !== undefined) && (
+        <div className="flex flex-wrap items-center gap-3">
+          {editing ? (
+            <>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-slate-500">Company name</span>
+                <input
+                  type="text"
+                  value={draft.company_name ?? ""}
+                  onChange={(e) => setDraft((p) => ({ ...p, company_name: e.target.value }))}
+                  className="px-2 py-1 rounded bg-white/10 border border-white/20 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-slate-500">Phone</span>
+                <input
+                  type="text"
+                  value={draft.phone ?? ""}
+                  onChange={(e) => setDraft((p) => ({ ...p, phone: e.target.value || null }))}
+                  className="px-2 py-1 rounded bg-white/10 border border-white/20 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue"
+                />
+              </div>
+              <div className="flex items-center gap-2 mt-4">
+                <input
+                  type="checkbox"
+                  id="has_pricing"
+                  checked={draft.has_pricing ?? false}
+                  onChange={(e) => setDraft((p) => ({ ...p, has_pricing: e.target.checked }))}
+                  className="rounded"
+                />
+                <label htmlFor="has_pricing" className="text-xs text-slate-400">Has pricing</label>
+              </div>
+            </>
+          ) : (
+            <>
+              {displayAnalysis.company_name && (
+                <span className="text-xs text-slate-400 font-semibold">{displayAnalysis.company_name}</span>
+              )}
+              {displayAnalysis.phone && (
+                <a href={`tel:${displayAnalysis.phone}`} className="text-xs text-blue hover:underline">{displayAnalysis.phone}</a>
+              )}
+              {displayAnalysis.has_pricing !== undefined && (
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${displayAnalysis.has_pricing ? "bg-emerald-900/50 text-emerald-400" : "bg-red-900/50 text-red-400"}`}>
+                  {displayAnalysis.has_pricing ? "Pricing shown" : "No pricing found"}
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Top 3 Wins / Biggest Win */}
+      {top3.length > 0 ? (
+        <div className="rounded-xl bg-slate-900 border border-white/10 px-4 py-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Your 3 Biggest Wins</p>
+          <p className="text-xs text-slate-500 mb-4">These are the three issues most likely to be costing this business enquiries right now.</p>
+          <div className="space-y-4">
+            {top3.map((win, i) => (
+              <div key={i} className={i < top3.length - 1 ? "pb-4 border-b border-white/8" : ""}>
+                <p className="text-xs font-bold uppercase tracking-wider text-blue mb-1">
+                  Win {i + 1} — {win.rule_name ?? `Rule ${win.rule}`}
+                </p>
+                {editing ? (
+                  <div className="space-y-1 mt-1">
+                    <textarea
+                      value={win.impact}
+                      onChange={(e) => updateTopWin(i, "impact", e.target.value)}
+                      rows={2}
+                      className={EDIT_INPUT}
+                      placeholder="Impact"
+                    />
+                    <textarea
+                      value={win.fix}
+                      onChange={(e) => updateTopWin(i, "fix", e.target.value)}
+                      rows={2}
+                      className={EDIT_INPUT}
+                      placeholder="Fix"
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-slate-200 font-semibold">{win.impact}</p>
+                    <p className="text-xs text-slate-400 mt-1"><span className="text-slate-300 font-semibold">Fix:</span> {win.fix}</p>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-xl bg-blue/10 border border-blue/20 px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Biggest Win</p>
+          {editing ? (
+            <textarea
+              value={draft.biggest_win}
+              onChange={(e) => setDraft((p) => ({ ...p, biggest_win: e.target.value }))}
+              rows={2}
+              className={EDIT_INPUT}
+            />
+          ) : (
+            <p className="text-sm text-slate-200">{displayAnalysis.biggest_win}</p>
+          )}
+        </div>
+      )}
 
       {/* Rule results */}
       <div className="rounded-xl border border-white/10 overflow-hidden">
@@ -169,26 +433,45 @@ function AnalysisPanel({ analysis, jobId }: { analysis: FullAnalysis; jobId: str
           </button>
         </div>
         <div className="divide-y divide-white/5 max-h-80 overflow-y-auto">
-          {analysis.passes.map((r) => (
+          {(editing ? draft : analysis).passes.map((r, i) => (
             <div key={`p-${r.rule}`} className="flex items-start gap-3 px-4 py-2.5">
               <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-emerald-900/50 text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
-              <div>
+              <div className="flex-1">
                 <p className="text-xs font-semibold text-slate-300">{r.rule_name ?? RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
+                {editing ? (
+                  <div className="space-y-1 mt-0.5">
+                    <textarea rows={2} value={draft.passes[i]?.finding ?? ""} onChange={(e) => updateRuleResult("passes", i, "finding", e.target.value)} className={EDIT_INPUT} placeholder="Finding" />
+                    <textarea rows={1} value={draft.passes[i]?.rationale ?? ""} onChange={(e) => updateRuleResult("passes", i, "rationale", e.target.value)} className={EDIT_INPUT} placeholder="Rationale" />
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
+                    {r.rationale && <p className="text-xs text-slate-600 mt-0.5 italic">{r.rationale}</p>}
+                  </>
+                )}
               </div>
             </div>
           ))}
-          {analysis.fails.map((r) => (
+          {(editing ? draft : analysis).fails.map((r, i) => (
             <div key={`f-${r.rule}`} className="flex items-start gap-3 px-4 py-2.5">
               <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-red-900/50 text-red-400 flex items-center justify-center text-xs font-bold">✗</span>
-              <div>
+              <div className="flex-1">
                 <p className="text-xs font-semibold text-slate-300">{r.rule_name ?? RULE_NAMES[r.rule] ?? `Rule ${r.rule}`}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
-                {r.rationale && <p className="text-xs text-slate-600 mt-0.5 italic">{r.rationale}</p>}
+                {editing ? (
+                  <div className="space-y-1 mt-0.5">
+                    <textarea rows={2} value={draft.fails[i]?.finding ?? ""} onChange={(e) => updateRuleResult("fails", i, "finding", e.target.value)} className={EDIT_INPUT} placeholder="Finding" />
+                    <textarea rows={1} value={draft.fails[i]?.rationale ?? ""} onChange={(e) => updateRuleResult("fails", i, "rationale", e.target.value)} className={EDIT_INPUT} placeholder="Rationale" />
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-slate-500 mt-0.5">{r.finding}</p>
+                    {r.rationale && <p className="text-xs text-slate-600 mt-0.5 italic">{r.rationale}</p>}
+                  </>
+                )}
               </div>
             </div>
           ))}
-          {(analysis.unable_to_assess ?? []).map((r) => (
+          {((editing ? draft : analysis).unable_to_assess ?? []).map((r) => (
             <div key={`u-${r.rule}`} className="flex items-start gap-3 px-4 py-2.5 opacity-50">
               <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-slate-700 text-slate-400 flex items-center justify-center text-xs font-bold">–</span>
               <div>
@@ -207,34 +490,108 @@ function AnalysisPanel({ analysis, jobId }: { analysis: FullAnalysis; jobId: str
         </div>
         <div className="p-4 space-y-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Headline</p>
-            <p className="text-sm font-bold text-[white]">{copy.headline}</p>
+            <p className={EDIT_LABEL}>Headline</p>
+            {editing ? (
+              <input type="text" value={draft.rewritten_copy.headline} onChange={(e) => updateCopy("headline", e.target.value)} className={EDIT_INPUT} />
+            ) : (
+              <p className="text-sm font-bold text-[white]">{copy.headline}</p>
+            )}
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Subheadline</p>
-            <p className="text-sm text-slate-300">{copy.subheadline}</p>
+            <p className={EDIT_LABEL}>Subheadline</p>
+            {editing ? (
+              <textarea rows={2} value={draft.rewritten_copy.subheadline} onChange={(e) => updateCopy("subheadline", e.target.value)} className={EDIT_INPUT} />
+            ) : (
+              <p className="text-sm text-slate-300">{copy.subheadline}</p>
+            )}
           </div>
+          {/* problem_section = external/factual problem (situational events)
+              sound_familiar  = internal/emotional problem (how it feels) — must NOT restate problem_section */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Problem Section</p>
+            <p className={EDIT_LABEL}>Problem Section</p>
             <ul className="space-y-1">
               {copy.problem_section.map((pt, i) => (
                 <li key={i} className="flex gap-2 text-sm text-slate-300">
-                  <span className="text-blue font-bold">•</span>{pt}
+                  <span className="text-blue font-bold flex-shrink-0">•</span>
+                  {editing ? (
+                    <textarea rows={1} value={draft.rewritten_copy.problem_section[i] ?? ""} onChange={(e) => updateCopyArray("problem_section", i, e.target.value)} className={EDIT_INPUT} />
+                  ) : pt}
                 </li>
               ))}
             </ul>
           </div>
+
+          {copy.sound_familiar && copy.sound_familiar.length > 0 && (
+            <div>
+              <p className={EDIT_LABEL}>Sound Familiar?</p>
+              <ul className="space-y-1">
+                {copy.sound_familiar.map((pt, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-slate-400">
+                    <span className="text-slate-500 font-bold flex-shrink-0">→</span>
+                    {editing ? (
+                      <textarea rows={1} value={draft.rewritten_copy.sound_familiar?.[i] ?? ""} onChange={(e) => updateCopyArray("sound_familiar", i, e.target.value)} className={EDIT_INPUT} />
+                    ) : (
+                      <span className="italic">"{pt}"</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-1">Primary CTA</p>
-            <span className="inline-block bg-blue text-[white] text-xs font-bold px-3 py-1.5 rounded-lg">{copy.primary_cta}</span>
+            <p className={EDIT_LABEL}>Primary CTA</p>
+            {editing ? (
+              <input type="text" value={draft.rewritten_copy.primary_cta} onChange={(e) => updateCopy("primary_cta", e.target.value)} className={EDIT_INPUT} />
+            ) : (
+              <span className="inline-block bg-blue text-[white] text-xs font-bold px-3 py-1.5 rounded-lg">{copy.primary_cta}</span>
+            )}
           </div>
+
+          {copy.section_headings && Object.keys(copy.section_headings).length > 0 && (
+            <div>
+              <p className={EDIT_LABEL}>Suggested Section Headings</p>
+              <div className="space-y-1">
+                {HEADING_ORDER.filter(k => copy.section_headings?.[k]).map(k => (
+                  <div key={k} className="flex items-start gap-2">
+                    <span className="text-xs text-slate-500 capitalize w-20 flex-shrink-0 pt-1">{k.replace("_", " ")}:</span>
+                    {editing ? (
+                      <input type="text" value={draft.rewritten_copy.section_headings?.[k] ?? ""} onChange={(e) => updateSectionHeading(k, e.target.value)} className={EDIT_INPUT} />
+                    ) : (
+                      <span className="text-sm text-slate-300">{copy.section_headings![k]}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {copy.solution_bullets && copy.solution_bullets.length > 0 && (
+            <div>
+              <p className={EDIT_LABEL}>Solution Bullets</p>
+              <ol className="space-y-1 list-decimal list-inside">
+                {copy.solution_bullets.map((bullet, i) => (
+                  <li key={i} className="text-sm text-slate-300">
+                    {editing ? (
+                      <textarea rows={1} value={draft.rewritten_copy.solution_bullets?.[i] ?? ""} onChange={(e) => updateCopyArray("solution_bullets", i, e.target.value)} className={EDIT_INPUT} />
+                    ) : bullet}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Testimonial Suggestions</p>
+            <p className={EDIT_LABEL}>Testimonial Suggestions</p>
             <div className="space-y-2">
               {copy.testimonial_suggestions.map((s, i) => (
                 <div key={i} className="rounded-lg bg-white/5 border border-white/10 px-3 py-2">
                   <p className="text-xs text-slate-500 mb-0.5">Suggestion {i + 1}</p>
-                  <p className="text-xs text-slate-300 italic">"{s}"</p>
+                  {editing ? (
+                    <textarea rows={2} value={draft.rewritten_copy.testimonial_suggestions[i] ?? ""} onChange={(e) => updateCopyArray("testimonial_suggestions", i, e.target.value)} className={EDIT_INPUT} />
+                  ) : (
+                    <p className="text-xs text-slate-300 italic">"{s}"</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -252,9 +609,12 @@ function JobCard({
   onAnalyse,
   onApprove,
   onGenerateHtml,
+  onRerun,
+  onSaveAnalysis,
   analysingId,
   approvingId,
   generatingHtmlId,
+  savingAnalysisId,
 }: {
   job: Job;
   expanded: boolean;
@@ -262,15 +622,18 @@ function JobCard({
   onAnalyse: (id: string) => void;
   onApprove: (id: string) => void;
   onGenerateHtml: (id: string) => void;
+  onRerun: (id: string, notes: string) => void;
+  onSaveAnalysis: (id: string, analysis: FullAnalysis) => Promise<void>;
   analysingId: string | null;
   approvingId: string | null;
   generatingHtmlId: string | null;
+  savingAnalysisId: string | null;
 }) {
   const isAnalysing = analysingId === job.id || job.status === "analysing";
   const isApproving = approvingId === job.id;
   const isGeneratingHtml = generatingHtmlId === job.id;
+  const [notes, setNotes] = useState("");
 
-  // An upgrade job has existing full_analysis but is html tier and needs HTML sent
   const isUpgradeJob =
     job.tier === "html" &&
     !!job.full_analysis &&
@@ -311,9 +674,7 @@ function JobCard({
           <p className="text-xs text-slate-500 mt-0.5">{job.email} · {new Date(job.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          {/* Action buttons */}
           {isUpgradeJob ? (
-            // Upgrade path: full_analysis exists, just need to generate HTML and send delivery email
             <button
               onClick={(e) => { e.stopPropagation(); onGenerateHtml(job.id); }}
               disabled={isGeneratingHtml}
@@ -322,7 +683,6 @@ function JobCard({
               {isGeneratingHtml ? "Sending…" : "Generate & Send HTML"}
             </button>
           ) : (job.status === "pending" || job.status === "error") ? (
-            // Normal path: no analysis yet, run Opus
             <button
               onClick={(e) => { e.stopPropagation(); onAnalyse(job.id); }}
               disabled={isAnalysing}
@@ -362,7 +722,13 @@ function JobCard({
           )}
           {job.full_analysis && !isAnalysing && (
             <>
-              <AnalysisPanel analysis={job.full_analysis} jobId={job.id} />
+              <AnalysisPanel
+                analysis={job.full_analysis}
+                jobId={job.id}
+                isHtmlTier={job.tier === "html"}
+                onSave={(updated) => onSaveAnalysis(job.id, updated)}
+                savingAnalysis={savingAnalysisId === job.id}
+              />
               {job.tier === "html" && job.html_output && (
                 <div className="mt-5">
                   <HtmlPreviewPanel htmlOutput={job.html_output} />
@@ -372,6 +738,47 @@ function JobCard({
                 <div className="mt-4 px-4 py-3 rounded-xl bg-amber-900/20 border border-amber-500/20 text-amber-400 text-xs">
                   HTML not generated yet — re-run analysis to generate it.
                 </div>
+              )}
+
+              {/* Re-run section */}
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-2">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Re-run Analysis</p>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Optional reviewer notes — e.g. 'The testimonials were missed, there are two on the page. Make the tone less formal.'"
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-[white] placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue resize-none"
+                />
+                <button
+                  onClick={() => { onRerun(job.id, notes); setNotes(""); }}
+                  disabled={isAnalysing}
+                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-[white] text-xs font-semibold transition-colors disabled:opacity-50"
+                >
+                  {isAnalysing ? "Running…" : "Re-run Analysis"}
+                </button>
+              </div>
+
+              {/* Version history */}
+              {job.analysis_history && job.analysis_history.length > 0 && (
+                <details className="mt-4 pt-4 border-t border-white/10">
+                  <summary className="text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer select-none">
+                    Previous versions ({job.analysis_history.length})
+                  </summary>
+                  <div className="mt-3 space-y-2">
+                    {job.analysis_history.map((prev, i) => (
+                      <details key={i} className="rounded-lg border border-white/10 overflow-hidden">
+                        <summary className="px-3 py-2 bg-white/5 text-xs text-slate-400 cursor-pointer select-none">
+                          Version {i + 1} — {prev.grade} {prev.score}/{prev.out_of}
+                          {prev.company_name ? ` — ${prev.company_name}` : ""}
+                        </summary>
+                        <pre className="p-3 text-xs text-slate-500 overflow-x-auto max-h-64 overflow-y-auto whitespace-pre-wrap break-words">
+                          {JSON.stringify(prev, null, 2)}
+                        </pre>
+                      </details>
+                    ))}
+                  </div>
+                </details>
               )}
             </>
           )}
@@ -386,8 +793,6 @@ function JobCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  // html tier: resend the delivery-only email via generate-html
-                  // report tier: resend full report via approve
                   if (job.tier === "html") {
                     onGenerateHtml(job.id);
                   } else {
@@ -416,6 +821,7 @@ export default function AdminDashboard() {
   const [analysingId, setAnalysingId] = useState<string | null>(null);
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [generatingHtmlId, setGeneratingHtmlId] = useState<string | null>(null);
+  const [savingAnalysisId, setSavingAnalysisId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "pending" | "review" | "sent">("all");
   const [testJobOpen, setTestJobOpen] = useState(false);
@@ -442,25 +848,22 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchJobs();
-    const interval = setInterval(fetchJobs, 15000); // poll every 15s
+    const interval = setInterval(fetchJobs, 15000);
     return () => clearInterval(interval);
   }, [fetchJobs]);
 
-  async function handleAnalyse(jobId: string) {
+  async function handleRerun(jobId: string, notes: string) {
     setAnalysingId(jobId);
     setActionError(null);
     setExpandedJob(jobId);
-
-    // Optimistically mark as analysing in UI
     setJobs((prev) =>
       prev.map((j) => (j.id === jobId ? { ...j, status: "analysing" } : j))
     );
-
     try {
       const res = await fetch("/api/admin/analyse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobId }),
+        body: JSON.stringify({ jobId, notes: notes || undefined }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -469,7 +872,6 @@ export default function AdminDashboard() {
           prev.map((j) => (j.id === jobId ? { ...j, status: "error" } : j))
         );
       } else {
-        // Refresh to get full job with analysis stored
         await fetchJobs();
       }
     } catch {
@@ -477,6 +879,10 @@ export default function AdminDashboard() {
     } finally {
       setAnalysingId(null);
     }
+  }
+
+  async function handleAnalyse(jobId: string) {
+    return handleRerun(jobId, "");
   }
 
   async function handleApprove(jobId: string) {
@@ -523,6 +929,28 @@ export default function AdminDashboard() {
     }
   }
 
+  async function handleUpdateAnalysis(jobId: string, analysis: FullAnalysis) {
+    setSavingAnalysisId(jobId);
+    setActionError(null);
+    try {
+      const res = await fetch("/api/admin/update-analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId, analysis }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setActionError(data.error ?? "Save failed");
+        throw new Error(data.error);
+      }
+      setJobs((prev) =>
+        prev.map((j) => (j.id === jobId ? { ...j, full_analysis: analysis } : j))
+      );
+    } finally {
+      setSavingAnalysisId(null);
+    }
+  }
+
   async function handleCreateTestJob(e: React.FormEvent) {
     e.preventDefault();
     setTestLoading(true);
@@ -565,7 +993,7 @@ export default function AdminDashboard() {
   const reviewCount = jobs.filter((j) => j.status === "review").length;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-[white]">
+    <div className="admin-panel min-h-screen bg-slate-950 text-[white]">
       {/* Header */}
       <header className="border-b border-white/10 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
@@ -711,9 +1139,12 @@ export default function AdminDashboard() {
               onAnalyse={handleAnalyse}
               onApprove={handleApprove}
               onGenerateHtml={handleGenerateHtml}
+              onRerun={handleRerun}
+              onSaveAnalysis={handleUpdateAnalysis}
               analysingId={analysingId}
               approvingId={approvingId}
               generatingHtmlId={generatingHtmlId}
+              savingAnalysisId={savingAnalysisId}
             />
           ))}
         </div>

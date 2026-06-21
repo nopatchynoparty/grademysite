@@ -440,6 +440,21 @@ export default function Home() {
                       ))}
                     </ul>
                   </div>
+                  <div className="mb-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Why customers choose you</p>
+                    <div className="space-y-1.5">
+                      {[
+                        "18 years in Bristol — over 400 jobs completed",
+                        "Same-day call-out, 7 days a week including emergencies",
+                        "Fixed price quoted before we start — no surprise invoices",
+                      ].map((bullet, i) => (
+                        <div key={i} className="flex gap-2 text-sm text-slate-300">
+                          <span className="text-blue font-bold flex-shrink-0">{i + 1}.</span>
+                          <span>{bullet}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-blue mb-2">Button text</p>
                     <span className="inline-block bg-blue text-[white] text-sm font-bold px-4 py-2 rounded-lg">
@@ -552,10 +567,11 @@ export default function Home() {
                 <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
                     "Full 22-rule audit with specific findings from your actual website",
-                    "New headline, subheadline and button text — ready to hand to your developer",
-                    "Problem section rewritten in plain language your customers recognise",
+                    "Rewritten copy: new headline, subheadline, button text and problem section",
+                    "Why customers choose you — 3 specific bullets pulled from your actual site",
+                    "Section headings for every part of your homepage (hero, problem, solution, testimonials, CTA)",
                     "Testimonial prompts — exact questions to ask your best customers",
-                    "Printable PDF report attached — professional, shareable, ready to hand to a developer",
+                    "Printable PDF report — professional, shareable, ready to hand to your developer",
                     "Human-reviewed and delivered by email within 24 hours",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">

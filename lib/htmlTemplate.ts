@@ -414,11 +414,8 @@ export function generateHtmlTemplate(
     )
     .join("\n");
 
-  const soundFamiliarBullets = (copy.sound_familiar ?? copy.problem_section)
-    .map(
-      (pt) => `<li style="padding:8px 0;border-bottom:1px solid #f1f5f9;color:#475569;line-height:1.6;">"${esc(pt)}"</li>`
-    )
-    .join("\n");
+  // problem_section = external/factual problem (situational events) — used in the Problem section below
+  // sound_familiar  = internal/emotional problem (how it feels) — report/email-only, not rendered in the homepage template
 
   const testimonialCards = copy.testimonial_suggestions
     .map(

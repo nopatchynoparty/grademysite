@@ -137,7 +137,11 @@ Write improved copy for this specific business, based only on information visibl
 
 Also identify the 3 most impactful fails — the ones most likely to cost this business enquiries — and write a plain-English explanation of the cost and fix for each. These go in the "top_3_wins" array.
 
-Write a "sound_familiar" section: 3 bullet points in second-person that name the specific frustrations a visitor to THIS type of business would feel. Base these on the actual business category inferred from the scan. Be specific — not generic.
+Write a "problem_section": 3 bullet points describing the EXTERNAL problem — the factual, situational frustration this customer is dealing with. Specific events or situations, not feelings. ("Your last three quotes came in over budget and the contractor disappeared for two weeks.") This will appear as structured homepage copy in a "Problem" section.
+
+Write a "sound_familiar" section: 3 bullet points describing the INTERNAL problem — how the external situation makes this customer FEEL, in second-person inner-monologue voice. Not a restatement of problem_section's facts — the emotional consequence of them. ("You're starting to wonder if you'll ever find someone who just does what they say they will.") This appears as a conversational "does this sound like you?" callout, distinct from the Problem section.
+
+problem_section and sound_familiar must never restate the same point. If problem_section describes a situation, sound_familiar must describe the feeling that situation produces — not the situation itself again.
 
 Write suggested section headings for a redesigned homepage: hero, problem, solution, social proof, CTA.
 
@@ -158,7 +162,7 @@ Return ONLY the following JSON — no markdown fences, no text outside the JSON:
   "score": <integer — count of passes only>,
   "out_of": <integer — rules assessed, excluding unable_to_assess and skipped>,
   "grade": "<A|B|C|D|F>",
-  "headline": "<one sentence summarising the biggest problem or strength — specific to this site>",
+  "headline": "<one sentence summarising the biggest problem or strength — specific to this site. If the grade is F or a low D (score/out_of under 50%), you must pair the honest assessment with a specific, encouraging note about the nearest achievable improvement — e.g. 'Fixing your phone number and headline alone would likely move you out of F territory.' Do not soften the grade or understate the problems, but always include a concrete near-term path forward, not just a verdict.>",
   "passes": [
     { "rule": <number>, "rule_name": "<exact rule name>", "finding": "<specific evidence from the page>", "rationale": "<one plain-English sentence on why this matters>" }
   ],
@@ -176,9 +180,9 @@ Return ONLY the following JSON — no markdown fences, no text outside the JSON:
     "headline": "<new outcome-focused headline — specific to this business, under 10 words, someone could disagree with it>",
     "subheadline": "<one supporting sentence with a specific number or qualifier>",
     "problem_section": [
-      "<pain point 1 in customer language — specific to their situation>",
-      "<pain point 2 in customer language>",
-      "<pain point 3 in customer language>"
+      "<external/situational pain point 1 — a specific event or situation, not a feeling>",
+      "<external/situational pain point 2>",
+      "<external/situational pain point 3>"
     ],
     "primary_cta": "<specific CTA text describing the next step — under 6 words>",
     "testimonial_suggestions": [
@@ -187,9 +191,9 @@ Return ONLY the following JSON — no markdown fences, no text outside the JSON:
       "<third suggestion with a different outcome>"
     ],
     "sound_familiar": [
-      "<second-person frustration bullet 1 — specific to this business type>",
-      "<second-person frustration bullet 2>",
-      "<second-person frustration bullet 3>"
+      "<internal frustration 1 — how the external situation makes the customer FEEL, in second-person inner voice, not a restatement of problem_section>",
+      "<internal frustration 2>",
+      "<internal frustration 3>"
     ],
     "section_headings": {
       "hero": "<suggested hero section heading>",

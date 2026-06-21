@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { jobId } = await req.json();
+  const { jobId, notes } = await req.json();
   if (!jobId) {
     return NextResponse.json({ error: "jobId required" }, { status: 400 });
   }
@@ -51,6 +51,19 @@ export async function POST(req: NextRequest) {
       { error: `Job is in '${job.status}' status — can only analyse pending/error jobs` },
       { status: 409 }
     );
+  }
+
+  // Archive current analysis to history before overwriting
+  try {
+    if (job.full_analysis) {
+      const currentHistory = Array.isArray(job.analysis_history) ? job.analysis_history : [];
+      await supabase
+        .from("jobs")
+        .update({ analysis_history: [...currentHistory, job.full_analysis] })
+        .eq("id", jobId);
+    }
+  } catch (historyErr) {
+    console.warn("[analyse] Could not save analysis history:", historyErr);
   }
 
   // Mark as analysing
@@ -170,7 +183,11 @@ export async function POST(req: NextRequest) {
         })()
       : "";
 
-    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}`;
+    const notesAppend = notes
+      ? `\n\nIMPORTANT — REVIEWER FEEDBACK ON PREVIOUS ATTEMPT: ${notes}\nIncorporate this feedback directly when generating this analysis.`
+      : "";
+
+    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}${notesAppend}`;
 
     // Claude Opus full analysis
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });

@@ -59,6 +59,8 @@ Font.register({
 
 Font.registerHyphenationCallback((word) => [word]);
 
+const HEADING_ORDER = ["hero", "problem", "solution", "social_proof", "cta"];
+
 const C = {
   ink: "#1B2534",
   blue: "#3B6CF4",
@@ -442,7 +444,9 @@ function BiggestWinsPage({ analysis, url }: { analysis: FullAnalysis; url: strin
       <PageHeader url={displayUrl} />
       <Text style={s.pageTitle}>Your 3 Biggest Wins</Text>
       <Text style={s.pageSub}>
-        These are the three issues most likely costing you enquiries right now. Fix these first.
+        {["C", "D", "F"].includes(analysis.grade)
+          ? "These are the three issues most likely costing you enquiries right now — and the fastest way to a better grade."
+          : "These are the three issues most likely costing you enquiries right now. Fix these first."}
       </Text>
 
       {wins.length === 0 ? (
@@ -451,7 +455,6 @@ function BiggestWinsPage({ analysis, url }: { analysis: FullAnalysis; url: strin
         wins.map((win, i) => (
           <View key={i} style={s.winCard} wrap={false}>
             <Text style={s.winLabel}>Win {i + 1} — {win.rule_name ?? `Rule ${win.rule}`}</Text>
-            <Text style={s.winName}>{win.rule_name ?? `Rule ${win.rule}`}</Text>
             <Text style={s.winImpact}>{win.impact}</Text>
             <Text style={s.winFix}>
               <Text style={s.winFixBold}>Fix: </Text>
@@ -526,6 +529,8 @@ function RewrittenCopyPage({ analysis, url }: { analysis: FullAnalysis; url: str
         <Text style={s.copySub}>{copy.subheadline}</Text>
       </View>
 
+      {/* problem_section = external/factual problem (situational events)
+          sound_familiar  = internal/emotional problem (how it feels) — must NOT restate problem_section */}
       <View style={s.copySection} wrap={false}>
         <Text style={s.copyLabel}>Problem Section</Text>
         {copy.problem_section.map((pt, i) => (
@@ -558,14 +563,26 @@ function RewrittenCopyPage({ analysis, url }: { analysis: FullAnalysis; url: str
       {copy.section_headings && Object.keys(copy.section_headings).length > 0 && (
         <View style={s.copySection} wrap={false}>
           <Text style={s.copyLabel}>Suggested Section Headings</Text>
-          {Object.entries(copy.section_headings)
-            .filter(([, v]) => v)
-            .map(([k, v]) => (
+          {HEADING_ORDER
+            .filter(k => copy.section_headings?.[k])
+            .map(k => (
               <View key={k} style={s.headingsRow}>
                 <Text style={s.headingsKey}>{k.replace("_", " ")}:</Text>
-                <Text style={s.headingsVal}>{v as string}</Text>
+                <Text style={s.headingsVal}>{copy.section_headings![k]}</Text>
               </View>
             ))}
+        </View>
+      )}
+
+      {copy.solution_bullets && copy.solution_bullets.length > 0 && (
+        <View style={s.copySection} wrap={false}>
+          <Text style={s.copyLabel}>Why Customers Choose You</Text>
+          {copy.solution_bullets.map((bullet, i) => (
+            <View key={i} style={s.copyBullet}>
+              <Text style={s.copyBulletDot}>{i + 1}.</Text>
+              <Text style={s.copyBulletText}>{bullet}</Text>
+            </View>
+          ))}
         </View>
       )}
 
