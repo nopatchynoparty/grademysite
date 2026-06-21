@@ -316,7 +316,7 @@ export default function Home() {
                   <div className="w-3 h-3 rounded-full bg-emerald-400" />
                 </div>
                 <div className="flex-1 ml-3 bg-white border border-border rounded px-3 py-1 text-xs text-muted truncate">
-                  Your GradeMysite Report — D grade (7/22 rules passed) · acornplumbing.co.uk
+                  Your GradeMysite Report — D grade (9/22 rules passed) · acornplumbing.co.uk
                 </div>
               </div>
 
@@ -337,7 +337,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-2xl font-black text-ink">
-                        7<span className="text-sm font-normal text-muted">/22</span>
+                        9<span className="text-sm font-normal text-muted">/22</span>
                       </p>
                       <p className="text-xs text-muted">rules passed</p>
                     </div>

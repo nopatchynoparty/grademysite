@@ -4,6 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import FirecrawlApp from "@mendable/firecrawl-js";
 import { FULL_ANALYSIS_SYSTEM_PROMPT } from "@/lib/fullAnalysisPrompt";
 import { generateHtmlTemplate } from "@/lib/htmlTemplate";
+import { calculateGrade } from "@/lib/grading";
 
 export const maxDuration = 300;
 
@@ -19,14 +20,6 @@ function getSupabase() {
   return createClient(url!, key!);
 }
 
-function gradeFromScore(score: number, outOf: number): string {
-  const pct = score / outOf;
-  if (pct >= 0.9) return "A";
-  if (pct >= 0.8) return "B";
-  if (pct >= 0.6) return "C";
-  if (pct >= 0.4) return "D";
-  return "F";
-}
 
 export async function POST(req: NextRequest) {
   if (!isAuthed(req)) {
@@ -212,9 +205,7 @@ export async function POST(req: NextRequest) {
     console.log("[analyse] Parsed analysis — score:", analysis.score, "grade:", analysis.grade, "keys:", Object.keys(analysis));
     console.log("[analyse] rewritten_copy.solution_bullets:", analysis?.rewritten_copy?.solution_bullets);
 
-    if (!analysis.grade) {
-      analysis.grade = gradeFromScore(analysis.score, analysis.out_of);
-    }
+    analysis.grade = calculateGrade(analysis.score, analysis.out_of);
 
     // Generate HTML page for html tier jobs
     let htmlOutput: string | null = null;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import FirecrawlApp from "@mendable/firecrawl-js";
 import Anthropic from "@anthropic-ai/sdk";
+import { calculateGrade } from "@/lib/grading";
 
 const STAGE1_SYSTEM_PROMPT = `You are a conversion rate expert evaluating a local business website homepage.
 
@@ -52,14 +53,6 @@ Grade mapping: 5=A, 4=B, 3=C, 2=D, 0-1=F
 
 If a rule truly cannot be assessed from the scraped content (e.g. the page returned no meaningful text), mark it as a fail with finding "Unable to assess — page content too limited".`;
 
-function gradeLabel(score: number, outOf: number): string {
-  const pct = score / outOf;
-  if (pct >= 0.9) return "A";
-  if (pct >= 0.8) return "B";
-  if (pct >= 0.6) return "C";
-  if (pct >= 0.4) return "D";
-  return "F";
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -152,10 +145,7 @@ export async function POST(req: NextRequest) {
 
     const analysis = JSON.parse(jsonMatch[0]);
 
-    // Ensure grade is present
-    if (!analysis.grade) {
-      analysis.grade = gradeLabel(analysis.score, analysis.out_of);
-    }
+    analysis.grade = calculateGrade(analysis.score, analysis.out_of);
 
 
     return NextResponse.json({
