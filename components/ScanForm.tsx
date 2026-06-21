@@ -332,7 +332,7 @@ export default function ScanForm() {
               placeholder="your@email.com — for report delivery"
               value={email}
               onChange={(e) => { setEmail(e.target.value); setCheckoutError(null); }}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-[white] placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-[white] placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
             />
             <label className="flex items-start gap-2.5 cursor-pointer mb-3">
               <input
