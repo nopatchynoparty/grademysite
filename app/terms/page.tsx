@@ -39,7 +39,7 @@ export default function TermsPage() {
 
           <Section title="What the service is">
             <p>Grade My Site provides automated and human-reviewed website audits for local business homepages. After purchasing, we scan your homepage against 22 criteria and deliver a written report by email, typically within 24 hours.</p>
-            <p>The £99 "Report + Homepage" tier also includes a complete HTML homepage file, styled and ready to hand to a developer.</p>
+            <p>A "Report + Homepage" tier is coming soon, which will also include a complete HTML homepage file styled and ready to hand to a developer.</p>
           </Section>
 
           <Section title="What the service is not">
@@ -48,7 +48,7 @@ export default function TermsPage() {
           </Section>
 
           <Section title="Payment">
-            <p>Payments are processed securely by Stripe. We accept major debit and credit cards. All prices are shown inclusive of VAT where applicable. Purchases are one-time — there is no subscription and you will not be charged again.</p>
+            <p>Payments are processed securely by Stripe. We accept major debit and credit cards. Grade My Site is not VAT-registered; prices shown are the total amount charged with no VAT applied. Purchases are one-time — there is no subscription and you will not be charged again.</p>
             <p>Your receipt will be sent to the email address you provide at checkout.</p>
           </Section>
 
