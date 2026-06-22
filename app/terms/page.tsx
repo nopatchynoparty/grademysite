@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Terms and conditions for using Grade My Site.",
 };
 
-const LAST_UPDATED = "21 June 2026";
+const LAST_UPDATED = "22 June 2026";
 
 export default function TermsPage() {
   return (
@@ -58,7 +58,7 @@ export default function TermsPage() {
           </Section>
 
           <Section title="Cancellation rights and refunds">
-            <p>Under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013, you have a 14-day right to cancel a purchase of digital content. However, by ticking the consent box at checkout, you expressly request that we begin delivering your report immediately and acknowledge that you lose your right to cancel once delivery has started.</p>
+            <p>Under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013, you ordinarily have a 14-day right to cancel a purchase of digital content. However, by completing your purchase you expressly request that we begin work on your report immediately, and you acknowledge that you lose your right to cancel once work has started.</p>
             <p>Once your report has been delivered to your email address, no refund is available.</p>
             <p>If your report has not yet been delivered and you wish to cancel, contact us at <a href="mailto:hello@grademy.site">hello@grademy.site</a> and we will issue a full refund.</p>
             <p>If you believe there is a factual error in your report — a finding that is demonstrably incorrect based on what is actually on your homepage — we will review and correct it at no charge.</p>
