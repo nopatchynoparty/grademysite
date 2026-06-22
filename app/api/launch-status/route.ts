@@ -30,5 +30,6 @@ export async function GET() {
     spotsLeft,
     launchPrice: LAUNCH_PRICE_PENCE,
     fullPrice: FULL_PRICE_PENCE,
+    _debug: { sold, slots: LAUNCH_SLOTS },
   });
 }
