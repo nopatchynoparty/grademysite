@@ -331,7 +331,7 @@ export default function ScanForm() {
               placeholder="your@email.com — for report delivery"
               value={email}
               onChange={(e) => { setEmail(e.target.value); setCheckoutError(null); }}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/[0.15] text-[white] placeholder:text-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
+              className="w-full px-4 py-3 rounded-xl border border-border bg-white text-[white] placeholder:text-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3 dm-input"
             />
             {checkoutError && (
               <p className="text-red text-xs mb-3">{checkoutError}</p>
