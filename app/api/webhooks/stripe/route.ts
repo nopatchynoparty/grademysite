@@ -198,11 +198,12 @@ export async function POST(req: NextRequest) {
       console.log(`Job ${jobId} upgraded to html tier — HTML sent to ${job.email}`);
     } else {
       // Standard new payment — mark job as pending for admin to analyse
+      const tierFromSession = (session.metadata?.tier ?? "report") as "report" | "html";
       const { error } = await supabase
         .from("jobs")
         .update({
           status: "pending",
-          tier: "html",
+          tier: tierFromSession,
           updated_at: new Date().toISOString(),
         })
         .eq("id", jobId);

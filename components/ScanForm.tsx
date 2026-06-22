@@ -97,7 +97,6 @@ export default function ScanForm() {
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState<"report" | "html" | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [waived, setWaived] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
   const paywallEmailRef = useRef<HTMLInputElement>(null);
 
@@ -321,7 +320,7 @@ export default function ScanForm() {
             <h3 className="text-xl font-bold mb-1">
               This was 5 of 22 rules — and the lighter half.
             </h3>
-            <p className="text-slate-300 text-sm mb-4">
+            <p className="text-slate-300 text-sm mb-5">
               The full report checks all 22 conversion principles and tells you
               exactly what to rewrite — with new headlines, button text, and words
               already written for your business.
@@ -332,34 +331,20 @@ export default function ScanForm() {
               placeholder="your@email.com — for report delivery"
               value={email}
               onChange={(e) => { setEmail(e.target.value); setCheckoutError(null); }}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 text-[white] placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
+              className="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/50 text-[white] placeholder:text-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent mb-3"
             />
-            <label className="flex items-start gap-2.5 cursor-pointer mb-3">
-              <input
-                type="checkbox"
-                checked={waived}
-                onChange={(e) => setWaived(e.target.checked)}
-                className="mt-0.5 h-4 w-4 shrink-0 rounded accent-blue cursor-pointer"
-              />
-              <span className="text-xs text-slate-400 leading-relaxed">
-                Start my audit now — I understand work begins on payment and I won't be able to cancel once it's underway.
-              </span>
-            </label>
             {checkoutError && (
               <p className="text-red text-xs mb-3">{checkoutError}</p>
             )}
             <button
               onClick={() => handleCheckout("report")}
-              disabled={checkoutLoading !== null || !waived}
-              className="w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-semibold text-center text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={checkoutLoading !== null}
+              className="w-full py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-center text-base transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {checkoutLoading === "report" ? "Redirecting…" : "Full Report — £49"}
+              {checkoutLoading === "report" ? "Redirecting…" : "Get the Full Report — £49"}
             </button>
-            <p className="text-xs text-slate-400 text-center mt-3">
-              Homepage service coming soon — upgrade to the full report to see your rewritten copy now.
-            </p>
-            <p className="text-xs text-slate-500 text-center mt-1">
-              One-time payment. Delivered by email within 24 hours.
+            <p className="text-xs text-slate-500 text-center mt-3">
+              One-time payment. Delivered by email within 24 hours. Work begins immediately on payment.
             </p>
           </div>
         </div>
