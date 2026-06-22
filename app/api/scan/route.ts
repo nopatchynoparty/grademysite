@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import FirecrawlApp from "@mendable/firecrawl-js";
 import Anthropic from "@anthropic-ai/sdk";
 import { calculateGrade } from "@/lib/grading";
+import { scanRatelimit } from "@/lib/rateLimit";
+import { isPrivateUrl } from "@/lib/validateUrl";
 
 const STAGE1_SYSTEM_PROMPT = `You are a conversion rate expert evaluating a local business website homepage.
 
@@ -56,6 +58,19 @@ If a rule truly cannot be assessed from the scraped content (e.g. the page retur
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit by IP
+    if (scanRatelimit) {
+      const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous";
+      const { success, reset } = await scanRatelimit.limit(ip);
+      if (!success) {
+        const retryAfter = Math.ceil((reset - Date.now()) / 1000);
+        return NextResponse.json(
+          { error: "Too many scans — please wait before trying again." },
+          { status: 429, headers: { "Retry-After": String(retryAfter) } }
+        );
+      }
+    }
+
     const { url, email } = await req.json();
 
     if (!url || typeof url !== "string") {
@@ -68,10 +83,13 @@ export async function POST(req: NextRequest) {
       targetUrl = `https://${targetUrl}`;
     }
 
-    // Validate it looks like a real URL
+    // Validate it looks like a real URL and isn't a private/internal host
     try {
       new URL(targetUrl);
     } catch {
+      return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+    }
+    if (isPrivateUrl(targetUrl)) {
       return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
     }
 

@@ -3,10 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { generateHtmlTemplate } from "@/lib/htmlTemplate";
 import { buildHtmlDeliveryEmail } from "@/lib/reportEmail";
-
-function isAuthed(req: NextRequest) {
-  return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
-}
+import { isAuthed } from "@/lib/adminAuth";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -18,7 +15,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 // Used when a job already has full_analysis (upgrade path) and just needs
 // HTML generated and sent — skips Opus re-run and admin review step.
 export async function POST(req: NextRequest) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

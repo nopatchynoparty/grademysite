@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { generateReportPdf } from "@/lib/pdfReport";
-
-function isAuthed(req: NextRequest) {
-  return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
-}
+import { isAuthed } from "@/lib/adminAuth";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -12,7 +9,7 @@ const supabase = createClient(
 );
 
 export async function GET(req: NextRequest) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

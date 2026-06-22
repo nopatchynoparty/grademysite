@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-
-function isAuthed(req: NextRequest) {
-  return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
-}
+import { isAuthed } from "@/lib/adminAuth";
 
 export async function POST(req: NextRequest) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

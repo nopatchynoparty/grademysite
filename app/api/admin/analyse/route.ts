@@ -5,12 +5,9 @@ import FirecrawlApp from "@mendable/firecrawl-js";
 import { FULL_ANALYSIS_SYSTEM_PROMPT } from "@/lib/fullAnalysisPrompt";
 import { generateHtmlTemplate } from "@/lib/htmlTemplate";
 import { calculateGrade } from "@/lib/grading";
+import { isAuthed } from "@/lib/adminAuth";
 
 export const maxDuration = 300;
-
-function isAuthed(req: NextRequest) {
-  return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
-}
 
 function getSupabase() {
   const url = process.env.SUPABASE_URL;
@@ -22,7 +19,7 @@ function getSupabase() {
 
 
 export async function POST(req: NextRequest) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

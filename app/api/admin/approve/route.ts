@@ -3,10 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { buildReportEmail } from "@/lib/reportEmail";
 import { generateReportPdf } from "@/lib/pdfReport";
-
-function isAuthed(req: NextRequest) {
-  return req.cookies.get("admin-auth")?.value === process.env.ADMIN_PASSWORD;
-}
+import { isAuthed } from "@/lib/adminAuth";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -16,7 +13,7 @@ const supabase = createClient(
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: NextRequest) {
-  if (!isAuthed(req)) {
+  if (!(await isAuthed(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
