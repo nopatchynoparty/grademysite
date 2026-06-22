@@ -11,11 +11,13 @@ async function getLaunchStatus() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
     const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "10", 10);
+    const LAUNCH_START = process.env.LAUNCH_START_DATE ?? "2026-06-22T00:00:00.000Z";
     const { count } = await supabase
       .from("jobs")
       .select("id", { count: "exact", head: true })
       .eq("tier", "report")
-      .neq("status", "pending_payment");
+      .neq("status", "pending_payment")
+      .gte("created_at", LAUNCH_START);
     const spotsLeft = Math.max(0, LAUNCH_SLOTS - (count ?? 0));
     return { active: spotsLeft > 0, spotsLeft };
   } catch {

@@ -7,6 +7,7 @@ const supabase = createClient(
 );
 
 const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "10", 10);
+const LAUNCH_START = process.env.LAUNCH_START_DATE ?? "2026-06-22T00:00:00.000Z";
 const LAUNCH_PRICE_PENCE = 2500;
 const FULL_PRICE_PENCE = 4900;
 
@@ -15,7 +16,8 @@ export async function GET() {
     .from("jobs")
     .select("id", { count: "exact", head: true })
     .eq("tier", "report")
-    .neq("status", "pending_payment");
+    .neq("status", "pending_payment")
+    .gte("created_at", LAUNCH_START);
 
   if (error) {
     return NextResponse.json({ active: false, spotsLeft: 0, launchPrice: FULL_PRICE_PENCE, fullPrice: FULL_PRICE_PENCE });
@@ -30,6 +32,5 @@ export async function GET() {
     spotsLeft,
     launchPrice: LAUNCH_PRICE_PENCE,
     fullPrice: FULL_PRICE_PENCE,
-    _debug: { sold, slots: LAUNCH_SLOTS },
   });
 }
