@@ -342,7 +342,7 @@ export default function ScanForm() {
                 className="mt-0.5 h-4 w-4 shrink-0 rounded accent-blue cursor-pointer"
               />
               <span className="text-xs text-slate-400 leading-relaxed">
-                I agree to immediate delivery of my report and acknowledge that I waive my 14-day right to cancel under the Consumer Contracts Regulations 2013.
+                Send my report immediately — I understand delivery starts on payment and I won't be able to cancel once it's underway.
               </span>
             </label>
             {checkoutError && (
