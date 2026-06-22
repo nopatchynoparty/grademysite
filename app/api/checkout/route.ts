@@ -43,6 +43,20 @@ export async function POST(req: NextRequest) {
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ?? "https://grademy.site";
 
+    // Apply launch price if slots remain
+    let amountPence: number = tierConfig.amountPence;
+    if (tier === "report") {
+      const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "10", 10);
+      const { count } = await supabase
+        .from("jobs")
+        .select("id", { count: "exact", head: true })
+        .eq("tier", "report")
+        .neq("status", "pending_payment");
+      if ((count ?? 0) < LAUNCH_SLOTS) {
+        amountPence = 2500;
+      }
+    }
+
     // Create job record first so we have an ID to reference in Stripe
     const { data: job, error: dbError } = await supabase
       .from("jobs")
@@ -73,7 +87,7 @@ export async function POST(req: NextRequest) {
           quantity: 1,
           price_data: {
             currency: "gbp",
-            unit_amount: tierConfig.amountPence,
+            unit_amount: amountPence,
             product_data: {
               name: `Grade My Site — ${tierConfig.label}`,
               description: tierConfig.description,

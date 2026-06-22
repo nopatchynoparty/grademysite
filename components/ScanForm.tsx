@@ -88,6 +88,13 @@ function RuleRow({ rule, pass }: { rule: RuleResult; pass: boolean }) {
   );
 }
 
+interface LaunchStatus {
+  active: boolean;
+  spotsLeft: number;
+  launchPrice: number;
+  fullPrice: number;
+}
+
 export default function ScanForm() {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
@@ -97,6 +104,7 @@ export default function ScanForm() {
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState<"report" | "html" | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [launchStatus, setLaunchStatus] = useState<LaunchStatus | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const paywallEmailRef = useRef<HTMLInputElement>(null);
 
@@ -112,6 +120,14 @@ export default function ScanForm() {
     );
     return () => timers.forEach(clearTimeout);
   }, [loading]);
+
+  useEffect(() => {
+    if (!result) return;
+    fetch("/api/launch-status")
+      .then((r) => r.json())
+      .then(setLaunchStatus)
+      .catch(() => null);
+  }, [result]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -325,6 +341,16 @@ export default function ScanForm() {
               exactly what to rewrite — with new headlines, button text, and words
               already written for your business.
             </p>
+
+            {launchStatus?.active && (
+              <div className="flex items-center gap-2 mb-4">
+                <span className="inline-flex items-center gap-1.5 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+                  Launch price — {launchStatus.spotsLeft} of 10 spots left
+                </span>
+              </div>
+            )}
+
             <input
               ref={paywallEmailRef}
               type="email"
@@ -341,9 +367,19 @@ export default function ScanForm() {
               disabled={checkoutLoading !== null}
               className="w-full py-3.5 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-center text-base transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {checkoutLoading === "report" ? "Redirecting…" : "Get the Full Report — £49"}
+              {checkoutLoading === "report"
+                ? "Redirecting…"
+                : launchStatus?.active
+                  ? "Get the Full Report — £25"
+                  : "Get the Full Report — £49"}
             </button>
-            <p className="text-xs text-slate-500 text-center mt-3">
+            {launchStatus?.active && (
+              <p className="text-xs text-slate-500 text-center mt-2">
+                <span className="line-through text-slate-600">£49</span>
+                <span className="text-slate-400 ml-1">— launch price, limited spots</span>
+              </p>
+            )}
+            <p className="text-xs text-slate-500 text-center mt-2">
               One-time payment. Delivered by email within 24 hours. Work begins immediately on payment.
             </p>
           </div>

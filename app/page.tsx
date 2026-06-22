@@ -1,5 +1,25 @@
 import Link from "next/link";
 import ScanForm from "@/components/ScanForm";
+import { createClient } from "@supabase/supabase-js";
+
+async function getLaunchStatus() {
+  try {
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "10", 10);
+    const { count } = await supabase
+      .from("jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("tier", "report")
+      .neq("status", "pending_payment");
+    const spotsLeft = Math.max(0, LAUNCH_SLOTS - (count ?? 0));
+    return { active: spotsLeft > 0, spotsLeft };
+  } catch {
+    return { active: false, spotsLeft: 0 };
+  }
+}
 
 /* ─── Static example data (example free scan — Acorn Plumbing) ───── */
 const EXAMPLE = {
@@ -49,7 +69,8 @@ const EXAMPLE = {
     "Add your phone number to the top of every page so mobile visitors can tap to call immediately. Change 'Welcome to Acorn Plumbing' to something like 'Emergency Plumber in Bristol — We Pick Up 7 Days a Week'. These two changes alone would get more calls within days.",
 };
 
-export default function Home() {
+export default async function Home() {
+  const launch = await getLaunchStatus();
   return (
     <div id="top" className="flex flex-col min-h-screen bg-white">
 
@@ -116,7 +137,7 @@ export default function Home() {
             {[
               { stat: "22", label: "rules checked" },
               { stat: "~30s", label: "free scan" },
-              { stat: "£49", label: "full report" },
+              { stat: launch.active ? "£25" : "£49", label: "full report" },
               { stat: "<24h", label: "delivery time" },
             ].map(({ stat, label }) => (
               <div key={label} className="text-center">
@@ -561,8 +582,22 @@ export default function Home() {
                   <p className="text-muted text-xs">Know exactly what to fix</p>
                 </div>
                 <div className="mb-4">
-                  <span className="text-4xl font-black text-ink">£49</span>
-                  <span className="text-muted text-sm ml-1">one-time</span>
+                  {launch.active ? (
+                    <div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-4xl font-black text-ink">£25</span>
+                        <span className="text-muted text-sm line-through">£49</span>
+                      </div>
+                      <p className="text-xs text-amber-600 font-semibold mt-0.5">
+                        Launch price — {launch.spotsLeft} spot{launch.spotsLeft === 1 ? "" : "s"} left
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <span className="text-4xl font-black text-ink">£49</span>
+                      <span className="text-muted text-sm ml-1">one-time</span>
+                    </div>
+                  )}
                 </div>
                 <ul className="space-y-2 text-sm text-muted flex-1 mb-5">
                   {[
@@ -583,7 +618,7 @@ export default function Home() {
                   href="#top"
                   className="block w-full py-3 rounded-[7px] bg-blue hover:bg-blue-dark text-[white] font-bold text-sm text-center transition-colors"
                 >
-                  Get My Free Score — £49
+                  {launch.active ? "Get My Free Score — £25" : "Get My Free Score — £49"}
                 </a>
               </div>
 
