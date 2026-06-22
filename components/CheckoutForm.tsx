@@ -76,7 +76,7 @@ export default function CheckoutForm({ tier }: { tier: "report" | "html" }) {
           className="mt-0.5 h-4 w-4 shrink-0 rounded accent-blue cursor-pointer"
         />
         <span className="text-xs text-muted leading-relaxed">
-          Send my report immediately — I understand delivery starts on payment and I won't be able to cancel once it's underway.
+          Start my audit now — I understand work begins on payment and I won't be able to cancel once it's underway.
         </span>
       </label>
 
