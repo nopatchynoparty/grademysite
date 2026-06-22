@@ -1,18 +1,19 @@
 import Stripe from "stripe";
+import { redirect } from "next/navigation";
 
 async function getSessionMeta(
-  sessionId: string | undefined
-): Promise<{ upgrade: boolean; tier: string | null }> {
-  if (!sessionId) return { upgrade: false, tier: null };
+  sessionId: string
+): Promise<{ upgrade: boolean; tier: string | null } | null> {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status !== "paid") return null;
     return {
       upgrade: session.metadata?.upgrade === "true",
       tier: session.metadata?.tier ?? null,
     };
   } catch {
-    return { upgrade: false, tier: null };
+    return null;
   }
 }
 
@@ -22,7 +23,12 @@ export default async function SuccessPage({
   searchParams: Promise<{ session_id?: string }>;
 }) {
   const { session_id } = await searchParams;
-  const { upgrade, tier } = await getSessionMeta(session_id);
+  if (!session_id) redirect("/");
+
+  const meta = await getSessionMeta(session_id);
+  if (!meta) redirect("/cancel");
+
+  const { upgrade, tier } = meta;
 
   if (upgrade) {
     return (

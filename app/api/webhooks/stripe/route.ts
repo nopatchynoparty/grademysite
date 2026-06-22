@@ -197,7 +197,9 @@ export async function POST(req: NextRequest) {
 
       console.log(`Job ${jobId} upgraded to html tier — HTML sent to ${job.email}`);
     } else {
-      // Standard new payment — mark job as pending for admin to analyse
+      // Standard new payment — mark job as pending for admin to analyse.
+      // Guard: only transition from pending_payment so duplicate webhook deliveries
+      // from Stripe don't reset a job that's already been analysed or sent.
       const tierFromSession = (session.metadata?.tier ?? "report") as "report" | "html";
       const { error } = await supabase
         .from("jobs")
@@ -206,7 +208,8 @@ export async function POST(req: NextRequest) {
           tier: tierFromSession,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", jobId);
+        .eq("id", jobId)
+        .eq("status", "pending_payment");
 
       if (error) {
         console.error("Failed to update job status:", error);

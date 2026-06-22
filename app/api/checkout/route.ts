@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     const tierConfig = TIERS[tier as keyof typeof TIERS];
     const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+      process.env.NEXT_PUBLIC_BASE_URL ?? "https://grademy.site";
 
     // Create job record first so we have an ID to reference in Stripe
     const { data: job, error: dbError } = await supabase
