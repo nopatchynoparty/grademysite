@@ -2,6 +2,8 @@ import Link from "next/link";
 import ScanForm from "@/components/ScanForm";
 import { createClient } from "@supabase/supabase-js";
 
+export const dynamic = "force-dynamic";
+
 async function getLaunchStatus() {
   try {
     const supabase = createClient(
