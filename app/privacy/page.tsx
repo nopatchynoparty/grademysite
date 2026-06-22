@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "How Grade My Site collects, uses, and protects your personal data.",
 };
 
-const LAST_UPDATED = "21 June 2026";
+const LAST_UPDATED = "22 June 2026";
 
 export default function PrivacyPage() {
   return (
@@ -75,12 +75,11 @@ export default function PrivacyPage() {
           </Section>
 
           <Section title="Cookies">
-            <p>This site uses only strictly necessary cookies:</p>
+            <p>This site sets exactly one cookie:</p>
             <ul>
-              <li><strong>admin-auth</strong> — used to authenticate the admin dashboard. Only set for site administrators, not visitors or customers.</li>
-              <li><strong>Stripe cookies</strong> — set during the checkout process for fraud prevention and payment security. These are necessary to complete your purchase.</li>
+              <li><strong>admin-auth</strong> — a session token used to authenticate the admin dashboard. This is only ever set for site administrators, never for visitors or customers.</li>
             </ul>
-            <p>We do not use analytics cookies, advertising cookies, or any third-party tracking. No cookie consent banner is required because we do not set non-essential cookies.</p>
+            <p>We do not use analytics cookies, advertising cookies, or any third-party tracking. Payment is handled on Stripe's hosted checkout page (stripe.com) — any cookies Stripe sets are on their domain, not ours. No cookie consent banner is required because we do not set non-essential cookies.</p>
           </Section>
 
           <Section title="How long we keep your data">
