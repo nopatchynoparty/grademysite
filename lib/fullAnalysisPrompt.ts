@@ -179,7 +179,6 @@ Return ONLY the following JSON — no markdown fences, no text outside the JSON:
   "top_3_wins": [
     { "rule": <number>, "rule_name": "<exact rule name>", "impact": "<one sentence on what this is costing the business in plain English>", "fix": "<one sentence on the specific change to make>" }
   ],
-  "biggest_win": "<the single most impactful specific change — name the actual copy that should change>",
   "rewritten_copy": {
     "headline": "<new outcome-focused headline — specific to this business, under 10 words, someone could disagree with it>",
     "subheadline": "<one supporting sentence with a specific number or qualifier>",

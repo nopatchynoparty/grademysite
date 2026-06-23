@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { generateHtmlTemplate } from "@/lib/htmlTemplate";
 import { buildHtmlDeliveryEmail } from "@/lib/reportEmail";
+import { generateReportPdf } from "@/lib/pdfReport";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -137,6 +138,13 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "HTML generation failed" }, { status: 500 });
       }
 
+      let pdfBuffer: Buffer | null = null;
+      try {
+        pdfBuffer = await generateReportPdf(job.url, job.full_analysis, "html", job.screenshot_url ?? null);
+      } catch (pdfErr) {
+        console.error("Upgrade: PDF generation failed:", pdfErr);
+      }
+
       // Atomic claim: only update the row if it is still tier='report'.
       // If two webhook deliveries race (e.g. Stripe CLI + production endpoint both
       // firing), only one UPDATE will match — the other sees 0 rows and bails out.
@@ -168,17 +176,25 @@ export async function POST(req: NextRequest) {
       const { subject, html } = buildHtmlDeliveryEmail(job.url, job.full_analysis);
       const from = process.env.RESEND_FROM_EMAIL ?? "GradeMysite <reports@grademy.site>";
 
+      const attachments: { filename: string; content: Buffer }[] = [
+        {
+          filename: `grademysite-${domain}-homepage.html`,
+          content: Buffer.from(htmlOutput),
+        },
+      ];
+      if (pdfBuffer) {
+        attachments.push({
+          filename: `grademysite-report-${domain}.pdf`,
+          content: pdfBuffer,
+        });
+      }
+
       const { error: emailError } = await resend.emails.send({
         from,
         to: job.email,
         subject,
         html,
-        attachments: [
-          {
-            filename: `grademysite-${domain}-homepage.html`,
-            content: Buffer.from(htmlOutput),
-          },
-        ],
+        attachments,
       });
 
       if (emailError) {
@@ -217,6 +233,31 @@ export async function POST(req: NextRequest) {
       }
 
       console.log(`Job ${jobId} marked as pending after payment`);
+
+      if (session.customer_email) {
+        try {
+          await resend.emails.send({
+            from: process.env.RESEND_FROM_EMAIL ?? "GradeMysite <reports@grademy.site>",
+            to: session.customer_email,
+            subject: `We've received your order — report coming within 24 hours`,
+            html: `<!DOCTYPE html>
+<html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 16px;background:#f8fafc;">
+  <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;">
+    <div style="margin-bottom:20px;">
+      <span style="font-size:18px;font-weight:900;color:#0f172a;">Grade<span style="color:#3B6CF4;">My</span>Site</span>
+    </div>
+    <h1 style="font-size:20px;font-weight:800;color:#0f172a;margin:0 0 12px;">Payment received — we're on it.</h1>
+    <p style="font-size:14px;color:#374151;line-height:1.6;margin:0 0 12px;">Your full 22-rule report for <strong>${session.metadata?.url ?? "your site"}</strong> is being prepared.</p>
+    <p style="font-size:14px;color:#374151;line-height:1.6;margin:0 0 20px;">You'll receive it by email within 24 hours. Every report is reviewed by a human before it's sent, which is what makes the findings specific to your site rather than generic.</p>
+    <p style="font-size:13px;color:#64748b;margin:0;">Questions? Reply to this email or contact <a href="mailto:hello@grademy.site" style="color:#3B6CF4;">hello@grademy.site</a></p>
+  </div>
+  <p style="font-size:11px;color:#94a3b8;text-align:center;margin-top:16px;">GradeMysite · grademy.site</p>
+</body></html>`,
+          });
+        } catch (confirmErr) {
+          console.error("Standard payment: confirmation email failed:", confirmErr);
+        }
+      }
     }
   }
 

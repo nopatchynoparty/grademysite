@@ -42,18 +42,19 @@ Finding must reference the business type and the specific contact method that is
 
 Return ONLY this exact JSON (no markdown, no explanation):
 {
-  "score": <integer 0-5>,
-  "out_of": 5,
+  "score": <integer — count of passes only, excluding unable_to_assess>,
+  "out_of": <integer — rules assessed only, excluding unable_to_assess>,
   "grade": "<A|B|C|D|F>",
   "headline": "<one sentence about the site's biggest strength or problem — specific to this site>",
   "passes": [{ "rule": <rule number>, "finding": "<specific evidence from the page copy>" }],
   "fails": [{ "rule": <rule number>, "finding": "<specific evidence from the page copy>" }],
+  "unable_to_assess": [{ "rule": <rule number>, "finding": "<why it couldn't be checked>" }],
   "biggest_win": "<one specific, actionable change that would most improve enquiries>"
 }
 
 Grade mapping: 5=A, 4=B, 3=C, 2=D, 0-1=F
 
-If a rule truly cannot be assessed from the scraped content (e.g. the page returned no meaningful text), mark it as a fail with finding "Unable to assess — page content too limited".`;
+If a rule truly cannot be assessed from the scraped content, do not mark it as a pass or fail. Add it to the unable_to_assess array and exclude it from score and out_of.`;
 
 
 export async function POST(req: NextRequest) {

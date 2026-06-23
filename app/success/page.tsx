@@ -35,7 +35,7 @@ export default async function SuccessPage({
       <SuccessLayout
         icon="html"
         heading="HTML page incoming"
-        subheading="We're building your new homepage now. It'll land in your inbox within 24 hours."
+        subheading="We're building your new homepage now. It'll land in your inbox within 24 hours, sent to the email address you provided."
         steps={[
           "We generate a complete HTML homepage using your existing report copy",
           "The file is reviewed before it goes out",
@@ -51,7 +51,7 @@ export default async function SuccessPage({
       <SuccessLayout
         icon="html"
         heading="Report + Homepage incoming"
-        subheading="We'll run your full audit and build your new homepage. Both land in your inbox within 24 hours."
+        subheading="We'll run your full audit and build your new homepage. Both will be sent to the email address you provided within 24 hours."
         steps={[
           "We run your site through all 22 rules with specific findings",
           "We rewrite your headline, CTA, and copy — and build it into a complete HTML file",
@@ -66,7 +66,7 @@ export default async function SuccessPage({
     <SuccessLayout
       icon="report"
       heading="Payment received"
-      subheading="Your report will be delivered to your email within 24 hours."
+      subheading="Your report will be delivered to the email address you provided within 24 hours."
       steps={[
         "We run your site through all 22 rules",
         "We rewrite your headline, CTA, and problem section using your actual copy",
@@ -146,6 +146,14 @@ function SuccessLayout({
               ))}
             </ul>
           </div>
+
+          <p className="text-sm text-muted leading-relaxed mb-6">
+            Check your spam folder if it doesn&apos;t arrive.{" "}
+            <a href="mailto:hello@grademy.site" className="text-blue hover:underline">
+              hello@grademy.site
+            </a>{" "}
+            if you need anything.
+          </p>
 
           <a
             href="/"

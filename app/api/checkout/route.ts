@@ -32,9 +32,10 @@ export async function POST(req: NextRequest) {
     if (!url || typeof url !== "string") {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
-    if (!email || typeof email !== "string") {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || typeof email !== "string" || !emailRegex.test(email)) {
       return NextResponse.json(
-        { error: "Email is required to receive your report" },
+        { error: "A valid email address is required to receive your report" },
         { status: 400 }
       );
     }

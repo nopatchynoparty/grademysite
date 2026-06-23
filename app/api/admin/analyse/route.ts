@@ -9,14 +9,10 @@ import { isAuthed } from "@/lib/adminAuth";
 
 export const maxDuration = 300;
 
-function getSupabase() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  console.log("[analyse] Supabase URL present:", !!url);
-  console.log("[analyse] Service role key present:", !!key, "starts with:", key?.slice(0, 20));
-  return createClient(url!, key!);
-}
-
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
   if (!(await isAuthed(req))) {
@@ -27,8 +23,6 @@ export async function POST(req: NextRequest) {
   if (!jobId) {
     return NextResponse.json({ error: "jobId required" }, { status: 400 });
   }
-
-  const supabase = getSupabase();
 
   // Fetch job
   const { data: job, error: fetchError } = await supabase

@@ -41,7 +41,8 @@ export interface FullAnalysis {
   fails: RuleResult[];
   unable_to_assess: RuleResult[];
   top_3_wins?: TopWin[];
-  biggest_win: string;
+  /** @deprecated use top_3_wins[0].fix; retained for existing stored jobs */
+  biggest_win?: string;
   rewritten_copy: RewrittenCopy;
   company_name?: string;
   phone?: string | null;

@@ -213,12 +213,12 @@ export function buildReportEmail(
       <p style="margin:0 0 6px;font-size:14px;color:#f1f5f9;font-weight:600;">${esc(win.impact)}</p>
       <p style="margin:0;font-size:13px;color:#94a3b8;"><strong style="color:#cbd5e1;">Fix:</strong> ${esc(win.fix)}</p>
     </div>`).join("")}
-  </div>` : `
-  <!-- Biggest win (fallback when top_3_wins not present) -->
+  </div>` : analysis.biggest_win ? `
+  <!-- Biggest win (fallback for older jobs that lack top_3_wins) -->
   <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-bottom:16px;">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#3B6CF4;margin-bottom:6px;">Biggest Quick Win</div>
     <p style="margin:0;font-size:14px;color:#1e293b;font-weight:500;">${esc(analysis.biggest_win)}</p>
-  </div>`}
+  </div>` : ""}
 
   <!-- Rule scorecard — single column -->
   <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:16px;">
