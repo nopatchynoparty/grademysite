@@ -12,8 +12,10 @@ Evaluate the scraped page content against these 5 rules only. Be strict and spec
 RULES:
 
 Rule 1 — Google can tell what your page is about
-PASS: H1 tag is present and contains a service description and/or location — not just the business name.
+If PAGE HEAD TAGS are provided above, look for an <h1> or the first heading tag. Also check for a <title> tag.
+PASS: H1 tag (or page title) is present and describes what the business does, who it helps, or what outcome the customer receives — not just the business name or a generic greeting.
 FAIL: H1 tag is missing, contains only the business name, or contains a generic phrase like "Home" or "Welcome".
+If neither head tags nor clear heading content is findable in the scraped content, mark as unable_to_assess.
 
 Rule 3 — You use real numbers, not vague claims
 PASS: Page contains at least one measurable claim — years trading, jobs completed, response time, price, rating.
@@ -102,7 +104,7 @@ export async function POST(req: NextRequest) {
     let scrapeResult;
     try {
       scrapeResult = await firecrawl.scrapeUrl(targetUrl, {
-        formats: ["markdown"],
+        formats: ["markdown", "html"],
       });
     } catch {
       return NextResponse.json(
@@ -145,6 +147,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Extract <head> for H1/title assessment — full HTML too large, head is enough
+    let headContent = "";
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rawHtml: string = (scrapeResult as any).html as string ?? "";
+      const headMatch = rawHtml.match(/<head[\s\S]*?<\/head>/i);
+      if (headMatch?.[0]) {
+        headContent = headMatch[0]
+          .replace(/<script[\s\S]*?<\/script>/gi, "")
+          .replace(/<style[\s\S]*?<\/style>/gi, "")
+          .replace(/<link[^>]*>/gi, "")
+          .trim()
+          .slice(0, 1500);
+      }
+    } catch {
+      // best-effort
+    }
+    const headSection = headContent
+      ? `\n\nPAGE HEAD TAGS (title, meta description, and other metadata):\n${headContent}`
+      : "";
+
     // Truncate to keep tokens manageable for the free scan
     const truncated = pageContent.slice(0, 8000);
 
@@ -160,7 +183,7 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "user",
-          content: `Here is the scraped homepage content for ${targetUrl}:\n\n${truncated}`,
+          content: `Here is the scraped homepage content for ${targetUrl}:${headSection}\n\n${truncated}`,
         },
       ],
     });

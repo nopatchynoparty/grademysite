@@ -130,8 +130,15 @@ FAIL: No indication of what happens after the customer makes contact.
 
 Rule 22 — Your page title and description in Google look professional
 PASS: Page title includes a service description and location; meta description is present and specific.
-FAIL: Page title contains only the business name; meta description is missing or generic.
-(Use any title/meta tags visible in the scraped content or metadata.)
+FAIL: Page title contains only the business name; meta description is missing or generic — and this is confirmed by visible content in the scraped data.
+UNABLE_TO_ASSESS: Use this ONLY if no H1, title tag, or any title-like content is findable at all.
+
+Assessment priority — work through these in order:
+1. If a <title> tag or meta description is visible in the scraped content or metadata, use it directly.
+2. If no <title> tag is found but an H1 is present, use the H1 as a proxy for the page title assessment. State this explicitly in the finding: "No page title tag was found in the scraped content — assessing based on the H1 instead." If the H1 is service-specific and/or location-aware, treat as likely passing. If the H1 is generic or business-name-only, treat as likely failing.
+3. Only mark unable_to_assess if neither a title tag nor an H1 is findable.
+
+Never mark Rule 22 as fail solely because the title/meta aren't in the scraped markdown — Firecrawl strips these tags from markdown output. Default to proxy assessment via H1 before marking unable_to_assess, and never default to fail when the content simply wasn't returned by the scraper.
 
 ═══════════════════════════════════════
 AFTER THE EVALUATION

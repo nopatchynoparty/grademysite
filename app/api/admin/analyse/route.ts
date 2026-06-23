@@ -68,11 +68,12 @@ export async function POST(req: NextRequest) {
     // Scrape the site — request screenshot too so we have a fallback if no og:image
     const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY! });
     let pageContent = "";
+    let headContent = "";
     let resolvedOgImage: string | null = job.og_image ?? null;
     let screenshotUrl: string | null = job.screenshot_url ?? null;
     try {
       const scrapeResult = await firecrawl.scrapeUrl(job.url, {
-        formats: ["markdown", "screenshot"],
+        formats: ["markdown", "screenshot", "html"],
       });
       pageContent = scrapeResult.markdown ?? "";
 
@@ -88,6 +89,19 @@ export async function POST(req: NextRequest) {
       if (!resolvedOgImage) {
         const metaOg: string | undefined = meta.ogImage ?? meta["og:image"];
         resolvedOgImage = metaOg ?? freshScreenshot ?? null;
+      }
+
+      // Extract <head> for title/meta assessment — full HTML is too large, head is enough
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rawHtml: string = (scrapeResult as any).html as string ?? "";
+      const headMatch = rawHtml.match(/<head[\s\S]*?<\/head>/i);
+      if (headMatch?.[0]) {
+        headContent = headMatch[0]
+          .replace(/<script[\s\S]*?<\/script>/gi, "")
+          .replace(/<style[\s\S]*?<\/style>/gi, "")
+          .replace(/<link[^>]*>/gi, "")
+          .trim()
+          .slice(0, 1500);
       }
     } catch (scrapeErr) {
       console.error("Firecrawl error:", scrapeErr);
@@ -178,7 +192,10 @@ export async function POST(req: NextRequest) {
       ? `\n\nIMPORTANT — REVIEWER FEEDBACK ON PREVIOUS ATTEMPT: ${notes}\nIncorporate this feedback directly when generating this analysis.`
       : "";
 
-    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}${notesAppend}`;
+    const headSection = headContent
+      ? `\n\nPAGE HEAD TAGS (title, meta description, and other metadata):\n${headContent}`
+      : "";
+    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}${headSection}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}${notesAppend}`;
 
     // Claude Opus full analysis
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
