@@ -224,6 +224,7 @@ export function buildReportEmail(
   <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:16px;">
     <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;">
       <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;">22-Rule Scorecard</span>
+      <div style="font-size:12px;color:#94a3b8;margin-top:4px;">We checked your site against 22 rules. <a href="https://grademy.site/rules" style="color:#3B6CF4;text-decoration:none;">See what each rule checks and why it matters →</a></div>
     </div>
     <div style="padding:16px 20px;">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#10b981;margin-bottom:10px;">What's working ✓</div>
@@ -242,6 +243,7 @@ export function buildReportEmail(
 
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#3B6CF4;margin-bottom:6px;">New Headline</div>
+      <div style="font-size:10px;color:#9ca3af;margin-top:2px;margin-bottom:6px;">The main text at the top of your page — what visitors read first</div>
       <div style="font-size:20px;font-weight:800;color:#ffffff;">${esc(copy.headline)}</div>
     </div>
 
@@ -296,6 +298,7 @@ export function buildReportEmail(
     ${copy.solution_bullets && copy.solution_bullets.length > 0 ? `
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#3B6CF4;margin-bottom:8px;">Why customers choose you</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:8px;">Three specific reasons a customer should pick you over a competitor — pulled from what's already on your page.</div>
       ${copy.solution_bullets.map((bullet, i) => `
       <div style="display:flex;gap:8px;margin-bottom:6px;">
         <span style="color:#3B6CF4;font-weight:700;flex-shrink:0;font-size:11px;">${i + 1}.</span>

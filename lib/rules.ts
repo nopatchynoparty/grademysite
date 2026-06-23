@@ -81,6 +81,11 @@ export const GRADE_COLOURS: Record<string, string> = {
   F: "#ef4444",
 };
 
+// Rule 13's rule_name is dynamic — the model returns either
+// "Your phone number is visible the moment the page loads" (urgent/trade)
+// or "Contact details are visible the moment the page loads" (other types).
+// getRuleName() correctly uses r.rule_name first, falling back to RULE_NAMES[r.rule].
+// RULE_NAMES[13] is the appointment-based fallback only.
 export function getRuleName(r: RuleResult): string {
   return r.rule_name ?? RULE_NAMES[r.rule] ?? `Rule ${r.rule}`;
 }

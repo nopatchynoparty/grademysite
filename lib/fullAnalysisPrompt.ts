@@ -18,8 +18,9 @@ FAIL: H1 tag is missing, contains only the business name, or contains a generic 
 (If H1 cannot be determined from the scraped content, mark as unable_to_assess.)
 
 Rule 2 — Your opening line tells visitors what they'll get
-PASS: The main visible headline describes a result or outcome the customer receives.
+PASS: The main visible headline describes a result or outcome the customer receives — what they get, not what the business does.
 FAIL: The headline describes the business, its name, or its service category only.
+NOTE: This rule checks for CUSTOMER OUTCOME. Rule 20 checks for SPECIFICITY. A headline can pass Rule 2 (it mentions an outcome) but fail Rule 20 (the outcome claim is too vague to be challenged). Do not conflate them — generate distinct findings for each.
 
 Rule 3 — You use real numbers, not vague claims
 PASS: Page contains at least one measurable claim — years trading, jobs completed, response time, price, rating.
@@ -28,6 +29,7 @@ FAIL: Page contains only adjectives — experienced, professional, high quality,
 Rule 4 — There's one clear thing for visitors to do
 PASS: One button or link is visually dominant in the top section of the page.
 FAIL: Two or more buttons or links compete at equal prominence in the top section.
+NOTE: If only one button exists on the entire page, treat as pass regardless of position. This rule is about competing options, not button placement.
 
 Rule 5 — Your main button tells people what happens when they click it
 PASS: The primary button uses specific action language describing what happens next ("Get a Free Quote", "Book Your Survey", "See Our Prices").
@@ -106,6 +108,7 @@ SKIP: Return unable_to_assess if no contact form is visible on the page.
 Rule 17 — Your strongest proof is the first thing people see
 PASS: The strongest stat, testimonial, or credential appears in the first visible section of the page.
 FAIL: All social proof and credentials are further down the page.
+NOTE: Assess based on text order in the scraped content — content appearing earlier in the markdown is treated as appearing higher on the page. If you cannot determine with reasonable confidence whether proof appears in the first visible section, mark as unable_to_assess rather than guessing.
 
 Rule 18 — You avoid meaningless filler words
 PASS: Page avoids using "wide range", "various", "many", "solutions", "bespoke" as primary descriptors without specifics.
@@ -117,8 +120,9 @@ FAIL: Copyright footer shows a year more than 2 years ago, or a blog exists with
 SKIP: Return unable_to_assess if no copyright year or blog dates are visible in the scraped content. IMPORTANT — if you simply cannot find a copyright year, you MUST mark this as unable_to_assess, not as a fail. Absence of scraped footer content is not evidence of a missing or outdated copyright year.
 
 Rule 20 — Your opening line makes a claim someone could actually disagree with
-PASS: The headline makes a specific, challengeable claim.
-FAIL: The headline is so vague it could not be disputed by anyone ("Quality You Can Trust", "Your Local Experts").
+PASS: The headline makes a specific, challengeable claim that could be disputed.
+FAIL: The headline is so vague it could not be disputed by anyone ("Quality You Can Trust", "Your Local Experts"), OR it states only a service and location without making a claim ("Plumber in Bristol" — factual but not challengeable).
+NOTE: This rule checks for SPECIFICITY/BOLDNESS. Rule 2 checks for CUSTOMER OUTCOME. Generate a distinct finding — do not restate the Rule 2 finding here.
 
 Rule 21 — You tell people what happens after they get in touch
 PASS: Page states what happens after someone enquires — callback time, site visit, quote turnaround.

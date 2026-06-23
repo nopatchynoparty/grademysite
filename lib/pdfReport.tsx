@@ -521,6 +521,7 @@ function RewrittenCopyPage({ analysis, url }: { analysis: FullAnalysis; url: str
 
       <View style={s.copySection} wrap={false}>
         <Text style={s.copyLabel}>New Headline</Text>
+        <Text style={{ fontSize: 8, color: C.muted, marginBottom: 4 }}>The main text at the top of your page — what visitors read first</Text>
         <Text style={s.copyHeadline}>{copy.headline}</Text>
       </View>
 

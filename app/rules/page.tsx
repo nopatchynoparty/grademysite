@@ -9,6 +9,8 @@ export const metadata: Metadata = {
 
 const TOOLTIP_TERMS: Record<string, string> = {
   "H1 tag": "A hidden label at the top of your page that tells Google what it's about",
+  "main heading": "The largest, most prominent text on your page — usually the first line visitors read. Also called an H1 in web design.",
+  "opening line": "The main text at the top of your page that visitors read first — sometimes called a headline.",
   "page title": "The heading that appears when your business shows up on Google",
   "meta description": "The short summary that appears under your link in Google search results",
   "above the fold": "The part of the page visible before you scroll",
@@ -27,15 +29,16 @@ const RULES: Rule[] = [
   {
     number: 1,
     name: "Google can tell what your page is about",
-    whyItMatters: "There's an invisible title on every webpage that tells Google what the page is about. If it's missing, or just says your business name, Google doesn't know what you do — and you'll struggle to show up when people search for your services.",
+    whyItMatters: "The main heading on your page — the largest piece of text visitors read first — is also the strongest signal you send Google about what your business does. If it just says your business name, or something generic like 'Welcome', Google can't tell whether you're a plumber, a solicitor, or a florist — and it won't show you to the right people.",
     whatGoodLooksLike: '"Emergency Plumber in Bristol — Same Day Call-Outs"',
-    tooltipTerm: "H1 tag",
+    tooltipTerm: "main heading",
   },
   {
     number: 2,
     name: "Your opening line tells visitors what they'll get",
     whyItMatters: "Most business websites open with \"Welcome to ABC Builders\" or \"Quality You Can Trust.\" These tell a visitor nothing useful. The first thing someone reads on your page has about three seconds to answer the question they're silently asking: \"Can these people help me?\"",
     whatGoodLooksLike: '"We fit kitchens in South London. Most jobs done in a week."',
+    tooltipTerm: "opening line",
   },
   {
     number: 3,
@@ -46,7 +49,7 @@ const RULES: Rule[] = [
   {
     number: 4,
     name: "There's one clear thing for visitors to do",
-    whyItMatters: "If someone lands on your page and sees three different buttons — Call Us, Get a Quote, Learn More — they'll often click none of them. Give people one obvious next step and more of them will take it.",
+    whyItMatters: "If someone lands on your page and sees three different buttons — Call Us, Get a Quote, Learn More — they'll often click none of them. Give people one obvious next step and more of them will take it. If your page has only one button anywhere, that's fine — this rule is about competing options, not button count.",
     whatGoodLooksLike: 'One prominent "Get a Free Quote" button, nothing else competing with it.',
   },
   {
@@ -71,13 +74,13 @@ const RULES: Rule[] = [
   {
     number: 8,
     name: "Your customer quotes are specific",
-    whyItMatters: "\"Great service, highly recommend\" is so generic it washes over people. A quote that names a specific job, result, or experience is far more believable — because it sounds like a real person talking about a real job.",
+    whyItMatters: "\"Great service, highly recommend\" is so generic it washes over people. A quote that names a specific job, result, or experience is far more believable — because it sounds like a real person talking about a real job. We only check this if Rule 7 passes — if there are no customer quotes on your page at all, this rule is skipped.",
     whatGoodLooksLike: '"They refitted our entire bathroom in four days and left the place spotless." — Sarah T., Brighton',
   },
   {
     number: 9,
     name: "You clearly state where you work",
-    whyItMatters: "If someone searches for a roofer in Chichester and lands on your site but can't immediately see that you cover Chichester, they'll leave. Stating your area clearly also helps Google show you to the right people.",
+    whyItMatters: "If someone searches for a roofer in Chichester and lands on your site but can't immediately see that you cover Chichester, they'll leave. Stating your area clearly also helps Google show you to the right people. If you serve customers nationally or online rather than locally, clearly stating who you serve ('for UK tradespeople', 'serving businesses across the UK') also passes this rule.",
     whatGoodLooksLike: '"Covering Chichester, Bognor Regis, and the surrounding villages."',
   },
   {
@@ -89,7 +92,7 @@ const RULES: Rule[] = [
   {
     number: 11,
     name: "You show photos of your actual work",
-    whyItMatters: "Stock photos of smiling tradespeople or generic tools look fake and signal low effort. Photos of your actual work — even taken on a phone — are more convincing because they're real proof of what you deliver.",
+    whyItMatters: "Stock photos of smiling tradespeople or generic tools look fake and signal low effort. Photos of your actual work — even taken on a phone — are more convincing because they're real proof of what you deliver. Note: we can't always tell from a scan whether photos are real or stock — if we can't confirm either way, we'll flag it as something to check manually.",
     whatGoodLooksLike: "At least one photo of a completed job, ideally with a short caption.",
   },
   {
@@ -119,13 +122,13 @@ const RULES: Rule[] = [
   {
     number: 16,
     name: "Getting in touch doesn't require filling in an essay",
-    whyItMatters: "Every extra field on an enquiry form reduces the number of people who complete it. Name, email or phone, and a brief message is enough to start a conversation. Save the detailed questions for when you speak to them.",
+    whyItMatters: "Every extra field on an enquiry form reduces the number of people who complete it. Name, email or phone, and a brief message is enough to start a conversation. Save the detailed questions for when you speak to them. We only check this if you have an enquiry form on your homepage — if there's no form, this rule is skipped.",
     whatGoodLooksLike: "Three fields maximum. Name, contact details, message. Done.",
   },
   {
     number: 17,
     name: "Your strongest proof is the first thing people see",
-    whyItMatters: "Most visitors don't scroll very far. If your most impressive testimonial, your best project photo, or your strongest credential is halfway down the page, most people will never reach it. Put your best foot forward immediately.",
+    whyItMatters: "Most visitors don't scroll very far. If your most impressive testimonial, your best project photo, or your strongest credential is halfway down the page, most people will never reach it. Put your best foot forward immediately. Note: we assess this from the order content appears on your page — if we can't determine what's visible without scrolling, we'll flag it as unable to check rather than guess.",
     whatGoodLooksLike: "Your best quote or most impressive number visible without scrolling at all.",
     tooltipTerm: "above the fold",
   },
@@ -138,7 +141,7 @@ const RULES: Rule[] = [
   {
     number: 19,
     name: "Your site looks like you're still in business",
-    whyItMatters: "An old date at the bottom of your page, a news section with posts from three years ago, or obviously outdated photos sends a quiet signal that you might not still be trading. It's a small thing that has a real impact on whether people trust you enough to get in touch.",
+    whyItMatters: "An old date at the bottom of your page, a news section with posts from three years ago, or obviously outdated photos sends a quiet signal that you might not still be trading. It's a small thing that has a real impact on whether people trust you enough to get in touch. If we can't find a date in the scanned content, we'll flag this as unable to check rather than mark it as a fail.",
     whatGoodLooksLike: "Current year at the bottom of the page, no obviously stale content.",
   },
   {
@@ -156,7 +159,7 @@ const RULES: Rule[] = [
   {
     number: 22,
     name: "Your page title and description in Google look professional",
-    whyItMatters: "When your business appears in Google search results, there's a title and a short description underneath it. If these are missing or messy, Google picks something at random from your page — which is rarely your best line. A clear title and description is free advertising in the search results that most local businesses ignore completely.",
+    whyItMatters: "When your business appears in Google search results, two things show up: a title (the blue clickable heading) and a description (the short summary underneath). Most businesses never set these deliberately, so Google picks random text from the page — which is rarely your best line. If these are missing or messy, it's free advertising in the search results that most local businesses ignore completely.",
     whatGoodLooksLike: '"Dan\'s Electrical Services | Electrician in East Sussex | Free Quotes" followed by a one-sentence description of exactly what you do and where.',
     tooltipTerm: "page title",
   },
