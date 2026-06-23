@@ -130,7 +130,7 @@ export default async function Home() {
             22-rule audit. Results in 30 seconds. Free.
           </p>
           <p className="text-sm text-muted max-w-lg mx-auto mb-8">
-            For UK local service businesses — builders, plumbers, decorators, valuers and more.
+            For any UK small business that relies on its website to get enquiries.
           </p>
 
           <div className="max-w-xl mx-auto text-left">
