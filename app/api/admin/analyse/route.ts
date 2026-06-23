@@ -259,6 +259,10 @@ export async function POST(req: NextRequest) {
     console.log("[analyse] Parsed analysis — score:", analysis.score, "grade:", analysis.grade, "keys:", Object.keys(analysis));
     console.log("[analyse] rewritten_copy.solution_bullets:", analysis?.rewritten_copy?.solution_bullets);
 
+    // Override score and out_of from actual array counts — never trust the model's self-reported values
+    analysis.score = (analysis.passes ?? []).length;
+    analysis.out_of = (analysis.passes ?? []).length + (analysis.fails ?? []).length;
+
     analysis.grade = calculateGrade(analysis.score, analysis.out_of);
 
     // Generate HTML page for html tier jobs

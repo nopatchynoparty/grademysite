@@ -15,6 +15,9 @@ For each rule, return:
 - "finding": one sentence citing specific copy or evidence from the page
 - "rationale": one plain-English sentence explaining why this rule matters (written for a non-technical business owner)
 
+IMPORTANT — when to use unable_to_assess:
+Use unable_to_assess ONLY when a rule is structurally impossible to verify from any scraped content, screenshot, or head section (e.g. Rule 16 requires counting live form fields that cannot be inferred from markdown alone). Do NOT use unable_to_assess because you are uncertain or the evidence is weak — if you can make a reasonable inference, return pass or fail with your reasoning. The same site submitted twice should return the same set of unable_to_assess rules.
+
 ═══════════════════════════════════════
 THE 22 RULES
 ═══════════════════════════════════════
