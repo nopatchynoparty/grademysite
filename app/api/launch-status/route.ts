@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "10", 10);
+const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "20", 10);
 const LAUNCH_START = process.env.LAUNCH_START_DATE ?? "2026-06-22T00:00:00.000Z";
 const LAUNCH_PRICE_PENCE = 2500;
 const FULL_PRICE_PENCE = 4900;
