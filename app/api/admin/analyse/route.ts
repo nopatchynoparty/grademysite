@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
     const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY! });
     let pageContent = "";
     let headContent = "";
+    let footerCopyrightContext = "";
     let resolvedOgImage: string | null = job.og_image ?? null;
     let screenshotUrl: string | null = job.screenshot_url ?? null;
     try {
@@ -102,6 +103,13 @@ export async function POST(req: NextRequest) {
           .replace(/<link[^>]*>/gi, "")
           .trim()
           .slice(0, 1500);
+      }
+      // Extract copyright year from raw HTML for Rule 19 — footer is frequently dropped by markdown scraper
+      const copyrightMatch =
+        rawHtml.match(/©\s*[\w\s,.-]*?(20\d{2})/i) ??
+        rawHtml.match(/copyright\s*[\w\s,.-]*?(20\d{2})/i);
+      if (copyrightMatch) {
+        footerCopyrightContext = `\n\nFOOTER COPYRIGHT DETECTED: ${copyrightMatch[0].replace(/\s+/g, " ").trim()}`;
       }
     } catch (scrapeErr) {
       console.error("Firecrawl error:", scrapeErr);
@@ -212,7 +220,7 @@ export async function POST(req: NextRequest) {
     const headSection = headContent
       ? `\n\nPAGE HEAD TAGS (title, meta description, and other metadata):\n${headContent}`
       : "";
-    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}${headSection}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}${notesAppend}`;
+    const userMessage = `URL: ${job.url}${stage1Context}${industryContext}${headSection}${footerCopyrightContext}\n\nScraped homepage content:\n\n${pageContent.slice(0, 12000)}${notesAppend}`;
 
     // Claude Opus full analysis
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });

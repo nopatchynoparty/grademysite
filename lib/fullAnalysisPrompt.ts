@@ -129,9 +129,7 @@ PASS: Page avoids using "wide range", "various", "many", "solutions", "bespoke" 
 FAIL: Page uses two or more of these words as primary descriptors without accompanying specifics.
 
 Rule 19 — Your site looks like you're still in business
-PASS: Copyright year is current, and any blog has posts within 12 months, or no blog exists.
-FAIL: Copyright footer shows a year more than 2 years ago, or a blog exists with no posts in over 12 months.
-SKIP: Return unable_to_assess if no copyright year or blog dates are visible in the scraped content. IMPORTANT — if you simply cannot find a copyright year, you MUST mark this as unable_to_assess, not as a fail. Absence of scraped footer content is not evidence of a missing or outdated copyright year.
+Consider ALL available recency signals, not just the copyright year. PASS if ANY of the following are present: a copyright year within the last 2 years (check FOOTER COPYRIGHT DETECTED if provided), blog posts or news items with recent dates, Google reviews dated within 12 months, image paths or filenames containing a recent year, or a visible phone number and active contact route suggesting the business is trading. FAIL only if there is explicit evidence of abandonment (e.g. "permanently closed", a copyright year more than 2 years ago with no other recency signals, a blog with no posts in over 12 months and no other active signals). Return unable_to_assess only if genuinely no recency signals exist anywhere in the scraped content, screenshot, or FOOTER COPYRIGHT DETECTED context. Do not fail this rule solely because a copyright year is absent from the scraped markdown — footer content is frequently dropped by the scraper.
 
 Rule 20 — Your opening line makes a claim someone could actually disagree with
 PASS: The headline makes a specific, challengeable claim that could be disputed.
