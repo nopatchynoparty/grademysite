@@ -53,8 +53,6 @@ Return ONLY this exact JSON (no markdown, no explanation):
   "biggest_win": "<one specific, actionable change that would most improve enquiries>"
 }
 
-Grade mapping: 5=A, 4=B, 3=C, 2=D, 0-1=F
-
 If a rule truly cannot be assessed from the scraped content, do not mark it as a pass or fail. Add it to the unable_to_assess array and exclude it from score and out_of.`;
 
 
@@ -230,6 +228,8 @@ export async function POST(req: NextRequest) {
 
     const analysis = JSON.parse(jsonMatch[0]);
 
+    analysis.score = (analysis.passes ?? []).length;
+    analysis.out_of = (analysis.passes ?? []).length + (analysis.fails ?? []).length;
     analysis.grade = calculateGrade(analysis.score, analysis.out_of);
 
 
