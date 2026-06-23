@@ -30,6 +30,7 @@ Rule 4 — There's one clear thing for visitors to do
 PASS: One button or link is visually dominant in the top section of the page.
 FAIL: Two or more buttons or links compete at equal prominence in the top section.
 NOTE: If only one button exists on the entire page, treat as pass regardless of position. This rule is about competing options, not button placement.
+NOTE: If the hero section has two competing buttons but one of them repeats consistently as the dominant action throughout the rest of the page, treat that repeated action as the primary CTA and pass the rule — noting in the finding which button is dominant overall. Example: "Directions" and "See Our Menu" in the hero, but "See Our Menu" appearing four more times below = clear primary action = pass.
 
 Rule 5 — Your main button tells people what happens when they click it
 PASS: The primary button uses specific action language describing what happens next ("Get a Free Quote", "Book Your Survey", "See Our Prices").
@@ -73,7 +74,7 @@ Before assessing, classify the business into one of these seven categories. If a
 
 URGENT/TRADE — plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire, emergency services of any kind. Visitors are often in crisis. A phone number in the header is non-negotiable. Email alone fails.
 
-APPOINTMENT-BASED PROFESSIONAL — solicitor, accountant, architect, therapist, physio, dentist, financial advisor, consultant, surveyor. Clients expect to email or call to arrange a consultation. Phone or email visible in the header both pass.
+APPOINTMENT-BASED PROFESSIONAL — solicitor, accountant, architect, therapist, physio, dentist, financial advisor, consultant, surveyor. Clients expect to email or call to arrange a consultation. Phone or email visible in the header both pass. ALSO PASS if a prominent "Let's talk", "Book a consultation", "Get in touch", or equivalent direct contact CTA appears as a button in the top navigation or header — even if no phone number or email address is explicitly shown in the scraped header text. For appointment-based businesses, a prominent contact button in the nav is a valid and expected contact route.
 
 LOCAL RETAIL WITH PHYSICAL PREMISES — clothes shop, furniture store, florist, gift shop, jeweller, hardware store, garden centre, or any shop with a physical location customers visit. Address, opening hours, or a Google Maps link in the header or top section passes. Phone or email also passes.
 
@@ -138,7 +139,7 @@ UNABLE_TO_ASSESS: Use this ONLY if no H1, title tag, or any title-like content i
 
 Assessment priority — work through these in order:
 1. If a <title> tag or meta description is visible in the scraped content or metadata, use it directly.
-2. If no <title> tag is found but an H1 is present, use the H1 as a proxy for the page title assessment. State this explicitly in the finding: "No page title tag was found in the scraped content — assessing based on the H1 instead." If the H1 is service-specific and/or location-aware, treat as likely passing. If the H1 is generic or business-name-only, treat as likely failing.
+2. If no <title> tag is found but an H1 is present, use the H1 as a proxy and return a definitive PASS or FAIL — not unable_to_assess. Finding must state: "No page title tag was found in the scraped content — assessed using the H1 instead: [H1 text]. [Pass/fail reason]." PASS if the H1 contains a service description and/or location (not just the business name). FAIL if the H1 is generic, business-name-only, or a greeting.
 3. Only mark unable_to_assess if neither a title tag nor an H1 is findable.
 
 Never mark Rule 22 as fail solely because the title/meta aren't in the scraped markdown — Firecrawl strips these tags from markdown output. Default to proxy assessment via H1 before marking unable_to_assess, and never default to fail when the content simply wasn't returned by the scraper.
