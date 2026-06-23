@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     // Apply launch price if slots remain
     let amountPence: number = tierConfig.amountPence;
     if (tier === "report") {
-      const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "10", 10);
+      const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "20", 10);
       const LAUNCH_START = process.env.LAUNCH_START_DATE ?? "2026-06-22T00:00:00.000Z";
       const { count } = await supabase
         .from("jobs")
