@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
     let scrapeResult;
     try {
       scrapeResult = await firecrawl.scrapeUrl(targetUrl, {
-        formats: ["markdown", "html"],
+        formats: ["markdown", "html", "screenshot"],
       });
     } catch {
       return NextResponse.json(
@@ -113,6 +113,8 @@ export async function POST(req: NextRequest) {
     }
 
     const pageContent = scrapeResult.markdown ?? "";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const scanScreenshotUrl: string | null = (scrapeResult as any).screenshot ?? null;
 
     // Extract og:image from metadata (present even without requesting html format)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,21 +172,47 @@ export async function POST(req: NextRequest) {
     // Truncate to keep tokens manageable for the free scan
     const truncated = pageContent.slice(0, 8000);
 
+    // Fetch screenshot as base64 for vision input
+    let scanScreenshotBase64: string | null = null;
+    let scanScreenshotMediaType: "image/jpeg" | "image/png" | "image/webp" = "image/jpeg";
+    if (scanScreenshotUrl) {
+      try {
+        const imgRes = await fetch(scanScreenshotUrl, { signal: AbortSignal.timeout(8000) });
+        if (imgRes.ok) {
+          const ct = imgRes.headers.get("content-type") ?? "image/jpeg";
+          if (ct.includes("png")) scanScreenshotMediaType = "image/png";
+          else if (ct.includes("webp")) scanScreenshotMediaType = "image/webp";
+          scanScreenshotBase64 = Buffer.from(await imgRes.arrayBuffer()).toString("base64");
+        }
+      } catch {
+        console.warn("[scan] Could not fetch screenshot for vision — continuing without");
+      }
+    }
+
     // Claude Sonnet — 5-rule free scan
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY ?? "",
     });
 
+    const scanUserText = `Here is the scraped homepage content for ${targetUrl}:${headSection}\n\n${truncated}`;
+    const scanMessageContent: Anthropic.MessageParam["content"] = scanScreenshotBase64
+      ? [
+          {
+            type: "image",
+            source: { type: "base64", media_type: scanScreenshotMediaType, data: scanScreenshotBase64 },
+          },
+          {
+            type: "text",
+            text: `The image above is a screenshot of the homepage. Use it to verify header content — phone numbers, CTAs, nav items — that may not appear in the markdown below.\n\n${scanUserText}`,
+          },
+        ]
+      : scanUserText;
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system: STAGE1_SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: `Here is the scraped homepage content for ${targetUrl}:${headSection}\n\n${truncated}`,
-        },
-      ],
+      messages: [{ role: "user", content: scanMessageContent }],
     });
 
     const rawText =

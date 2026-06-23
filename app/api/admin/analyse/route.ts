@@ -172,6 +172,23 @@ export async function POST(req: NextRequest) {
       console.log(`[analyse] brandData keys:`, Object.keys(brandData));
     }
 
+    // Fetch screenshot as base64 for vision input
+    let screenshotBase64: string | null = null;
+    let screenshotMediaType: "image/jpeg" | "image/png" | "image/webp" = "image/jpeg";
+    if (screenshotUrl) {
+      try {
+        const imgRes = await fetch(screenshotUrl, { signal: AbortSignal.timeout(8000) });
+        if (imgRes.ok) {
+          const ct = imgRes.headers.get("content-type") ?? "image/jpeg";
+          if (ct.includes("png")) screenshotMediaType = "image/png";
+          else if (ct.includes("webp")) screenshotMediaType = "image/webp";
+          screenshotBase64 = Buffer.from(await imgRes.arrayBuffer()).toString("base64");
+        }
+      } catch {
+        console.warn("[analyse] Could not fetch screenshot for vision — continuing without");
+      }
+    }
+
     // Build user message — include Stage 1 context if available
     const stage1Context = job.scan_results
       ? `\n\n---\nSTAGE 1 QUICK SCAN RESULTS (for context — rules 1, 3, 4, 7, 13 only):\n${JSON.stringify(job.scan_results, null, 2)}\n---`
@@ -199,11 +216,23 @@ export async function POST(req: NextRequest) {
 
     // Claude Opus full analysis
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
+    const messageContent: Anthropic.MessageParam["content"] = screenshotBase64
+      ? [
+          {
+            type: "image",
+            source: { type: "base64", media_type: screenshotMediaType, data: screenshotBase64 },
+          },
+          {
+            type: "text",
+            text: `The image above is a screenshot of the homepage at the time of scan. Use it to verify what is visible in the header, navigation bar, and top section of the page — particularly phone numbers, email addresses, addresses, CTAs, and any text that may not appear in the scraped markdown below due to dynamic rendering.\n\n${userMessage}`,
+          },
+        ]
+      : userMessage;
     const message = await anthropic.messages.create({
       model: "claude-opus-4-8",
       max_tokens: 4096,
       system: FULL_ANALYSIS_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMessage }],
+      messages: [{ role: "user", content: messageContent }],
     });
 
     const rawText =
