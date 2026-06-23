@@ -30,17 +30,16 @@ PASS: At least one customer quote with a name attached appears on the homepage.
 FAIL: No customer quotes appear on the homepage.
 
 Rule 13 — Contact details are visible the moment the page loads
-Before assessing, classify the business into one of these contact expectation categories:
-  URGENT/TRADE (plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire): phone number in the header required. Email alone fails.
-  APPOINTMENT-BASED (solicitor, accountant, architect, therapist, physio, dentist, consultant, financial advisor): phone or email in the header both pass.
-  RETAIL/HOSPITALITY (restaurant, café, shop, salon, gym, hotel): phone, email, or booking link in the header all pass.
-  If unclear, default to APPOINTMENT-BASED.
-
-Apply accordingly:
-  URGENT/TRADE — PASS: phone in header. FAIL: no phone visible above the fold.
-  APPOINTMENT-BASED — PASS: phone or email in header. FAIL: neither present.
-  RETAIL/HOSPITALITY — PASS: phone, email, or booking link in header. FAIL: none present.
-Finding must reference the business type and the specific contact method that is missing or present.
+Before assessing, classify the business into one of these categories (use BUSINESS INDUSTRY if provided above, otherwise infer from content):
+  URGENT/TRADE (plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire, emergency services): phone number in the header required. Email alone fails.
+  APPOINTMENT-BASED PROFESSIONAL (solicitor, accountant, therapist, physio, dentist, financial advisor, consultant, surveyor): phone or email in the header both pass.
+  LOCAL RETAIL WITH PHYSICAL PREMISES (clothes shop, florist, jeweller, hardware store, garden centre): address, opening hours, map link, phone, or email in the top section passes.
+  HOSPITALITY AND FOOD SERVICE (restaurant, café, pub, hotel, takeaway, wedding venue): booking link, phone, address, or opening hours in the top section passes.
+  E-COMMERCE / ONLINE RETAIL (pure online shop, no physical premises): contact page link, email, or live chat passes. Fail only if no contact route exists.
+  PORTFOLIO / CREATIVE SERVICES (photographer, videographer, designer, artist): email or contact form link in the header passes. Phone not required.
+  CONSUMER WEB APP / SAAS (web app, software tool, subscription service): support email, help link, or contact page passes. No phone required. Fail only if no contact route of any kind exists.
+  If unclear, default to APPOINTMENT-BASED PROFESSIONAL.
+Apply the appropriate contact standard for the detected business type. Finding must reference the business type and what is or isn't present.
 
 Return ONLY this exact JSON (no markdown, no explanation):
 {

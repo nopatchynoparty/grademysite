@@ -62,35 +62,34 @@ FAIL: No project photos on the homepage, or only obvious stock imagery described
 SKIP: Return unable_to_assess if image content cannot be determined from the scraped text — finding should say "We couldn't check whether your photos show real work or stock images — this requires visiting your site directly."
 
 Rule 12 — You give at least a rough idea of your prices
-PASS: A price, price range, or starting-from figure appears anywhere on the page.
-FAIL: No pricing information or indication exists anywhere on the page.
+PASS: A price, price range, starting-from figure, day rate, or package price appears anywhere on the page.
+FAIL: No pricing information or indication exists anywhere on the page — and this is a business type where pricing would normally be expected.
+SKIP: Return unable_to_assess for PORTFOLIO/CREATIVE SERVICES businesses (photographers, videographers, interior designers, graphic designers, bespoke manufacturers, architects in a design-led context) where quoting without a brief is industry norm and absence of prices is not a conversion mistake. Finding should say: "Pricing isn't shown — standard for this type of business where every project is quoted individually. Consider adding a 'from' figure or day rate if you want to filter enquiries."
+NOTE: For E-COMMERCE / ONLINE RETAIL, assess whether product prices are visible or clearly accessible (e.g. a "Shop" link leads to priced products). A shop without any visible price indication fails. For CONSUMER WEB APP / SAAS, assess whether the pricing page or free/paid distinction is clear — a free tool that states it's free passes.
 
 Rule 13 — Contact details are visible the moment the page loads
-Before assessing this rule, classify the business into one of these contact expectation categories. If a BUSINESS INDUSTRY classification is provided above, use it to determine the category — it takes precedence over inference from scraped text. Otherwise, infer from the scraped content:
 
-  URGENT/TRADE — plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire. These businesses lose enquiries without a phone number. Email alone does not pass.
-  APPOINTMENT-BASED — solicitor, accountant, architect, therapist, physio, dentist, consultant, financial advisor. Phone or email visible in the header both pass.
-  RETAIL/HOSPITALITY — restaurant, café, shop, salon, gym, hotel. Phone, email, or booking link in the header all pass.
-  If the business type is unclear, default to APPOINTMENT-BASED.
+Before assessing, classify the business into one of these seven categories. If a BUSINESS INDUSTRY classification is provided above, use it to determine the category — it takes precedence over inference from scraped text. Otherwise, infer from the scraped content:
 
-Apply the rule accordingly:
+URGENT/TRADE — plumber, electrician, roofer, locksmith, drainage, boiler, pest control, glazier, skip hire, emergency services of any kind. Visitors are often in crisis. A phone number in the header is non-negotiable. Email alone fails.
 
-  URGENT/TRADE
-    PASS: A phone number appears in the page header or top section.
-    FAIL: No phone number visible without scrolling, or contact requires a separate page.
-    Finding must reference the business type, e.g. "For an emergency plumber, a tap-to-call number in the header is essential — visitors in a crisis won't hunt for a contact page."
+APPOINTMENT-BASED PROFESSIONAL — solicitor, accountant, architect, therapist, physio, dentist, financial advisor, consultant, surveyor. Clients expect to email or call to arrange a consultation. Phone or email visible in the header both pass.
 
-  APPOINTMENT-BASED
-    PASS: A phone number or email address appears in the page header or top section. Note: Firecrawl markdown does not always preserve layout — if an email address appears alongside navigation links, at the very top of the scraped content, or in what looks like a site header block, treat it as being in the header.
-    FAIL: Neither a phone number nor an email address is found anywhere in the scraped content, or contact requires navigating to a separate page.
-    Finding must reference the business type, e.g. "A solicitor's clients expect to email first — but there's no email address or phone number visible without scrolling."
+LOCAL RETAIL WITH PHYSICAL PREMISES — clothes shop, furniture store, florist, gift shop, jeweller, hardware store, garden centre, or any shop with a physical location customers visit. Address, opening hours, or a Google Maps link in the header or top section passes. Phone or email also passes.
 
-  RETAIL/HOSPITALITY
-    PASS: A phone number, email address, or booking link appears in the header or top section.
-    FAIL: None of these are visible without scrolling.
-    Finding must reference the business type and what is (or isn't) present.
+HOSPITALITY AND FOOD SERVICE — restaurant, café, pub, hotel, takeaway, catering company, wedding venue. A booking link, phone number, address, or opening hours visible in the top section all pass. At least one of these must be present.
 
-The rule_name in the JSON output must remain "Your phone number is visible the moment the page loads" for urgent/trade businesses, or "Contact details are visible the moment the page loads" for appointment-based and retail/hospitality. The finding and rationale must reference the detected business type and the appropriate contact method.
+E-COMMERCE / ONLINE RETAIL — pure online shop with no physical premises, selling physical or digital products. A contact page link, email address, or live chat option passes. No phone number required. Fail only if there is no contact route whatsoever.
+
+PORTFOLIO / CREATIVE SERVICES — photographer, videographer, interior designer, graphic designer, web designer, architect (design-led rather than professional services), artist. Email or contact form link in the header or top section passes. Phone not required.
+
+CONSUMER WEB APP / SAAS — free or paid web application, software tool, subscription service with no physical presence and no expectation of personal contact before use. A support email, help link, or contact page link passes. Absence of a phone number is expected and must not fail this rule. If no contact route of any kind exists, fail.
+
+If the business type is genuinely unclear, default to APPOINTMENT-BASED PROFESSIONAL.
+
+Apply the rule accordingly, and write a finding that references the detected business type and what is or isn't present. The rule_name in the JSON output should reflect the business type:
+- URGENT/TRADE: "Your phone number is visible the moment the page loads"
+- All others: "Contact details are visible the moment the page loads"
 
 Rule 14 — Your page sounds like it was written for your specific business
 PASS: Page contains details that could only apply to this business — named staff, specific local projects, their actual process, specific equipment or qualifications.
@@ -106,9 +105,13 @@ FAIL: Initial contact form requires four or more fields before submission.
 SKIP: Return unable_to_assess if no contact form is visible on the page.
 
 Rule 17 — Your strongest proof is the first thing people see
-PASS: The strongest stat, testimonial, or credential appears in the first visible section of the page.
-FAIL: All social proof and credentials are further down the page.
-NOTE: Assess based on text order in the scraped content — content appearing earlier in the markdown is treated as appearing higher on the page. If you cannot determine with reasonable confidence whether proof appears in the first visible section, mark as unable_to_assess rather than guessing.
+PASS: Genuine social proof — a named customer testimonial, a real user number or stat, a verified credential or award, or a named client — appears in the first visible section of the page without scrolling.
+FAIL: All genuine social proof is further down the page, or no social proof exists at all.
+UNABLE_TO_ASSESS: Mark as unable_to_assess if you cannot determine what appears in the first visible section from the scraped content order.
+
+IMPORTANT: Feature bullets, product descriptions, and benefit statements ("Zero sponsored picks", "5 recommendations per session", "Free for any reader") are NOT social proof and do not pass this rule — they are claims made by the business about itself. Social proof is evidence from outside the business: customer quotes, user counts, press mentions, verified ratings, named case studies. A page that leads only with feature bullets and no third-party validation fails this rule regardless of how strong the features are.
+
+NOTE: Assess based on text order in the scraped content — content appearing earlier in the markdown is treated as appearing higher on the page.
 
 Rule 18 — You avoid meaningless filler words
 PASS: Page avoids using "wide range", "various", "many", "solutions", "bespoke" as primary descriptors without specifics.

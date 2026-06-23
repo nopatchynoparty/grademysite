@@ -104,8 +104,8 @@ const RULES: Rule[] = [
   {
     number: 13,
     name: "Contact details are visible the moment the page loads",
-    whyItMatters: "For trade businesses, a visible phone number is essential — someone with a burst pipe won't hunt for a contact page. For appointment-based businesses like solicitors or therapists, a phone number or email in the header is enough. Either way, visitors shouldn't have to scroll to find how to reach you.",
-    whatGoodLooksLike: "Trade: phone number at the top of every page, tap-to-call on mobile. Appointment-based: phone or email clearly visible in the header. Retail or hospitality: phone, email, or a booking link.",
+    whyItMatters: "How people expect to contact you depends on what you do. If you're a plumber or electrician, someone in a crisis needs to call you immediately — a phone number at the top of the page is non-negotiable. If you're a solicitor or therapist, an email address is enough. If you have a shop, your address and opening hours matter more than a phone number. If you're an online tool or app, a support link or contact page is sufficient. Whatever category you're in, visitors should never have to hunt to find how to reach you.",
+    whatGoodLooksLike: "Trade: phone number at the top, tap-to-call on mobile. Professional services: phone or email in the header. Local shop: address, hours, or map link visible immediately. Online retail or app: contact page link or support email clearly accessible.",
   },
   {
     number: 14,
@@ -128,7 +128,7 @@ const RULES: Rule[] = [
   {
     number: 17,
     name: "Your strongest proof is the first thing people see",
-    whyItMatters: "Most visitors don't scroll very far. If your most impressive testimonial, your best project photo, or your strongest credential is halfway down the page, most people will never reach it. Put your best foot forward immediately. Note: we assess this from the order content appears on your page — if we can't determine what's visible without scrolling, we'll flag it as unable to check rather than guess.",
+    whyItMatters: "Most visitors don't scroll very far. If your most impressive customer quote, your strongest number, or your best credential is halfway down the page, most people will never reach it. Note: listing your features at the top doesn't count — this rule is specifically about proof from outside your business: customer quotes, verified ratings, user numbers, or named case studies. Note: we assess this from the order content appears on your page — if we can't determine what's visible without scrolling, we'll flag it as unable to check rather than guess.",
     whatGoodLooksLike: "Your best quote or most impressive number visible without scrolling at all.",
     tooltipTerm: "above the fold",
   },
