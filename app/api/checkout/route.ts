@@ -44,20 +44,10 @@ export async function POST(req: NextRequest) {
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ?? "https://grademy.site";
 
-    // Apply launch price if slots remain
+    // Apply launch price if promo is active
     let amountPence: number = tierConfig.amountPence;
-    if (tier === "report") {
-      const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "20", 10);
-      const LAUNCH_START = process.env.LAUNCH_START_DATE ?? "2026-06-22T00:00:00.000Z";
-      const { count } = await supabase
-        .from("jobs")
-        .select("id", { count: "exact", head: true })
-        .eq("tier", "report")
-        .neq("status", "pending_payment")
-        .gte("created_at", LAUNCH_START);
-      if ((count ?? 0) < LAUNCH_SLOTS) {
-        amountPence = 2500;
-      }
+    if (tier === "report" && process.env.LAUNCH_ACTIVE !== "false") {
+      amountPence = 2500;
     }
 
     // Create job record first so we have an ID to reference in Stripe

@@ -1,28 +1,10 @@
 import Link from "next/link";
 import ScanForm from "@/components/ScanForm";
-import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
-async function getLaunchStatus() {
-  try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-    const LAUNCH_SLOTS = parseInt(process.env.LAUNCH_SLOTS ?? "20", 10);
-    const LAUNCH_START = process.env.LAUNCH_START_DATE ?? "2026-06-22T00:00:00.000Z";
-    const { count } = await supabase
-      .from("jobs")
-      .select("id", { count: "exact", head: true })
-      .eq("tier", "report")
-      .neq("status", "pending_payment")
-      .gte("created_at", LAUNCH_START);
-    const spotsLeft = Math.max(0, LAUNCH_SLOTS - (count ?? 0));
-    return { active: spotsLeft > 0, spotsLeft };
-  } catch {
-    return { active: false, spotsLeft: 0 };
-  }
+function getLaunchStatus() {
+  return { active: process.env.LAUNCH_ACTIVE !== "false" };
 }
 
 /* ─── Static example data (example free scan — Acorn Plumbing) ───── */
@@ -593,7 +575,7 @@ export default async function Home() {
                         <span className="text-muted text-sm line-through">£49</span>
                       </div>
                       <p className="text-xs text-amber-600 font-semibold mt-0.5">
-                        Launch price — {launch.spotsLeft} spot{launch.spotsLeft === 1 ? "" : "s"} left
+                        Launch price — limited time only
                       </p>
                     </div>
                   ) : (
