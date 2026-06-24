@@ -91,6 +91,7 @@ function RuleRow({ rule, pass }: { rule: RuleResult; pass: boolean }) {
 interface LaunchStatus {
   active: boolean;
   spotsLeft: number;
+  totalSlots: number;
   launchPrice: number;
   fullPrice: number;
 }
@@ -346,7 +347,7 @@ export default function ScanForm() {
               <div className="flex items-center gap-2 mb-4">
                 <span className="inline-flex items-center gap-1.5 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
-                  Launch price — {launchStatus.spotsLeft} of 10 spots left
+                  Launch price — {launchStatus.spotsLeft} of {launchStatus.totalSlots} spots left
                 </span>
               </div>
             )}

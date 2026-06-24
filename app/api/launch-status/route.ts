@@ -30,6 +30,7 @@ export async function GET() {
   return NextResponse.json({
     active,
     spotsLeft,
+    totalSlots: LAUNCH_SLOTS,
     launchPrice: LAUNCH_PRICE_PENCE,
     fullPrice: FULL_PRICE_PENCE,
   });
