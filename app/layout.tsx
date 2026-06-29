@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://grademy.site"),
   icons: {
     icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
-    apple: "/logo.svg",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     title: "Grade My Site — Free Website Audit for Local Businesses",
