@@ -625,9 +625,8 @@ export default async function Home() {
                 </div>
                 <ul className="space-y-2 text-sm text-slate-300 flex-1 mb-5">
                   {[
-                    "Single page — from £350, live in days",
-                    "Multi-page with booking, forms, or payment — from £800",
-                    "Custom app, booking system, or MVP — from £2,500",
+                    "Single pages, multi-page sites, or custom apps",
+                    "Booking, forms, or payment integration if you need it",
                     "Built personally, not auto-generated",
                     "Free call, quoted the same day",
                   ].map((f) => (
