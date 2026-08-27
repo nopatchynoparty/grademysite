@@ -207,14 +207,14 @@ export async function POST(req: NextRequest) {
       : scanUserText;
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1024,
+      model: "claude-sonnet-5",
+      max_tokens: 2048,
       system: STAGE1_SYSTEM_PROMPT,
       messages: [{ role: "user", content: scanMessageContent }],
     });
 
-    const rawText =
-      message.content[0].type === "text" ? message.content[0].text : "";
+    const textBlock = message.content.find((b) => b.type === "text");
+    const rawText = textBlock ? textBlock.text : "";
 
     // Extract JSON from Claude's response (strip any accidental markdown fences)
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);

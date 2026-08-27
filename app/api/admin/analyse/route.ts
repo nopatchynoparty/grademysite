@@ -237,14 +237,14 @@ export async function POST(req: NextRequest) {
         ]
       : userMessage;
     const message = await anthropic.messages.create({
-      model: "claude-opus-4-8",
+      model: "claude-opus-5",
       max_tokens: 4096,
       system: FULL_ANALYSIS_SYSTEM_PROMPT,
       messages: [{ role: "user", content: messageContent }],
     });
 
-    const rawText =
-      message.content[0].type === "text" ? message.content[0].text : "";
+    const textBlock = message.content.find((b) => b.type === "text");
+    const rawText = textBlock ? textBlock.text : "";
 
     console.log("[analyse] Raw Opus response (first 500 chars):", rawText.slice(0, 500));
     console.log("[analyse] Stop reason:", message.stop_reason, "— output tokens:", message.usage.output_tokens);
