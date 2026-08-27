@@ -321,8 +321,8 @@ export function buildReportEmail(
 
   ${
     tier === "report"
-      ? `<!-- Coming soon note — report tier only -->
-  <p style="margin:0 0 16px;font-size:13px;color:#64748b;line-height:1.6;">Like the rewritten copy above? We can turn it into a complete, ready-to-build homepage file — styled in your colours, your fonts, your logo. Reply to this email to be first to know when we launch.</p>`
+      ? `<!-- Custom build upsell note — report tier only -->
+  <p style="margin:0 0 16px;font-size:13px;color:#64748b;line-height:1.6;">Want this report turned into a working website? Patrick — the founder — builds homepages personally, from £350, based on exactly what's in this report. Reply to this email if you'd like to talk about it.</p>`
       : ""
   }
 

@@ -640,7 +640,7 @@ function TestimonialsPage({
         <Text style={s.closingNoteText}>
           {tier === "html"
             ? "Your new homepage file is also attached to this email — hand it to your developer with the instructions in the email."
-            : "Want this turned into a ready-to-use homepage? Reply to your report email to find out more."}
+            : "Want this turned into a working website? Patrick — the founder — builds homepages personally, from £350, based on your report. Reply to the emailed version of this report to find out more."}
         </Text>
       </View>
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScanForm from "@/components/ScanForm";
+import { CUSTOM_BUILD_PRICE } from "@/lib/customBuildCopy";
 
 export const dynamic = "force-dynamic";
 
@@ -608,40 +609,39 @@ export default async function Home() {
                 </a>
               </div>
 
-              {/* HTML Package */}
+              {/* Custom Build */}
               <div className="rounded-2xl border border-border bg-slate-900 p-6 flex flex-col text-[white] dm-card relative mt-4 sm:mt-0">
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-slate-600 text-slate-200 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                    COMING SOON
+                    BESPOKE
                   </span>
                 </div>
                 <div className="mb-4">
-                  <p className="font-bold text-base mb-0.5">Report + Homepage</p>
-                  <p className="text-slate-400 text-xs">Everything in the full report, plus a branded homepage file ready to hand to your developer — styled in your colours, your fonts, your logo. One payment, no briefing required.</p>
+                  <p className="font-bold text-base mb-0.5">Want a fully custom site?</p>
+                  <p className="text-slate-400 text-xs">Skip the DIY rebuild. Patrick — the founder — builds anything from a single page to a custom app, personally, based on your report&apos;s findings.</p>
                 </div>
                 <div className="mb-4">
-                  <span className="text-4xl font-black">£99</span>
-                  <span className="text-slate-400 text-sm ml-1">one-time</span>
+                  <span className="text-4xl font-black">{CUSTOM_BUILD_PRICE}</span>
                 </div>
                 <ul className="space-y-2 text-sm text-slate-300 flex-1 mb-5">
                   {[
-                    "Everything in Full Report",
-                    "Complete HTML homepage file — ready to hand to your developer",
-                    "Styled in your existing colours and fonts — looks like your business, not a template",
-                    "Your logo included in the header",
-                    "Developer handoff notes — no briefing required",
+                    "Single page — from £350, live in days",
+                    "Multi-page with booking, forms, or payment — from £800",
+                    "Custom app, booking system, or MVP — from £2,500",
+                    "Built personally, not auto-generated",
+                    "Free call, quoted the same day",
                   ].map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <span className="text-green font-bold flex-shrink-0 mt-0.5">✓</span> {f}
                     </li>
                   ))}
                 </ul>
-                <button
-                  disabled
-                  className="block w-full py-3 rounded-[7px] bg-slate-700 text-slate-500 font-bold text-sm text-center cursor-not-allowed"
-                >
-                  Coming Soon
-                </button>
+                <p className="text-center text-slate-400 text-xs">
+                  Interested? Email{" "}
+                  <a href="mailto:hello@grademy.site" className="text-slate-200 font-semibold underline">
+                    hello@grademy.site
+                  </a>
+                </p>
               </div>
             </div>
 
