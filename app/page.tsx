@@ -618,7 +618,7 @@ export default async function Home() {
                 </div>
                 <div className="mb-4">
                   <p className="font-bold text-base mb-0.5">Want a fully custom site?</p>
-                  <p className="text-slate-400 text-xs">Skip the DIY rebuild. Patrick — the founder — builds anything from a single page to a custom app, personally, based on your report&apos;s findings.</p>
+                  <p className="text-slate-400 text-xs">Skip the DIY rebuild.</p>
                 </div>
                 <div className="mb-4">
                   <span className="text-4xl font-black">{CUSTOM_BUILD_PRICE}</span>
