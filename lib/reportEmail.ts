@@ -6,6 +6,7 @@ import {
   GRADE_COLOURS,
   getRuleName,
 } from "@/lib/rules";
+import { CUSTOM_BUILD_BLURB } from "@/lib/customBuildCopy";
 
 const HEADING_ORDER = ["hero", "problem", "solution", "social_proof", "cta"];
 
@@ -322,7 +323,7 @@ export function buildReportEmail(
   ${
     tier === "report"
       ? `<!-- Custom build upsell note — report tier only -->
-  <p style="margin:0 0 16px;font-size:13px;color:#64748b;line-height:1.6;">Want this report turned into a working website? Patrick — the founder — builds homepages personally, from £350, based on exactly what's in this report. Reply to this email if you'd like to talk about it.</p>`
+  <p style="margin:0 0 16px;font-size:13px;color:#64748b;line-height:1.6;">${esc(CUSTOM_BUILD_BLURB)} Reply to this email to talk about it.</p>`
       : ""
   }
 

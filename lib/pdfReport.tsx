@@ -12,6 +12,7 @@ import {
   Font,
   renderToBuffer,
 } from "@react-pdf/renderer";
+import { CUSTOM_BUILD_BLURB } from "@/lib/customBuildCopy";
 
 const LOGO_PATH = path.join(process.cwd(), "public/logo.svg");
 import {
@@ -640,7 +641,7 @@ function TestimonialsPage({
         <Text style={s.closingNoteText}>
           {tier === "html"
             ? "Your new homepage file is also attached to this email — hand it to your developer with the instructions in the email."
-            : "Want this turned into a working website? Patrick — the founder — builds homepages personally, from £350, based on your report. Reply to the emailed version of this report to find out more."}
+            : `${CUSTOM_BUILD_BLURB} Reply to the emailed version of this report to talk about it.`}
         </Text>
       </View>
 
